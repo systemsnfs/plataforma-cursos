@@ -364,82 +364,85 @@ async function initLesson() {
     </div>
 
 
-    <!-- PLAYER -->
+    <!-- CONTEÚDO DA AULA -->
 
-    <div class="premium-video-card">
+${
+  lesson.video_url
+    ? `
+        <div class="premium-video-card">
 
-      <div class="premium-video">
+          <div class="premium-video">
 
-        ${
-          lesson.video_url
-            ? `
-              <iframe
-                src="${escapeAttr(
-                  lesson.video_url
-                )}"
-                title="${escapeAttr(
-                  lesson.title
-                )}"
-                allow="
-                  accelerometer;
-                  autoplay;
-                  clipboard-write;
-                  encrypted-media;
-                  gyroscope;
-                  picture-in-picture
-                "
-                allowfullscreen
-              ></iframe>
-            `
-            : `
-              <div class="premium-video-empty">
+            <iframe
+              src="${escapeAttr(lesson.video_url)}"
+              title="${escapeAttr(lesson.title)}"
+              allow="
+                accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture
+              "
+              allowfullscreen
+            ></iframe>
 
-                <div class="video-play-icon">
-                  ▶
-                </div>
-
-                <strong>
-                  Vídeo da aula
-                </strong>
-
-                <span>
-                  O vídeo será exibido aqui.
-                </span>
-
-              </div>
-            `
-        }
-
-      </div>
+          </div>
 
 
-      ${
-        lesson.material_url
-          ? `
-            <div class="premium-video-footer">
+          ${
+            lesson.material_url
+              ? `
+                  <div class="premium-video-footer">
 
-              <div>
+                    <div>
 
-                <span class="premium-eyebrow">
-                  MATERIAL
-                </span>
+                      <span class="premium-eyebrow">
+                        MATERIAL
+                      </span>
 
-                <strong>
-                  Conteúdo complementar
-                </strong>
+                      <strong>
+                        Conteúdo complementar
+                      </strong>
 
-              </div>
+                    </div>
 
-              ${materialButton}
+                    ${materialButton}
+
+                  </div>
+                `
+              : ""
+          }
+
+        </div>
+      `
+    : lesson.material_url
+      ? `
+          <div class="premium-material-only">
+
+            <div>
+
+              <span class="premium-eyebrow">
+                MATERIAL DA AULA
+              </span>
+
+              <h2>
+                Conteúdo complementar
+              </h2>
+
+              <p>
+                Acesse o material disponibilizado
+                para esta aula.
+              </p>
 
             </div>
-          `
-          : ""
-      }
 
-    </div>
+            ${materialButton}
 
-
+          </div>
+        `
+      : ""
+}
     <!-- NAVEGAÇÃO -->
 
     <div class="premium-lesson-navigation">
