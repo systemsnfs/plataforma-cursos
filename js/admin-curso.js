@@ -1142,7 +1142,12 @@ catch (error) {
 
 
     lessonForm.reset();
+if (pdfFileName) {
 
+  pdfFileName.textContent =
+    "Nenhum PDF selecionado";
+
+}
 
     msgA.textContent =
       "Aula criada com sucesso!";
