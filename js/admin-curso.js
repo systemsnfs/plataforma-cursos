@@ -1050,7 +1050,35 @@ lessonForm.addEventListener(
       return;
     }
 
+/* =========================
+   ENVIAR PDF
+========================= */
 
+let materialUrl = null;
+
+try {
+
+  msgA.textContent =
+    "Enviando material...";
+
+  materialUrl =
+    await uploadLessonPdf();
+
+}
+catch (error) {
+
+  console.error(
+    "Erro no upload:",
+    error
+  );
+
+  msgA.textContent =
+    "Erro ao enviar PDF: " +
+    error.message;
+
+  return;
+
+}
     const {
       count
     } = await sbA
