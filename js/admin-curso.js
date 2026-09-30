@@ -1115,9 +1115,7 @@ catch (error) {
             .trim() || null,
 
         material_url:
-          $("#materialUrl")
-            .value
-            .trim() || null,
+  materialUrl,
 
         duration_minutes:
           Number(
