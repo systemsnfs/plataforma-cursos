@@ -8206,3 +8206,136 @@ body{
   }
 
 }
+/* =====================================================
+   SELETOR DE PDF - NOVA AULA
+===================================================== */
+
+.lesson-create-form .pdf-upload-box{
+  width:100%;
+  box-sizing:border-box;
+
+  display:flex;
+  align-items:center;
+  gap:16px;
+
+  padding:16px 18px;
+
+  background:#fbf8f3;
+
+  border:1px dashed #d8c8ad;
+  border-radius:14px;
+}
+
+
+/* BOTÃO */
+
+.lesson-create-form .pdf-select-button{
+  appearance:none;
+  -webkit-appearance:none;
+
+  flex:0 0 auto;
+
+  min-height:46px;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+
+  padding:0 20px;
+
+  border:1px solid #c99b4d;
+  border-radius:10px;
+
+  background:#fff;
+
+  color:#9b6b20;
+
+  font-family:"DM Sans",sans-serif;
+  font-size:13px;
+  font-weight:700;
+
+  line-height:1;
+
+  cursor:pointer;
+
+  transition:
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    transform .2s ease;
+}
+
+
+.lesson-create-form .pdf-select-button:hover{
+  background:#c99b4d;
+  border-color:#c99b4d;
+  color:#fff;
+
+  transform:translateY(-1px);
+}
+
+
+/* INFORMAÇÕES DO ARQUIVO */
+
+.lesson-create-form .pdf-file-info{
+  min-width:0;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:4px;
+}
+
+
+.lesson-create-form .pdf-file-info strong{
+  display:block;
+
+  max-width:280px;
+
+  overflow:hidden;
+
+  color:#332d27;
+
+  font-family:"DM Sans",sans-serif;
+  font-size:13px;
+  font-weight:600;
+
+  line-height:1.4;
+
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+
+.lesson-create-form .pdf-file-info small{
+  display:block;
+
+  color:#9b9187;
+
+  font-family:"DM Sans",sans-serif;
+  font-size:11px;
+  font-weight:400;
+
+  line-height:1.5;
+}
+
+
+/* RESPONSIVO */
+
+@media(max-width:700px){
+
+  .lesson-create-form .pdf-upload-box{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .lesson-create-form .pdf-select-button{
+    width:100%;
+  }
+
+  .lesson-create-form .pdf-file-info strong{
+    max-width:100%;
+  }
+
+}
