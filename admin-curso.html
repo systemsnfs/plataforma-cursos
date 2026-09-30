@@ -395,23 +395,45 @@
 
 
 
-            <div class="form-group">
+         <div class="form-group">
 
-              <label for="materialUrl">
-                URL do material
-              </label>
+  <label for="materialPdf">
+    Material da aula
+  </label>
 
-              <input
-                id="materialUrl"
-                placeholder="https://..."
-              >
+  <div class="pdf-upload-box">
 
-              <small class="field-help">
-                Opcional — PDF, apostila ou material complementar.
-              </small>
+    <input
+      id="materialPdf"
+      type="file"
+      accept="application/pdf,.pdf"
+      hidden
+    >
 
-            </div>
+    <button
+      type="button"
+      class="pdf-select-button"
+      id="selectPdfButton"
+    >
+      <span>＋</span>
+      Selecionar PDF
+    </button>
 
+    <div class="pdf-file-info">
+
+      <strong id="pdfFileName">
+        Nenhum PDF selecionado
+      </strong>
+
+      <small>
+        Opcional — somente arquivos PDF.
+      </small>
+
+    </div>
+
+  </div>
+
+</div>
 
 
             <div class="form-group">
