@@ -857,7 +857,158 @@ async function deleteModule(
 
   await loadModules();
 }
+/* =====================================
+   UPLOAD DE PDF
+===================================== */
 
+const materialPdf =
+  $("#materialPdf");
+
+const selectPdfButton =
+  $("#selectPdfButton");
+
+const pdfFileName =
+  $("#pdfFileName");
+
+
+if (selectPdfButton && materialPdf) {
+
+  selectPdfButton.onclick = () => {
+
+    materialPdf.click();
+
+  };
+
+}
+
+
+if (materialPdf) {
+
+  materialPdf.addEventListener(
+    "change",
+    () => {
+
+      const file =
+        materialPdf.files[0];
+
+      if (!file) {
+
+        pdfFileName.textContent =
+          "Nenhum PDF selecionado";
+
+        return;
+
+      }
+
+
+      if (
+        file.type !== "application/pdf"
+      ) {
+
+        alert(
+          "Selecione somente arquivos PDF."
+        );
+
+        materialPdf.value = "";
+
+        pdfFileName.textContent =
+          "Nenhum PDF selecionado";
+
+        return;
+
+      }
+
+
+      pdfFileName.textContent =
+        file.name;
+
+    }
+  );
+
+}
+
+
+/* =====================================
+   ENVIAR PDF PARA O SUPABASE
+===================================== */
+
+async function uploadLessonPdf() {
+
+  const file =
+    materialPdf?.files?.[0];
+
+
+  /* PDF É OPCIONAL */
+
+  if (!file) {
+
+    return null;
+
+  }
+
+
+  if (
+    file.type !== "application/pdf"
+  ) {
+
+    throw new Error(
+      "O material precisa ser um arquivo PDF."
+    );
+
+  }
+
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+
+  const fileName =
+    `${crypto.randomUUID()}.${extension}`;
+
+
+  const filePath =
+    `${courseId}/${fileName}`;
+
+
+  const {
+    error: uploadError
+  } = await sbA.storage
+    .from("materiais")
+    .upload(
+      filePath,
+      file,
+      {
+        contentType:
+          "application/pdf",
+
+        upsert:
+          false
+      }
+    );
+
+
+  if (uploadError) {
+
+    throw uploadError;
+
+  }
+
+
+  const {
+    data
+  } = sbA.storage
+    .from("materiais")
+    .getPublicUrl(
+      filePath
+    );
+
+
+  return data.publicUrl;
+
+}
 
 /* =====================================
    CRIAR AULA
