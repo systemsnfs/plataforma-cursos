@@ -17,6 +17,19 @@ const params =
 const courseId =
   params.get("course_id");
 
+// Preserva apenas destinos internos válidos (evita redirecionamento externo).
+const requestedNext = params.get("next");
+const safeNext = requestedNext &&
+  !requestedNext.startsWith("/") &&
+  !requestedNext.includes("://") &&
+  !requestedNext.includes("\\") &&
+  /^(checkout|aluno)\.html(?:\?.*)?$/.test(requestedNext)
+    ? requestedNext
+    : null;
+const purchaseCourseId = courseId || (safeNext?.startsWith("checkout.html")
+  ? new URLSearchParams(safeNext.split("?")[1] || "").get("course_id")
+  : null);
+
 
 /* =====================================
    LINK LOGIN → CADASTRO
@@ -25,10 +38,10 @@ const courseId =
 const registerLink =
   document.getElementById("registerLink");
 
-if (registerLink && courseId) {
+if (registerLink && purchaseCourseId) {
 
   registerLink.href =
-    `cadastro.html?course_id=${encodeURIComponent(courseId)}`;
+    `cadastro.html?course_id=${encodeURIComponent(purchaseCourseId)}`;
 
 }
 
@@ -169,6 +182,11 @@ if (loginForm) {
     }
 
 if (profile.role === "student") {
+
+  if (safeNext) {
+    location.href = safeNext;
+    return;
+  }
 
   /* Veio da compra de um curso */
   if (courseId) {
