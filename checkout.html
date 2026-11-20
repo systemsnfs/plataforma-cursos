@@ -124,6 +124,17 @@
         <div class="checkout-divider"></div>
 
 
+        <div class="telegram-offer">
+          <label class="telegram-offer-choice" for="telegramAddon">
+            <input type="checkbox" id="telegramAddon">
+            <span class="telegram-offer-copy">
+              <span class="telegram-offer-tag">OFERTA ESPECIAL</span>
+              <strong>Consultoria vitalícia pelo Telegram</strong>
+              <small>Adicione acesso à consultoria no grupo exclusivo por apenas <b>R$ 9,99</b>.</small>
+            </span>
+          </label>
+        </div>
+
         <div class="checkout-total">
 
           <div>
@@ -143,6 +154,8 @@
 
         </div>
 
+
+        <p class="telegram-total-note" id="telegramTotalNote" aria-live="polite">Curso sem consultoria adicional</p>
 
         <button
           type="button"
@@ -170,6 +183,17 @@
   </main>
 
 
+  <style>
+    .legion-checkout .telegram-offer{margin:0 0 22px;padding:17px;border:1px solid #d6bc86;border-radius:13px;background:#f3ead7}
+    .legion-checkout .telegram-offer-choice{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
+    .legion-checkout .telegram-offer-choice input{width:19px;height:19px;flex:0 0 19px;margin:4px 0 0;accent-color:#314b38}
+    .legion-checkout .telegram-offer-copy{display:flex;flex-direction:column;gap:7px;color:#21382b}
+    .legion-checkout .telegram-offer-tag{font-size:10px;letter-spacing:.16em;font-weight:800;color:#946b2b}
+    .legion-checkout .telegram-offer-copy strong{font-size:15px;line-height:1.35}
+    .legion-checkout .telegram-offer-copy small{font-size:12px;line-height:1.6;color:#526354}
+    .legion-checkout .telegram-offer-copy b{color:#896021}
+    .legion-checkout .telegram-total-note{font-size:11px;color:#6a756b;margin:0 0 16px}
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/checkout.js"></script>
