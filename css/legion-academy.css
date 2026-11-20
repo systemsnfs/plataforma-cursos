@@ -64,3 +64,26 @@
  .course-manager-page .course-manager-heading{padding:22px;min-height:140px}
  .course-manager-page .course-manager-heading::after{display:none}
 }
+
+
+/* Gerenciar curso: paleta militar verde-oliva suave, alinhada ao painel */
+body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-gold:#cba66a;--legion-sand:#dce4d8;--legion-cream:#e8ede5;background:#34463a!important;color:#f7f4ea!important}
+.course-manager-page .admin-layout,.course-manager-page .admin-content,.course-manager-page .course-manager-dashboard{background:#34463a!important;color:#f7f4ea!important}
+.course-manager-page .admin-topbar{background:#293b30!important;border-bottom:1px solid #70826f!important}
+.course-manager-page .course-topbar-back a,.course-manager-page .admin-user-info strong{color:#f7f4ea!important}
+.course-manager-page .admin-user-info span{color:#d3decf!important}
+.course-manager-page .admin-logout{color:#f4dcaf!important;background:transparent!important;border:1px solid #b99b67!important}
+.course-manager-page .course-manager-heading{background:linear-gradient(110deg,#24372c,#465a48)!important;border-color:#74816a!important}
+.course-manager-page .premium-panel{background:#435649!important;border:1px solid #788975!important;box-shadow:0 14px 35px #101d1526!important;color:#fff9ef!important}
+.course-manager-page .premium-panel h2,.course-manager-page .premium-panel h3,.course-manager-page .premium-panel label,.course-manager-page .premium-panel strong{color:#fff9ef!important}
+.course-manager-page .premium-panel p,.course-manager-page .premium-panel small{color:#dbe4d7!important}
+.course-manager-page .premium-eyebrow,.course-manager-page .section-divider span{color:#efd09b!important}
+.course-manager-page .manager-create-box,.course-manager-page .premium-modules-list>*,.course-manager-page .premium-lessons-list>*{background:#506451!important;border-color:#82947d!important;color:#fff9ef!important}
+.course-manager-page .create-box-header h3,.course-manager-page .create-box-header p{color:#fff9ef!important}
+.course-manager-page input:not([type="checkbox"]):not([type="file"]),.course-manager-page textarea,.course-manager-page select{background:#293b30!important;border:1px solid #91a08e!important;color:#fff9ef!important}
+.course-manager-page input::placeholder,.course-manager-page textarea::placeholder{color:#c8d3c5!important}
+.course-manager-page .pdf-upload-box,.course-manager-page [class*="video-upload-box"],.course-manager-page [class*="upload-box"]{background:#3b5041!important;border-color:#b89b67!important;color:#f8f1e4!important}
+.course-manager-page .pdf-select-button,.course-manager-page [class*="select-button"]{background:#e9d5ac!important;color:#243428!important;border-color:#cba66a!important}
+.course-manager-page .premium-btn,.course-manager-page button[type="submit"]{background:#cba66a!important;color:#17271d!important;border-color:#e0c18d!important;font-weight:700}
+.course-manager-page .section-divider{border-color:#84947d!important}
+.course-manager-page .premium-modules-list h3,.course-manager-page .premium-modules-list strong{color:#fff9ef!important}
