@@ -22,3 +22,35 @@ body.admin-premium{--mil-bg:#101713;--mil-panel:#1b2720;--mil-panel2:#243329;--m
 .admin-premium .admin-avatar,.admin-premium .panel-icon,.admin-premium .create-icon{background:#3a432d!important;color:#e7c58c!important}
 .admin-premium .modal{background:#000b!important}
 @media(max-width:800px){.admin-premium .admin-sidebar{border-right:0!important;border-bottom:1px solid var(--mil-border)!important}}
+
+/* Ajustes de contraste: indicadores e listas dinâmicas */
+.admin-premium .premium-stats-section .cards,
+.admin-premium .premium-stats-section .premium-stats{background:transparent!important}
+.admin-premium .premium-stats-section .cards > *,
+.admin-premium .premium-stats-section .premium-stats > *,
+.admin-premium .premium-stats-section .premium-stats > * > *,
+.admin-premium .premium-stats-section .cards > * > *{background:#1b2720!important;color:#f1eee4!important;border-color:#405244!important}
+.admin-premium .premium-stats-section .cards *:not(.panel-icon):not(.create-icon):not(.admin-avatar){color:#e5e9df}
+.admin-premium .premium-stats-section .cards strong,
+.admin-premium .premium-stats-section .cards h3,
+.admin-premium .premium-stats-section .cards [id^="total"]{color:#f1cd91!important}
+.admin-premium .premium-student-list,
+.admin-premium .premium-course-list{color:#f1eee4!important}
+.admin-premium .premium-student-list strong,
+.admin-premium .premium-student-list h3,
+.admin-premium .premium-student-list h4,
+.admin-premium .premium-student-list b,
+.admin-premium .premium-student-list [class*="name"],
+.admin-premium .premium-course-list strong,
+.admin-premium .premium-course-list h3{color:#f6f3e9!important}
+.admin-premium .premium-student-list small,
+.admin-premium .premium-student-list p,
+.admin-premium .premium-course-list small{color:#b9c5b8!important}
+.admin-premium .premium-student-list button,
+.admin-premium .premium-course-list button{font-weight:700!important}
+.admin-premium .premium-student-list .btn:not(.btn-outline),
+.admin-premium .premium-course-list .btn:not(.btn-outline){background:#c6a267!important;color:#101712!important;border-color:#e2c38e!important}
+.admin-premium .premium-student-list .btn-outline,
+.admin-premium .premium-course-list .btn-outline{background:#26372b!important;color:#f4deb7!important;border-color:#ad874e!important}
+.admin-premium .premium-student-list button:hover,
+.admin-premium .premium-course-list button:hover{filter:brightness(1.12)}
