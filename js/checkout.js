@@ -78,13 +78,20 @@ async function initCheckout() {
 
 
   if (!user) {
+    location.replace(`login.html?course_id=${encodeURIComponent(courseId)}`);
+    return;
+  }
 
-    const destination =
-      `checkout.html?course_id=${encodeURIComponent(courseId)}`;
+  // O pagamento exige uma conta de aluno registrada e ativa.
+  const { data: profile, error: profileError } = await sb
+    .from("profiles")
+    .select("role,active")
+    .eq("id", user.id)
+    .maybeSingle();
 
-    location.href =
-      `login.html?next=${encodeURIComponent(destination)}`;
-
+  if (profileError || !profile || profile.active !== true || profile.role !== "student") {
+    checkoutMessage.textContent =
+      "Para comprar, entre ou crie uma conta de aluno ativa.";
     return;
   }
 
@@ -155,8 +162,7 @@ payButton.addEventListener("click", async () => {
   try {
     const { data: { session }, error: sessionError } = await sb.auth.getSession();
     if (sessionError || !session?.access_token) {
-      const destination = `checkout.html?course_id=${encodeURIComponent(courseId)}`;
-      location.href = `login.html?next=${encodeURIComponent(destination)}`;
+      location.href = `login.html?course_id=${encodeURIComponent(courseId)}`;
       return;
     }
     const response = await fetch(
