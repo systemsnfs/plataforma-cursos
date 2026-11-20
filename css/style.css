@@ -8512,3 +8512,41 @@ body.legion-student{background:#e7e3d8;color:#1e2b23;font-family:"DM Sans",sans-
   }
   .legion-home .home-how .home-steps article{padding:26px}
 }
+
+/* Legion Academy — checkout consistente com a identidade militar */
+.legion-checkout{background:#e7e3d8!important;color:#213328!important;min-height:100vh}
+.legion-checkout .checkout-header{background:#15271d!important;border-bottom:1px solid #ad935f!important}
+.legion-checkout .checkout-brand,.legion-checkout .checkout-brand strong{color:#fff8e9!important}
+.legion-checkout .checkout-brand span{color:#d8b36d!important}
+.legion-checkout .checkout-page{background:#e7e3d8!important}
+.legion-checkout .checkout-info{position:relative}
+.legion-checkout .checkout-back{color:#45614b!important}
+.legion-checkout .checkout-eyebrow,.legion-checkout .checkout-card-label,.legion-checkout .checkout-total small{color:#a77d38!important}
+.legion-checkout .checkout-info h1{color:#203328!important}
+.legion-checkout .checkout-info h1 em{color:#a47c38!important}
+.legion-checkout .checkout-description{color:#536354!important}
+.legion-checkout .checkout-benefits{color:#304636!important}
+.legion-checkout .checkout-benefits div span{background:#e5d2a8!important;color:#24392b!important}
+.legion-checkout .checkout-card{background:#faf7f0!important;border:1px solid #cdbb97!important;box-shadow:0 20px 50px rgba(18,39,27,.13)!important}
+.legion-checkout .checkout-card h2{color:#203328!important}
+.legion-checkout .checkout-card p,.legion-checkout .checkout-total span{color:#627061!important}
+.legion-checkout .checkout-course-icon{background:#b99b5c!important;color:#1b2f22!important}
+.legion-checkout .checkout-divider{background:#d9c9a9!important}
+.legion-checkout .checkout-total strong{color:#203328!important}
+.legion-checkout .checkout-pay-button{background:linear-gradient(110deg,#304735,#203328)!important;color:#fff8e9!important;border:1px solid #b99b5c!important}
+.legion-checkout .checkout-pay-button span{color:#d8b36d!important}
+.legion-checkout .checkout-secure{color:#697566!important}
+@media(min-width:900px){
+ .legion-checkout .checkout-info{
+  padding:42px 30px 42px 36px;
+  border-radius:18px;
+  background:linear-gradient(90deg,rgba(17,36,25,.96),rgba(23,44,29,.82)),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png") center/cover no-repeat;
+  border:1px solid #a88e59;
+ }
+ .legion-checkout .checkout-info h1{color:#fff8e9!important}
+ .legion-checkout .checkout-description,.legion-checkout .checkout-benefits{color:#e7e9dc!important}
+ .legion-checkout .checkout-back{color:#e8d1a2!important}
+ .legion-checkout .checkout-eyebrow{color:#e3bf78!important}
+ .legion-checkout .checkout-info h1 em{color:#e3bf78!important}
+}
+@media(max-width:899px){.legion-checkout .checkout-wrapper{gap:30px}}
