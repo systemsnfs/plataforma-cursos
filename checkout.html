@@ -168,7 +168,13 @@
         </button>
 
 
-        <div id="checkoutMessage" class="checkout-message"></div>
+        <div id="checkoutMessage" class="checkout-message" role="status" aria-live="polite"></div>
+
+        <div id="checkoutAccountActions" class="checkout-account-actions" hidden>
+          <p>Escolha como deseja continuar:</p>
+          <button type="button" id="switchStudentAccount" class="checkout-account-action checkout-account-login">Entrar com uma conta de aluno</button>
+          <button type="button" id="createStudentAccount" class="checkout-account-action checkout-account-register">Criar minha conta de aluno</button>
+        </div>
 
 
         <div class="checkout-secure">
@@ -193,10 +199,17 @@
     .legion-checkout .telegram-offer-copy small{font-size:12px;line-height:1.6;color:#526354}
     .legion-checkout .telegram-offer-copy b{color:#896021}
     .legion-checkout .telegram-total-note{font-size:11px;color:#6a756b;margin:0 0 16px}
+    .legion-checkout .checkout-account-actions{margin-top:18px;padding:16px;border:1px solid #d7bd89;border-radius:12px;background:#f6ecdc}
+    .legion-checkout .checkout-account-actions[hidden]{display:none!important}
+    .legion-checkout .checkout-account-actions p{font-size:12px;color:#435344;margin:0 0 12px;line-height:1.5}
+    .legion-checkout .checkout-account-action{display:block;width:100%;min-height:41px;padding:10px 12px;margin-top:9px;border-radius:8px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer}
+    .legion-checkout .checkout-account-login{background:#1d392c;border:1px solid #1d392c;color:#fff}
+    .legion-checkout .checkout-account-register{background:#fffaf0;border:1px solid #bda06d;color:#324c38}
+    .legion-checkout .checkout-account-action:disabled{opacity:.6;cursor:wait}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
-  <script src="js/checkout.js?v=2"></script>
+  <script src="js/checkout.js?v=3"></script>
 
 </body>
 
