@@ -8550,3 +8550,20 @@ body.legion-student{background:#e7e3d8;color:#1e2b23;font-family:"DM Sans",sans-
  .legion-checkout .checkout-info h1 em{color:#e3bf78!important}
 }
 @media(max-width:899px){.legion-checkout .checkout-wrapper{gap:30px}}
+
+/* Legion Academy — oferta visual da consultoria Telegram (sem cobrança ativa) */
+.legion-home .legion-telegram-offer{
+ margin:26px 0 20px;padding:24px 26px;border-radius:16px;
+ background:linear-gradient(135deg,#e8e1d0,#f4eddf);
+ border:1px solid #c8ad76;color:#24372a;
+ box-shadow:0 8px 22px rgba(31,47,34,.06)
+}
+.legion-home .legion-telegram-offer-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.legion-home .legion-telegram-tag{font-size:10px;font-weight:800;letter-spacing:.15em;color:#856020}
+.legion-home .legion-telegram-price{font-size:24px;font-weight:800;color:#25412d;white-space:nowrap}
+.legion-home .legion-telegram-offer h3{font-family:"Playfair Display",serif;font-size:23px;line-height:1.25;margin:13px 0 10px;color:#1e3325}
+.legion-home .legion-telegram-offer p{font-size:13px;line-height:1.7;margin:0 0 16px;color:#435646}
+.legion-home .legion-telegram-offer-foot{display:flex;flex-direction:column;gap:7px;border-top:1px solid #cbb990;padding-top:13px}
+.legion-home .legion-telegram-offer-foot span{font-size:12px;font-weight:700;color:#5e4928}
+.legion-home .legion-telegram-offer-foot small{font-size:11px;line-height:1.5;color:#677164}
+@media(max-width:600px){.legion-home .legion-telegram-offer{padding:20px}}
