@@ -149,15 +149,51 @@ async function initCheckout() {
 }
 
 
-payButton.addEventListener(
-  "click",
-  () => {
-
-    checkoutMessage.textContent =
-      "Pagamento será conectado ao Mercado Pago na próxima etapa.";
-
+payButton.addEventListener("click", async () => {
+  payButton.disabled = true;
+  checkoutMessage.textContent = "Preparando seu pagamento seguro...";
+  try {
+    const { data: { session }, error: sessionError } = await sb.auth.getSession();
+    if (sessionError || !session?.access_token) {
+      const destination = `checkout.html?course_id=${encodeURIComponent(courseId)}`;
+      location.href = `login.html?next=${encodeURIComponent(destination)}`;
+      return;
+    }
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/create-payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          course_id: courseId,
+          telegram_addon: telegramAddon.checked
+        })
+      }
+    );
+    const result = await response.json();
+    if (!response.ok || !result.checkout_url) {
+      throw new Error(result.error || "Não foi possível iniciar o pagamento.");
+    }
+    checkoutMessage.textContent = "Redirecionando ao Mercado Pago...";
+    location.assign(result.checkout_url);
+  } catch (error) {
+    checkoutMessage.textContent = error.message || "Tente novamente.";
+    payButton.disabled = false;
   }
-);
+});
 
+
+if (params.get("retorno")) {
+  const messages = {
+    sucesso: "Retorno recebido. O acesso será liberado somente após a confirmação do Mercado Pago.",
+    falha: "O pagamento não foi concluído. Você pode tentar novamente.",
+    pendente: "Pagamento pendente. O acesso será liberado quando houver confirmação."
+  };
+  checkoutMessage.textContent = messages[params.get("retorno")] || "";
+}
 
 initCheckout();
