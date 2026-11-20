@@ -27,6 +27,26 @@ const checkoutMessage =
   document.getElementById("checkoutMessage");
 
 
+const telegramAddon = document.getElementById("telegramAddon");
+const telegramTotalNote = document.getElementById("telegramTotalNote");
+const TELEGRAM_ADDON_PRICE = 9.99;
+let baseCoursePrice = 0;
+
+function formatCheckoutBRL(value) {
+  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function updateCheckoutTotal() {
+  const selected = telegramAddon.checked;
+  const totalCents = Math.round(baseCoursePrice * 100) + (selected ? 999 : 0);
+  coursePrice.textContent = formatCheckoutBRL(totalCents / 100);
+  telegramTotalNote.textContent = selected
+    ? "Curso + consultoria vitalícia pelo Telegram"
+    : "Curso sem consultoria adicional";
+}
+
+telegramAddon.addEventListener("change", updateCheckoutTotal);
+
 async function initCheckout() {
 
   /* =====================================
@@ -121,19 +141,8 @@ async function initCheckout() {
     "Curso online Academia Online.";
 
 
-  const price =
-    Number(course.price || 0);
-
-
-  coursePrice.textContent =
-    price.toLocaleString(
-      "pt-BR",
-      {
-        style: "currency",
-        currency: "BRL"
-      }
-    );
-
+  baseCoursePrice = Number(course.price || 0);
+  updateCheckoutTotal();
 
   payButton.disabled = false;
 
