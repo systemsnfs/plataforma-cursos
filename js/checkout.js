@@ -178,6 +178,8 @@ async function initCheckout() {
   baseCoursePrice = Number(course.price || 0);
   updateCheckoutTotal();
 
+  accountActions.hidden = true;
+  checkoutMessage.textContent = params.get("retorno") ? checkoutMessage.textContent : "";
   payButton.disabled = false;
 
 }
