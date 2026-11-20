@@ -8402,3 +8402,43 @@ body.legion-student{background:#e7e3d8;color:#1e2b23;font-family:"DM Sans",sans-
  .legion-student .student-welcome{min-height:240px;background-position:62% center!important}
  .legion-student .student-course-hero{background-position:65% center!important}
 }
+
+
+/* LEGION ACADEMY — identidade unificada: home, login, cadastro e aulas */
+.legion-home,.legion-auth,.legion-lesson{--la-forest:#17271e;--la-olive:#304733;--la-gold:#c5a15f;--la-paper:#e7e3d8;--la-cream:#f8f5ed;font-family:"DM Sans",sans-serif;color:#203126}
+.legion-home{background:var(--la-paper)}
+.legion-home .home-header,.legion-lesson .student-topbar{background:#17271e!important;border-bottom:1px solid #5e654e!important;color:#f8f4e8!important}
+.legion-home .home-brand,.legion-home .home-nav>a,.legion-lesson .student-brand,.legion-lesson .premium-student-area{color:#f8f4e8!important}
+.legion-home .home-brand strong span,.legion-lesson .student-brand strong span,.legion-home .home-brand-icon,.legion-lesson .student-brand-icon{color:#d7b675!important}
+.legion-home .home-login,.legion-lesson .student-logout{border:1px solid #b99b5c!important;color:#f8e1ad!important;background:transparent!important}
+.legion-home .premium-home-hero{background:linear-gradient(90deg,rgba(14,30,21,.96) 0%,rgba(19,37,27,.91) 43%,rgba(18,34,25,.38) 100%),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png") center 35%/cover no-repeat!important;min-height:620px;color:#fff}
+.legion-home .premium-home-hero h1,.legion-home .premium-home-hero h1 span,.legion-home .premium-home-hero p,.legion-home .home-trust{color:#fff!important}
+.legion-home .home-eyebrow,.legion-home .home-feature-label{color:#e2bd77!important}
+.legion-home .home-primary-btn,.legion-home .home-gold-btn{background:#b99b5c!important;color:#17271e!important;border-color:#b99b5c!important}
+.legion-home .home-secondary-btn{border-color:#d7b675!important;color:#fff!important}
+.legion-home .home-feature-card{background:linear-gradient(150deg,rgba(21,39,27,.95),rgba(47,70,48,.9))!important;border:1px solid #8e825c!important;color:#fff!important}
+.legion-home .home-feature-card h2,.legion-home .home-feature-card p{color:#f8f4e8!important}
+.legion-home .home-benefits,.legion-home .home-course-section,.legion-home .home-how-section{background:#e7e3d8!important}
+.legion-home .home-benefit-card,.legion-home .home-course-preview,.legion-home .home-course-info,.legion-home .home-step-card{border-color:#d6c7aa!important}
+.legion-home .home-final-cta,.legion-home .home-footer{background:#17271e!important;color:#f8f4e8!important}
+.legion-home .home-final-cta h2,.legion-home .home-final-cta p,.legion-home .home-footer p{color:#f8f4e8!important}
+.legion-auth{background:#e7e3d8!important}
+.legion-auth .premium-login-visual{background:linear-gradient(90deg,rgba(15,29,21,.96),rgba(19,36,26,.83)),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png") 58% center/cover no-repeat!important;color:#fff}
+.legion-auth .premium-login-visual-content h1,.legion-auth .premium-login-visual-content p,.legion-auth .premium-login-brand{color:#fff!important}
+.legion-auth .premium-login-visual-content em,.legion-auth .premium-login-brand strong span,.legion-auth .premium-login-eyebrow{color:#e1bd78!important}
+.legion-auth .premium-login-form-side{background:#f5f1e8!important}
+.legion-auth .premium-login-button{background:#24392a!important;color:#fff!important;border:1px solid #4d624c!important}
+.legion-auth .premium-login-button-arrow,.legion-auth .premium-login-register a,.legion-auth .password-recovery-link a{color:#9c7738!important}
+.legion-auth .premium-login-button-arrow{color:#e5c17e!important}
+.legion-lesson{background:#e7e3d8!important;min-height:100vh}
+.legion-lesson .premium-lesson-container{width:min(1050px,90%)}
+.legion-lesson .premium-lesson-header{background:linear-gradient(100deg,rgba(18,35,25,.96),rgba(28,48,33,.83)),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png") center 35%/cover no-repeat!important;border-radius:17px;padding:34px 40px;color:#fff!important;border:1px solid #b99b5c}
+.legion-lesson .premium-lesson-header h1,.legion-lesson .premium-lesson-header p,.legion-lesson .premium-lesson-breadcrumb{color:#fff!important}
+.legion-lesson .premium-lesson-header .premium-eyebrow{color:#e8c780!important}
+.legion-lesson .premium-lesson-position{background:rgba(16,30,21,.72)!important;color:#f8e7c2!important;border:1px solid #b99b5c!important}
+.legion-lesson .premium-video-card,.legion-lesson .premium-material-only{background:#f8f5ed!important;border:1px solid #d6c7aa!important;border-radius:16px}
+.legion-lesson .premium-material-only h2,.legion-lesson .premium-video-footer strong{color:#24372a!important}
+.legion-lesson .premium-material-btn,.legion-lesson .premium-nav-next{background:#304733!important;color:#fff!important;border-color:#304733!important}
+.legion-lesson .premium-nav-btn,.legion-lesson .premium-back-course{border-color:#cdbb97!important}
+@media(max-width:850px){.legion-home .premium-home-hero{background-position:62% center!important}.legion-auth .premium-login-visual{min-height:340px;background-position:center 32%!important}.legion-lesson .premium-lesson-header{padding:26px 22px}}
+@media(max-width:600px){.legion-home .premium-home-hero{background-image:linear-gradient(90deg,rgba(14,30,21,.94),rgba(18,34,25,.7)),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png")!important}.legion-lesson .premium-lesson-container{width:94%}}
