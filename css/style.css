@@ -8442,3 +8442,22 @@ body.legion-student{background:#e7e3d8;color:#1e2b23;font-family:"DM Sans",sans-
 .legion-lesson .premium-nav-btn,.legion-lesson .premium-back-course{border-color:#cdbb97!important}
 @media(max-width:850px){.legion-home .premium-home-hero{background-position:62% center!important}.legion-auth .premium-login-visual{min-height:340px;background-position:center 32%!important}.legion-lesson .premium-lesson-header{padding:26px 22px}}
 @media(max-width:600px){.legion-home .premium-home-hero{background-image:linear-gradient(90deg,rgba(14,30,21,.94),rgba(18,34,25,.7)),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png")!important}.legion-lesson .premium-lesson-container{width:94%}}
+
+/* Legion Academy — benefícios e apresentação do curso */
+.legion-home .home-benefits{background:#e7e3d8!important}
+.legion-home .home-benefits .home-section-heading h2,
+.legion-home .home-benefits .home-section-heading p{color:#203126}
+.legion-home .home-benefits .home-section-heading p{max-width:680px;margin-left:auto;margin-right:auto;line-height:1.7}
+.legion-home .home-benefit-card{background:linear-gradient(155deg,#304735,#203328)!important;border:1px solid #a88e59!important;box-shadow:0 14px 30px rgba(19,37,26,.13);transition:transform .2s ease,box-shadow .2s ease}
+.legion-home .home-benefit-card:hover{transform:translateY(-4px);box-shadow:0 20px 35px rgba(19,37,26,.2)}
+.legion-home .home-benefit-card h3{color:#fff8e9!important}
+.legion-home .home-benefit-card p{color:#e4e7d9!important;line-height:1.65}
+.legion-home .home-benefit-card .benefit-number{color:#d7b675!important}
+.legion-home .home-benefit-card .benefit-icon{background:#b99b5c!important;color:#192b20!important}
+.legion-home .home-course-preview{background:linear-gradient(150deg,rgba(18,35,25,.9),rgba(35,59,39,.72)),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png") center/cover no-repeat!important;color:#f9f4e8!important}
+.legion-home .home-course-preview p,.legion-home .home-course-preview span{color:#f9f4e8!important}
+.legion-home .home-course-info{background:#f8f5ed!important;color:#223429!important}
+.legion-home .home-course-info h2{color:#223429!important}
+.legion-home .home-course-description{color:#526052!important}
+.legion-home .home-course-features{color:#24392b!important}
+@media(max-width:700px){.legion-home .home-benefit-card{transform:none}.legion-home .home-benefits .home-section-heading h2{font-size:clamp(27px,7vw,40px)}}
