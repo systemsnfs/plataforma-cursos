@@ -1,0 +1,24 @@
+/* Tema militar — painel administrativo. Apenas apresentação. */
+body.admin-premium{--mil-bg:#101713;--mil-panel:#1b2720;--mil-panel2:#243329;--mil-border:#405244;--mil-gold:#c6a267;--mil-text:#f1eee4;--mil-muted:#b2bcaf;background:var(--mil-bg)!important;color:var(--mil-text)!important;font-family:"DM Sans",sans-serif}
+.admin-premium .admin-layout,.admin-premium .admin-content,.admin-premium .premium-dashboard{background:var(--mil-bg)!important;color:var(--mil-text)!important}
+.admin-premium .admin-sidebar{background:#0b120e!important;border-right:1px solid var(--mil-border)!important}
+.admin-premium .admin-topbar{background:#162119!important;border-bottom:1px solid var(--mil-border)!important}
+.admin-premium .sidebar-link{color:#c6cec3!important}
+.admin-premium .sidebar-link.active,.admin-premium .sidebar-link:hover{background:#304333!important;color:#e6c18a!important;border-color:var(--mil-gold)!important}
+.admin-premium .premium-brand,.admin-premium .sidebar-logo,.admin-premium .admin-user-info strong{color:var(--mil-text)!important}
+.admin-premium .premium-brand span,.admin-premium .sidebar-logo-icon,.admin-premium .premium-eyebrow,.admin-premium .panel-icon,.admin-premium .create-icon{color:var(--mil-gold)!important}
+.admin-premium .dashboard-heading h1,.admin-premium .premium-panel h2,.admin-premium .premium-panel h3,.admin-premium .premium-modal h2{color:var(--mil-text)!important}
+.admin-premium .dashboard-heading p,.admin-premium .premium-panel p,.admin-premium .admin-user-info span,.admin-premium .premium-stats small{color:var(--mil-muted)!important}
+.admin-premium .premium-stats .cards>*,.admin-premium .premium-stats .cards article,.admin-premium .premium-panel,.admin-premium .course-create-box,.admin-premium .premium-modal,.admin-premium .modal-content{background:var(--mil-panel)!important;color:var(--mil-text)!important;border:1px solid var(--mil-border)!important;box-shadow:0 14px 40px #0003!important}
+.admin-premium .course-create-box{background:var(--mil-panel2)!important}
+.admin-premium .premium-stats strong,.admin-premium .premium-stats h3{color:#f4d7a2!important}
+.admin-premium label,.admin-premium .form-label,.admin-premium .create-box-header strong,.admin-premium .premium-panel-header strong{color:var(--mil-text)!important}
+.admin-premium input,.admin-premium select,.admin-premium textarea,.admin-premium .price-input{background:#101b14!important;color:#f5f2e9!important;border:1px solid #536453!important}
+.admin-premium input::placeholder,.admin-premium textarea::placeholder{color:#a6afa3!important}
+.admin-premium input:focus,.admin-premium select:focus,.admin-premium textarea:focus{outline:2px solid var(--mil-gold)!important;outline-offset:1px}
+.admin-premium .premium-btn,.admin-premium .btn:not(.btn-outline){background:#ad874e!important;color:#101712!important;border:1px solid #d1ad73!important}
+.admin-premium .btn-outline,.admin-premium .admin-logout{background:transparent!important;color:#ebd0a5!important;border:1px solid #826c48!important}
+.admin-premium .premium-student-list>*,.admin-premium .premium-course-list>*,.admin-premium .section-divider{border-color:var(--mil-border)!important}
+.admin-premium .admin-avatar,.admin-premium .panel-icon,.admin-premium .create-icon{background:#3a432d!important;color:#e7c58c!important}
+.admin-premium .modal{background:#000b!important}
+@media(max-width:800px){.admin-premium .admin-sidebar{border-right:0!important;border-bottom:1px solid var(--mil-border)!important}}
