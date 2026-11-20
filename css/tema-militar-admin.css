@@ -54,3 +54,19 @@ body.admin-premium{--mil-bg:#101713;--mil-panel:#1b2720;--mil-panel2:#243329;--m
 .admin-premium .premium-course-list .btn-outline{background:#26372b!important;color:#f4deb7!important;border-color:#ad874e!important}
 .admin-premium .premium-student-list button:hover,
 .admin-premium .premium-course-list button:hover{filter:brightness(1.12)}
+
+/* Paleta militar mais clara — correções de cards gerados dinamicamente */
+body.admin-premium{--mil-bg:#303d33;--mil-panel:#435447;--mil-panel2:#4b5e4e;--mil-border:#70816f;--mil-muted:#e0e7da;background:var(--mil-bg)!important}
+.admin-premium .admin-layout,.admin-premium .admin-content,.admin-premium .premium-dashboard{background:var(--mil-bg)!important}
+.admin-premium .admin-topbar{background:#29392e!important}
+.admin-premium .premium-panel,.admin-premium .premium-stats-section .cards>*,.admin-premium .premium-stats-section .premium-stats>*{background:var(--mil-panel)!important;border-color:var(--mil-border)!important;color:#fff9ed!important}
+.admin-premium .course-create-box{background:var(--mil-panel2)!important}
+.admin-premium .premium-stats-section .cards>*>*,.admin-premium .premium-stats-section .premium-stats>*>*{background:transparent!important}
+.admin-premium .premium-stats-section .cards *{color:#f5f0e5!important}
+.admin-premium .premium-stats-section .cards strong,.admin-premium .premium-stats-section .cards h3{color:#f5d49c!important}
+.admin-premium .premium-course-list>*,.admin-premium .premium-course-list>*>*,.admin-premium .premium-student-list>*{background:#394b3e!important;border-color:#71836f!important;color:#fff9ed!important}
+.admin-premium .premium-course-list strong,.admin-premium .premium-course-list h3,.admin-premium .premium-course-list h4,.admin-premium .premium-course-list [class*="title"],.admin-premium .premium-student-list strong{color:#fff9ed!important}
+.admin-premium .premium-course-list p,.admin-premium .premium-course-list small,.admin-premium .premium-course-list [class*="meta"]{color:#e0e7da!important}
+.admin-premium .premium-course-list .btn,.admin-premium .premium-student-list .btn{font-weight:700!important}
+.admin-premium .premium-course-list .btn:not(.btn-outline),.admin-premium .premium-student-list .btn:not(.btn-outline){background:#d0ab70!important;color:#17231b!important}
+.admin-premium input,.admin-premium select,.admin-premium textarea{background:#233329!important;color:#fff9ed!important;border-color:#879586!important}
