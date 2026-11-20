@@ -29,7 +29,27 @@ const checkoutMessage =
 
 const telegramAddon = document.getElementById("telegramAddon");
 const telegramTotalNote = document.getElementById("telegramTotalNote");
+const accountActions = document.getElementById("checkoutAccountActions");
+const switchStudentAccount = document.getElementById("switchStudentAccount");
+const createStudentAccount = document.getElementById("createStudentAccount");
 const TELEGRAM_ADDON_PRICE = 9.99;
+
+async function startStudentAccountFlow(mode) {
+  switchStudentAccount.disabled = true;
+  createStudentAccount.disabled = true;
+  checkoutMessage.textContent = "Preparando o acesso à sua conta...";
+  const { error } = await sb.auth.signOut();
+  if (error) {
+    checkoutMessage.textContent = "Não foi possível trocar de conta. Tente novamente.";
+    switchStudentAccount.disabled = false;
+    createStudentAccount.disabled = false;
+    return;
+  }
+  location.replace(`${mode}.html?course_id=${encodeURIComponent(courseId)}`);
+}
+
+switchStudentAccount.addEventListener("click", () => startStudentAccountFlow("login"));
+createStudentAccount.addEventListener("click", () => startStudentAccountFlow("cadastro"));
 let baseCoursePrice = 0;
 
 function formatCheckoutBRL(value) {
@@ -90,8 +110,15 @@ async function initCheckout() {
     .maybeSingle();
 
   if (profileError || !profile || profile.active !== true || profile.role !== "student") {
-    checkoutMessage.textContent =
-      "Para comprar, entre ou crie uma conta de aluno ativa.";
+    payButton.disabled = true;
+    accountActions.hidden = false;
+    checkoutMessage.textContent = profileError
+      ? "Não foi possível validar sua conta. Entre novamente como aluno."
+      : !profile
+        ? "Esta sessão não possui um perfil de aluno. Entre ou crie uma conta de aluno."
+        : profile.role !== "student"
+          ? "Você está conectado com uma conta administrativa. Para testar a compra, use uma conta de aluno."
+          : "Esta conta está desativada. Entre com outra conta de aluno.";
     return;
   }
 
