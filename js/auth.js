@@ -271,10 +271,15 @@ if (registerForm) {
     }
 
 
+    if (data.session && courseId) {
+      location.href = `checkout.html?course_id=${encodeURIComponent(courseId)}`;
+      return;
+    }
+
     message.textContent =
       data.session
-        ? "Conta criada."
-        : "Conta criada. Confira seu e-mail para confirmar o cadastro.";
+        ? "Conta criada. Você já pode acessar sua área."
+        : "Conta criada. Confira seu e-mail para confirmar o cadastro e depois faça login.";
 
   });
 
