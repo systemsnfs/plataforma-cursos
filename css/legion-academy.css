@@ -1,0 +1,66 @@
+/* Legion Academy — tema visual do gerenciador de cursos.
+   Escopo limitado a .course-manager-page para preservar as demais páginas. */
+.course-manager-page{
+ --legion-green:#202a20;--legion-deep:#141c16;--legion-gold:#b99551;
+ --legion-sand:#f0e9db;--legion-cream:#faf7f0;
+ background:#ece7dc;color:#222b22;
+}
+.course-manager-page .admin-sidebar{
+ background:linear-gradient(160deg,#253225 0%,#18231c 72%,#101914 100%);
+ border-right:1px solid #64704d;color:#f5efe3;
+}
+.course-manager-page .sidebar-logo{border-bottom-color:#56604766}
+.course-manager-page .sidebar-logo-icon{color:#d9b66e}
+.course-manager-page .sidebar-logo .brand,
+.course-manager-page .sidebar-logo .premium-brand{color:#f8f4e8}
+.course-manager-page .sidebar-logo .brand span,
+.course-manager-page .sidebar-logo .premium-brand span{color:#d9b66e}
+.course-manager-page .sidebar-link{color:#e5e8db}
+.course-manager-page .sidebar-link:hover,
+.course-manager-page .sidebar-link.active{
+ background:linear-gradient(90deg,#b9955140,#b9955114);
+ color:#f3d59a;border-color:#b99551;
+}
+.course-manager-page .admin-content{background:#ece7dc}
+.course-manager-page .admin-topbar{background:#f7f3ea;border-bottom:1px solid #d8cdb7}
+.course-manager-page .course-manager-dashboard{background:transparent}
+.course-manager-page .course-manager-heading{
+ position:relative;overflow:hidden;isolation:isolate;
+ background:linear-gradient(110deg,#18251feF,#28382add),repeating-linear-gradient(145deg,#73806722 0 2px,transparent 2px 36px);
+ border:1px solid #586247;border-radius:18px;
+ color:#f8f4e9;padding:36px;min-height:170px;
+}
+.course-manager-page .course-manager-heading::after{
+ content:"LEGION ACADEMY";position:absolute;right:26px;bottom:14px;
+ font:700 11px "DM Sans",sans-serif;letter-spacing:.28em;
+ color:#c5aa72;opacity:.65;pointer-events:none;
+}
+.course-manager-page .course-manager-heading h1,
+.course-manager-page .course-manager-heading h2,
+.course-manager-page .course-manager-heading p{color:#f7f2e6}
+.course-manager-page .course-heading-icon{background:#b9955133;color:#e8c77f}
+.course-manager-page .premium-panel{
+ background:#faf7f0;border:1px solid #d7c9ae;
+ box-shadow:0 14px 35px #25302512;border-radius:18px;
+}
+.course-manager-page .premium-panel h2{color:#243024}
+.course-manager-page .premium-eyebrow{color:#987337;letter-spacing:.2em}
+.course-manager-page input:not([type="checkbox"]):not([type="file"]),
+.course-manager-page textarea,.course-manager-page select{
+ background:#fffdf9;border-color:#d8cbb5;color:#263125;
+}
+.course-manager-page input:focus,.course-manager-page textarea:focus,
+.course-manager-page select:focus{outline-color:#b99551;border-color:#b99551}
+.course-manager-page .premium-btn,
+.course-manager-page button[type="submit"]{
+ background:linear-gradient(100deg,#8d7036,#b99551);color:#fff;
+ border-color:#a8894c;
+}
+.course-manager-page .premium-btn:hover,
+.course-manager-page button[type="submit"]:hover{filter:brightness(1.08)}
+.course-manager-page .pdf-upload-box{background:#f7f1e5;border-color:#c7ad7a}
+.course-manager-page .pdf-select-button{background:#fffaf0;border-color:#b99551;color:#705628}
+@media(max-width:760px){
+ .course-manager-page .course-manager-heading{padding:22px;min-height:140px}
+ .course-manager-page .course-manager-heading::after{display:none}
+}
