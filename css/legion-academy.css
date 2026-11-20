@@ -87,3 +87,22 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page .premium-btn,.course-manager-page button[type="submit"]{background:#cba66a!important;color:#17271d!important;border-color:#e0c18d!important;font-weight:700}
 .course-manager-page .section-divider{border-color:#84947d!important}
 .course-manager-page .premium-modules-list h3,.course-manager-page .premium-modules-list strong{color:#fff9ef!important}
+
+
+/* Banner fotográfico Legion Academy */
+.course-manager-page .course-manager-heading{
+ background-image:linear-gradient(90deg,rgba(17,29,22,.94) 0%,rgba(24,39,29,.78) 42%,rgba(24,39,29,.12) 100%),url("../images/Soldado%20em%20Primeiro%20Plano%20na%20Fortaleza%20Francesa.png")!important;
+ background-size:cover!important;
+ background-position:center 35%!important;
+ background-repeat:no-repeat!important;
+ min-height:250px!important;
+ padding:45px!important;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ border:1px solid #8b805c!important;
+}
+.course-manager-page .course-manager-heading h1,
+.course-manager-page .course-manager-heading h2{color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+.course-manager-page .course-manager-heading p{color:#f1e9d9!important;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+@media(max-width:760px){.course-manager-page .course-manager-heading{min-height:210px!important;padding:25px!important;background-position:60% center!important}}
