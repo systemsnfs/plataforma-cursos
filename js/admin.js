@@ -574,15 +574,15 @@ function closeEditCourseModal() {
 }
 
 
-$("#closeEditCourse").onclick =
+if ($("#closeEditCourse")) $("#closeEditCourse").onclick =
   closeEditCourseModal;
 
 
-$("#cancelEditCourse").onclick =
+if ($("#cancelEditCourse")) $("#cancelEditCourse").onclick =
   closeEditCourseModal;
 
 
-editCourseModal.onclick =
+if (editCourseModal) editCourseModal.onclick =
   event => {
 
     if (
@@ -601,7 +601,7 @@ editCourseModal.onclick =
    SALVAR EDIÇÃO
 ======================== */
 
-editCourseForm.addEventListener(
+editCourseForm?.addEventListener(
   "submit",
   async event => {
 
@@ -888,7 +888,7 @@ const courseForm =
   $("#courseForm");
 
 
-courseForm.addEventListener(
+courseForm?.addEventListener(
   "submit",
   async event => {
 
