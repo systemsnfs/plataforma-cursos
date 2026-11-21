@@ -107,6 +107,19 @@ if (studentAvatar) {
 }
 
 
+  // Vincula automaticamente compras aprovadas feitas antes do cadastro.
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.access_token) {
+      const res = await fetch(SUPABASE_URL + "/functions/v1/claim-purchases", {
+        method: "POST",
+        headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + session.access_token, "Content-Type": "application/json" },
+        body: "{}"
+      });
+      if (!res.ok) console.warn("Ainda não foi possível ativar uma compra pendente.");
+    }
+  } catch (error) { console.warn("Falha ao consultar pagamentos:", error); }
+
   /* =====================================
      MATRÍCULAS ATIVAS
   ===================================== */
@@ -150,7 +163,7 @@ if (studentAvatar) {
       </div>
 
       <h2>
-        Nenhum curso disponível
+        Nenhum curso liberado ainda
       </h2>
 
       <p>
@@ -159,7 +172,7 @@ if (studentAvatar) {
       </p>
 
       <a
-        href="index.html#cursos"
+        href="index.html#curso"
         class="student-empty-button"
       >
         Ver cursos
