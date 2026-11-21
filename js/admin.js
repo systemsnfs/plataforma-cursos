@@ -1194,7 +1194,7 @@ window.manageAccess = async function(studentId) {
     error: enrollmentsError
   } = await adminSb
     .from("enrollments")
-    .select("id, course_id, status")
+    .select("id, user_id, course_id, status")
     .eq("user_id", studentId);
 
 
