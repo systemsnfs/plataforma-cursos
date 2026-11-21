@@ -8,6 +8,9 @@ const payButton = document.getElementById("payButton");
 const checkoutMessage = document.getElementById("checkoutMessage");
 const telegramAddon = document.getElementById("telegramAddon");
 const telegramTotalNote = document.getElementById("telegramTotalNote");
+const installmentsPrice = document.getElementById("checkoutInstallments");
+const telegramOfferCard = document.getElementById("telegramOfferCard");
+const telegramSelectHint = document.getElementById("telegramSelectHint");
 const buyerName = document.getElementById("buyerName");
 const buyerEmail = document.getElementById("buyerEmail");
 const buyerDetails = document.getElementById("checkoutBuyerDetails");
@@ -21,11 +24,20 @@ function brl(value) {
 }
 
 function updateCheckoutTotal() {
-  const amount = Math.round(baseCoursePrice * 100) + (telegramAddon.checked ? 999 : 0);
-  coursePrice.textContent = brl(amount / 100);
-  telegramTotalNote.textContent = telegramAddon.checked
+  const selected = telegramAddon.checked;
+  const amountCents = Math.round(baseCoursePrice * 100) + (selected ? 999 : 0);
+  // A parcela apresentada é uma simulação aritmética. A cobrança efetiva
+  // e as opções de parcelamento são determinadas pelo Mercado Pago.
+  const installmentCents = Math.round(amountCents / 10);
+  installmentsPrice.textContent = "10x de " + brl(installmentCents / 100);
+  coursePrice.textContent = brl(amountCents / 100);
+  telegramTotalNote.textContent = selected
     ? "Curso + consultoria vitalícia pelo Telegram"
     : "Curso sem consultoria adicional";
+  telegramOfferCard.classList.toggle("is-selected", selected);
+  telegramSelectHint.textContent = selected
+    ? "✓ Consultoria adicionada ao seu pedido"
+    : "Clique para adicionar ao seu curso";
 }
 
 function showReturn() {
