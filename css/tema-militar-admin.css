@@ -115,3 +115,46 @@ body.admin-premium{--mil-bg:#303d33;--mil-panel:#435447;--mil-panel2:#4b5e4e;--m
 .admin-premium .admin-navigation-card small{color:#e0e7da;line-height:1.5;font-size:12px}
 .admin-premium .admin-navigation-arrow{color:#f5d49c;font-size:12px;font-weight:700;margin-top:auto}
 @media(max-width:950px){.admin-premium .admin-navigation-cards{grid-template-columns:1fr}}
+
+/* Alunos: botões compactos na página exclusiva */
+.admin-premium.admin-single-page .students-panel .premium-student-card{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+}
+.admin-premium.admin-single-page .students-panel .student-main{
+  width:auto!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+.admin-premium.admin-single-page .students-panel .student-actions{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-wrap:wrap!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  width:auto!important;
+  gap:8px!important;
+}
+.admin-premium.admin-single-page .students-panel .student-actions .btn{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:34px!important;
+  padding:8px 15px!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+@media(max-width:780px){
+  .admin-premium.admin-single-page .students-panel .premium-student-card{
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+  .admin-premium.admin-single-page .students-panel .student-actions{
+    justify-content:flex-start!important;
+  }
+}
