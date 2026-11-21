@@ -242,100 +242,58 @@ function renderStats(
   `;
 }
 
+let allAdminCourses = [];
+const formatCoursePrice = price => Number(price || 0).toLocaleString("pt-BR", {style:"currency",currency:"BRL"});
+
 function renderCourses(coursesData) {
+  const list = $("#courses");
+  if (!list) return;
+  allAdminCourses = coursesData || [];
+  const total = allAdminCourses.length;
+  const active = allAdminCourses.filter(c => c.active === true).length;
+  if ($("#coursesTotal")) $("#coursesTotal").textContent = total;
+  if ($("#coursesActive")) $("#coursesActive").textContent = active;
+  if ($("#coursesInactive")) $("#coursesInactive").textContent = total - active;
 
-  const courses = $("#courses");
-
-  if (!courses) return;
-
-  if (!coursesData.length) {
-    courses.innerHTML = `
-      <div class="premium-empty">
-        <div class="premium-empty-icon">◇</div>
-        <strong>Nenhum curso cadastrado</strong>
-        <span>Os cursos cadastrados aparecerão aqui.</span>
-      </div>
-    `;
+  const term = ($("#courseSearch")?.value || "").trim().toLocaleLowerCase("pt-BR");
+  const status = $("#courseStatusFilter")?.value || "all";
+  const visible = allAdminCourses.filter(c => {
+    const matchesText = !term || `${c.title || ""} ${c.slug || ""}`.toLocaleLowerCase("pt-BR").includes(term);
+    const matchesStatus = status === "all" || (status === "active" ? c.active === true : c.active !== true);
+    return matchesText && matchesStatus;
+  });
+  if ($("#coursesCount")) $("#coursesCount").textContent = `${visible.length} de ${total} ${total === 1 ? "curso" : "cursos"}`;
+  if (!visible.length) {
+    list.innerHTML = `<div class="legion-course-empty"><strong>${total ? "Nenhum curso encontrado" : "Nenhum curso cadastrado"}</strong><p>${total ? "Altere a busca ou o filtro para ver outros cursos." : "Clique em + Novo curso para criar seu primeiro treinamento."}</p></div>`;
     return;
   }
 
-  courses.innerHTML =
-    coursesData
-      .map(course => `
-
-        <div class="premium-course-card">
-
-          <div class="course-card-icon">
-            ◇
-          </div>
-
-          <div class="course-card-info">
-
-            <span class="course-card-label">
-              CURSO
-            </span>
-
-            <h3>
-              ${escapeHtml(course.title)}
-            </h3>
-
-            <div class="course-card-meta">
-
-              <span>
-                ${escapeHtml(course.slug || "Sem slug")}
-              </span>
-
-              <span class="meta-dot"></span>
-
-              <strong>
-                R$ ${Number(course.price || 0)
-                  .toLocaleString(
-                    "pt-BR",
-                    {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    }
-                  )}
-              </strong>
-
-            </div>
-
-          </div>
-
-
-          <div class="course-card-actions">
-
-            <button
-              type="button"
-              class="btn course-edit-btn edit-course"
-              data-id="${course.id}"
-            >
-              Editar
-            </button>
-
-            <a
-              class="btn course-content-btn"
-              href="admin-curso.html?id=${course.id}"
-            >
-              Conteúdo
-            </a>
-
-            <button
-              type="button"
-              class="btn course-delete-btn delete-course"
-              data-id="${course.id}"
-              data-title="${escapeHtml(course.title)}"
-            >
-              Excluir
-            </button>
-
-          </div>
-
+  list.innerHTML = visible.map(c => `
+    <article class="premium-course-card legion-course-row">
+      <div class="course-card-icon legion-course-row-icon" aria-hidden="true">◇</div>
+      <div class="course-card-info legion-course-row-main">
+        <span class="course-card-label">TREINAMENTO</span>
+        <h3>${escapeHtml(c.title || "Curso sem nome")}</h3>
+        <div class="legion-course-row-meta">
+          <span>${escapeHtml(c.slug || "Sem identificador")}</span>
+          <span class="legion-course-price">${formatCoursePrice(c.price)}</span>
+          <span class="legion-course-status ${c.active ? "is-active" : "is-inactive"}">${c.active ? "Ativo" : "Inativo"}</span>
         </div>
-
-      `)
-      .join("");
+      </div>
+      <div class="course-card-actions legion-course-actions">
+        <button type="button" class="btn course-edit-btn edit-course" data-id="${c.id}">Editar</button>
+        <a class="btn course-content-btn" href="admin-curso.html?id=${encodeURIComponent(c.id)}">Conteúdo</a>
+        <button type="button" class="btn legion-course-toggle" data-id="${c.id}" data-active="${c.active === true}" title="${c.active ? "Ocultar este curso do catálogo público" : "Publicar este curso no catálogo público"}">${c.active ? "Desativar" : "Ativar"}</button>
+        <button type="button" class="btn course-delete-btn delete-course" data-id="${c.id}" data-title="${escapeHtml(c.title || "Curso")}" title="Excluir permanentemente">Excluir</button>
+      </div>
+    </article>
+  `).join("");
+  addCourseButtons();
 }
+
+$("#courseSearch")?.addEventListener("input", () => renderCourses(allAdminCourses));
+$("#courseStatusFilter")?.addEventListener("change", () => renderCourses(allAdminCourses));
+
 function renderStudents(studentsData) {
 
   const students = $("#students");
@@ -509,8 +467,50 @@ function addCourseButtons() {
         };
 
     });
+  document.querySelectorAll(".legion-course-toggle").forEach(button => {
+    button.onclick = async () => {
+      const id = button.dataset.id;
+      const nextActive = button.dataset.active !== "true";
+      if (!confirm(nextActive
+          ? "Ativar este curso e exibi-lo no catálogo público?"
+          : "Desativar este curso e ocultá-lo do catálogo público? Os acessos de alunos já matriculados serão preservados.")) return;
+      button.disabled = true;
+      const { error } = await adminSb.from("courses").update({active:nextActive}).eq("id",id);
+      if (error) {
+        alert("Não foi possível atualizar o curso: " + error.message);
+        button.disabled = false;
+        return;
+      }
+      if (message) message.textContent = nextActive ? "Curso ativado com sucesso." : "Curso desativado com sucesso.";
+      await load();
+    };
+  });
+
 }
 
+
+/* ========================
+   MODAL DE CADASTRO DE CURSO
+======================== */
+const newCourseModal = $("#newCourseModal");
+const closeNewCourseModal = () => {
+  if (!newCourseModal) return;
+  newCourseModal.style.display = "none";
+  document.body.classList.remove("legion-modal-open");
+};
+$("#openNewCourse")?.addEventListener("click", () => {
+  if (!newCourseModal) return;
+  newCourseModal.style.display = "flex";
+  document.body.classList.add("legion-modal-open");
+  $("#title")?.focus();
+});
+$("#closeNewCourse")?.addEventListener("click", closeNewCourseModal);
+newCourseModal?.addEventListener("click", e => {
+  if (e.target === newCourseModal) closeNewCourseModal();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && newCourseModal?.style.display === "flex") closeNewCourseModal();
+});
 
 /* ========================
    ABRIR MODAL EDITAR CURSO
@@ -554,6 +554,8 @@ async function openEditCourse(
 
   $("#editDescription").value =
     course.description || "";
+
+  if ($("#editActive")) $("#editActive").checked = course.active === true;
 
 
   editCourseModal.style.display =
@@ -666,7 +668,8 @@ editCourseForm?.addEventListener(
         title,
         slug,
         price,
-        description
+        description,
+        active: $("#editActive")?.checked === true
 
       })
       .eq("id", courseId);
@@ -951,7 +954,8 @@ courseForm?.addEventListener(
         title,
         slug,
         price,
-        description
+        description,
+        active: $("#createActive")?.checked === true
 
       });
 
@@ -970,6 +974,7 @@ courseForm?.addEventListener(
 
 
     courseForm.reset();
+    closeNewCourseModal();
 
 
     await load();
