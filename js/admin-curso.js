@@ -1095,6 +1095,14 @@ lessonVideo?.addEventListener("change", () => {
   }
   videoFileName.textContent = file.name;
 });
+const lessonStatus = $("#lessonSaveStatus");
+function setLessonStatus(text, kind = "info") {
+  if (!lessonStatus) return;
+  lessonStatus.hidden = false;
+  lessonStatus.dataset.status = kind;
+  lessonStatus.textContent = text;
+  if (kind === "error") lessonStatus.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
 async function uploadLessonVideo() {
   const file = lessonVideo?.files?.[0];
   if (!file) return null;
@@ -1105,11 +1113,51 @@ async function uploadLessonVideo() {
   const extension = file.name.split(".").pop().toLowerCase();
   const path = `${courseId}/${crypto.randomUUID()}.${extension}`;
   const mime = file.type || (extension === "mov" ? "video/quicktime" : `video/${extension}`);
-  const { error } = await sbA.storage.from("videos").upload(path, file, {
-    contentType: mime,
-    upsert: false
-  });
-  if (error) throw error;
+
+  // Vídeos grandes usam o protocolo TUS com progresso e repetição de tentativas.
+  if (file.size > 6 * 1024 * 1024) {
+    if (!window.tus?.Upload) {
+      throw new Error("O carregador de vídeos não foi iniciado. Atualize a página e tente novamente.");
+    }
+    const { data: { session }, error: sessionError } = await sbA.auth.getSession();
+    if (sessionError || !session?.access_token) {
+      throw new Error("Sua sessão expirou. Entre novamente antes de enviar o vídeo.");
+    }
+    const host = new URL(SUPABASE_URL).hostname.replace(".supabase.co", ".storage.supabase.co");
+    await new Promise((resolve, reject) => {
+      const upload = new window.tus.Upload(file, {
+        endpoint: `https://${host}/storage/v1/upload/resumable`,
+        retryDelays: [0, 3000, 5000, 10000],
+        chunkSize: 6 * 1024 * 1024,
+        uploadDataDuringCreation: true,
+        removeFingerprintOnSuccess: true,
+        headers: {
+          authorization: `Bearer ${session.access_token}`,
+          "x-upsert": "false"
+        },
+        metadata: {
+          bucketName: "videos",
+          objectName: path,
+          contentType: mime,
+          cacheControl: "3600"
+        },
+        onError(error) { reject(error); },
+        onProgress(uploaded, total) {
+          const progress = total ? Math.round(uploaded * 100 / total) : 0;
+          setLessonStatus(`Enviando vídeo: ${progress}% — mantenha esta janela aberta.`);
+        },
+        onSuccess() { resolve(); }
+      });
+      upload.start();
+    });
+  } else {
+    setLessonStatus("Enviando vídeo... mantenha esta janela aberta.");
+    const { error } = await sbA.storage.from("videos").upload(path, file, {
+      contentType: mime,
+      upsert: false
+    });
+    if (error) throw error;
+  }
   return sbA.storage.from("videos").getPublicUrl(path).data.publicUrl;
 }
 
@@ -1117,126 +1165,75 @@ async function uploadLessonVideo() {
    CRIAR AULA
 ===================================== */
 
-lessonForm.addEventListener(
-  "submit",
-  async event => {
-
-    event.preventDefault();
-
-
-    const moduleId =
-      moduleSelect.value;
-
-
-    if (!moduleId) {
-
-      alert(
-        "Crie um módulo primeiro."
-      );
-
-      return;
-    }
-
-
-    const title =
-      $("#lessonTitle")
-        .value
-        .trim();
-
-
-    if (!title) {
-
-      alert(
-        "Informe o título da aula."
-      );
-
-      return;
-    }
-
-let materialUrl = null;
-    let videoUrl = null;
-    const submitButton = lessonForm.querySelector('button[type="submit"]');
-    if (submitButton) submitButton.disabled = true;
-    try {
-      msgA.textContent = "Enviando arquivos...";
-      materialUrl = await uploadLessonPdf();
-      videoUrl = await uploadLessonVideo();
-    } catch (error) {
-      console.error("Erro ao enviar arquivo:", error);
-      msgA.textContent = "Erro no envio: " + error.message;
-      if (submitButton) submitButton.disabled = false;
-      return;
-    }
-    const {
-      count
-    } = await sbA
-      .from("lessons")
-      .select("*", {
-        count: "exact",
-        head: true
-      })
-      .eq(
-        "module_id",
-        moduleId
-      );
-
-
-    const {
-      error
-    } = await sbA
-      .from("lessons")
-      .insert({
-
-        module_id:
-          moduleId,
-
-        title,
-
-        description:
-          $("#lessonDescription")
-            .value
-            .trim(),
-
-        video_url: videoUrl,
-
-        material_url:
-  materialUrl,
-
-        duration_minutes:
-          Number(
-            $("#duration")
-              .value || 0
-          ),
-
-        position:
-          (count || 0) + 1,
-
-        published:
-          true
-
-      });
-
-
-    if (error) {
-      msgA.textContent = error.message;
-      if (submitButton) submitButton.disabled = false;
-      return;
-    }
-
-    if (submitButton) submitButton.disabled = false;
-    lessonForm.reset();
-    closeCreateLessonModal();
-if (pdfFileName) pdfFileName.textContent = "Nenhum PDF selecionado";
-if (videoFileName) videoFileName.textContent = "Nenhum vídeo selecionado";
-
-    msgA.textContent =
-      "Aula criada com sucesso!";
-
-
-    await loadModules();
+lessonForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  const moduleId = moduleSelect.value;
+  const title = $("#lessonTitle").value.trim();
+  if (!moduleId) {
+    setLessonStatus("Selecione um módulo antes de salvar a aula.", "error");
+    return;
   }
-);
+  if (!title) {
+    setLessonStatus("Informe o título da aula.", "error");
+    return;
+  }
 
+  const submitButton = lessonForm.querySelector('button[type="submit"]');
+  if (submitButton?.disabled) return;
+  submitButton.disabled = true;
+  const previousLabel = submitButton.innerHTML;
+  submitButton.textContent = "Salvando aula...";
+  let videoUrl = null;
+  let materialUrl = null;
+  try {
+    setLessonStatus("Preparando os arquivos...");
+    if (materialPdf?.files?.length) {
+      setLessonStatus("Enviando PDF...");
+      materialUrl = await uploadLessonPdf();
+    }
+    if (lessonVideo?.files?.length) {
+      videoUrl = await uploadLessonVideo();
+    }
+    setLessonStatus("Arquivos enviados. Registrando a aula...");
+    const { count, error: countError } = await sbA
+      .from("lessons")
+      .select("*", { count: "exact", head: true })
+      .eq("module_id", moduleId);
+    if (countError) throw countError;
+
+    const { error } = await sbA.from("lessons").insert({
+      module_id: moduleId,
+      title,
+      description: $("#lessonDescription").value.trim(),
+      video_url: videoUrl,
+      material_url: materialUrl,
+      duration_minutes: Number($("#duration").value || 0),
+      position: (count || 0) + 1,
+      published: true
+    });
+    if (error) throw error;
+
+    lessonForm.reset();
+    if (pdfFileName) pdfFileName.textContent = "Nenhum PDF selecionado";
+    if (videoFileName) videoFileName.textContent = "Nenhum vídeo selecionado";
+    setLessonStatus("Aula salva com sucesso!", "success");
+    closeCreateLessonModal();
+    msgA.textContent = "Aula criada com sucesso!";
+    await loadModules();
+  } catch (error) {
+    console.error("Erro ao cadastrar aula:", error);
+    const text = error?.message || "Erro desconhecido ao salvar a aula.";
+    const likelySize = /413|exceeded|max.*size|payload too large|entity too large|size limit/i.test(text);
+    const readable = likelySize
+      ? "O arquivo ultrapassa o limite de tamanho do armazenamento. Comprima o vídeo ou revise o limite do Supabase."
+      : "Não foi possível salvar: " + text;
+    setLessonStatus(readable, "error");
+    msgA.textContent = readable;
+  } finally {
+    submitButton.disabled = false;
+    submitButton.innerHTML = previousLabel;
+  }
+});
 
 /* =====================================
    MODAL EDITAR AULA
