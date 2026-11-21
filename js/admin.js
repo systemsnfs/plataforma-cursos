@@ -92,7 +92,7 @@ async function load() {
   const enrollmentsResult =
     await adminSb
       .from("enrollments")
-      .select("id, status");
+      .select("id, user_id, course_id, status");
 
 
   if (coursesResult.error) {
@@ -117,6 +117,18 @@ async function load() {
   }
 
 
+  let payments = [];
+  if ($("#students")) {
+    const paymentsResult = await adminSb
+      .from("payments")
+      .select("user_id, course_id, status, telegram_addon");
+    if (paymentsResult.error) {
+      message.textContent = "Não foi possível consultar os acessos do Telegram: " + paymentsResult.error.message;
+      return;
+    }
+    payments = paymentsResult.data || [];
+  }
+
   renderStats(
     coursesResult.data || [],
     studentsResult.data || [],
@@ -128,7 +140,10 @@ async function load() {
   );
 
   renderStudents(
-    studentsResult.data || []
+    studentsResult.data || [],
+    coursesResult.data || [],
+    enrollmentsResult.data || [],
+    payments
   );
 
   addCourseButtons();
@@ -294,7 +309,16 @@ function renderCourses(coursesData) {
 $("#courseSearch")?.addEventListener("input", () => renderCourses(allAdminCourses));
 $("#courseStatusFilter")?.addEventListener("change", () => renderCourses(allAdminCourses));
 
-function renderStudents(studentsData) {
+function hasStudentTelegramAccess(student, enrollments, payments) {
+  if (!student.active) return false;
+  const activeIds = new Set(
+    enrollments.filter(e => e.user_id === student.id && e.status === "active").map(e => e.course_id)
+  );
+  return payments.some(p => p.user_id === student.id &&
+    p.status === "approved" && p.telegram_addon === true && activeIds.has(p.course_id));
+}
+
+function renderStudents(studentsData, coursesData = [], enrollmentsData = [], paymentsData = []) {
 
   const students = $("#students");
 
@@ -338,6 +362,14 @@ function renderStudents(studentsData) {
             .charAt(0)
             .toUpperCase() || "A";
 
+        const activeEnrollments = enrollmentsData.filter(enrollment =>
+          enrollment.user_id === student.id && enrollment.status === "active"
+        );
+        const accessibleTitles = activeEnrollments.map(enrollment =>
+          coursesData.find(course => course.id === enrollment.course_id)?.title || "Curso indisponível"
+        );
+        const telegramApproved = hasStudentTelegramAccess(student, enrollmentsData, paymentsData);
+
 
         return `
 
@@ -373,6 +405,19 @@ function renderStudents(studentsData) {
                       : "Usuário inativo"
                   }
 
+                </div>
+
+                <div class="legion-student-access-summary">
+                  <span class="legion-student-access-label">CURSOS COM ACESSO</span>
+                  <div class="legion-student-access-tags">
+                    ${accessibleTitles.length
+                      ? accessibleTitles.map(title => `<span class="legion-student-course-tag">${escapeHtml(title)}</span>`).join("")
+                      : '<span class="legion-student-no-access">Nenhum curso liberado</span>'}
+                  </div>
+                  <span class="legion-student-telegram-status ${telegramApproved ? "has-access" : "no-access"}">
+                    <span aria-hidden="true">✈</span>
+                    Telegram: ${telegramApproved ? "Acesso liberado" : "Sem acesso"}
+                  </span>
                 </div>
 
               </div>
@@ -1114,7 +1159,7 @@ window.manageAccess = async function(studentId) {
     error: studentError
   } = await adminSb
     .from("profiles")
-    .select("full_name")
+    .select("full_name, active")
     .eq("id", studentId)
     .single();
 
@@ -1157,6 +1202,29 @@ window.manageAccess = async function(studentId) {
     alert(enrollmentsError.message);
     return;
   }
+
+  const {data: telegramPayments, error: telegramPaymentsError} = await adminSb
+    .from("payments")
+    .select("course_id, status, telegram_addon")
+    .eq("user_id", studentId)
+    .eq("telegram_addon", true);
+  if (telegramPaymentsError) {
+    alert("Não foi possível consultar o Telegram: " + telegramPaymentsError.message);
+    return;
+  }
+  const telegramEligible = hasStudentTelegramAccess(
+    {id:studentId, active: student.active},
+    enrollments || [],
+    (telegramPayments || []).map(p => ({...p, user_id:studentId}))
+  );
+  const telegramPurchased = (telegramPayments || []).some(p =>
+    p.status === "approved" && p.telegram_addon === true
+  );
+  const telegramLabel = telegramEligible
+    ? "Acesso liberado"
+    : telegramPurchased
+      ? "Adicional aprovado, mas sem acesso ativo ao curso ou à conta"
+      : "Não adquirido ou pagamento não aprovado";
 
 
   const studentName =
@@ -1244,6 +1312,15 @@ window.manageAccess = async function(studentId) {
 
       </div>
 
+
+      <section class="legion-modal-telegram-status ${telegramEligible ? "is-eligible" : "is-ineligible"}">
+        <div>
+          <span class="legion-student-access-label">CONSULTORIA TELEGRAM</span>
+          <strong>✈ ${escapeHtml(telegramLabel)}</strong>
+          <p>O botão do grupo aparece na área do aluno somente quando há adicional aprovado e matrícula ativa no curso correspondente. Esta informação não confirma se o aluno entrou no grupo.</p>
+        </div>
+        <span class="legion-modal-telegram-marker">${telegramEligible ? "✓" : "—"}</span>
+      </section>
 
       <!-- CURSOS -->
 
