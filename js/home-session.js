@@ -31,3 +31,41 @@ homeLogoutButton.addEventListener("click", async () => {
   await refreshHomeAuth();
 });
 refreshHomeAuth();
+
+const HOME_COURSE_ID = "0385b572-c4ee-48b6-9e8b-50af39df6b58";
+
+async function loadHomeCoursePrice() {
+  const priceElement = document.getElementById("homeCoursePrice");
+  const buyButton = document.getElementById("homeCourseBuyButton");
+  if (!priceElement) return;
+
+  try {
+    const { data: course, error } = await homeClient
+      .from("courses")
+      .select("price, active")
+      .eq("id", HOME_COURSE_ID)
+      .maybeSingle();
+
+    if (error || !course || !course.active || !Number.isFinite(Number(course.price))) {
+      throw error || new Error("Curso ou preço indisponível");
+    }
+
+    priceElement.textContent = Number(course.price).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+    if (buyButton) {
+      buyButton.href = "checkout.html?course_id=" + encodeURIComponent(HOME_COURSE_ID);
+      buyButton.style.pointerEvents = "";
+      buyButton.removeAttribute("aria-disabled");
+    }
+  } catch (error) {
+    console.warn("Não foi possível atualizar o preço do curso:", error);
+    priceElement.textContent = "Consulte o valor";
+    if (buyButton) {
+      buyButton.style.pointerEvents = "none";
+      buyButton.setAttribute("aria-disabled", "true");
+    }
+  }
+}
+loadHomeCoursePrice();
