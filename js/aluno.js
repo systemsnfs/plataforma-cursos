@@ -120,6 +120,8 @@ if (studentAvatar) {
     }
   } catch (error) { console.warn("Falha ao consultar pagamentos:", error); }
 
+  await initializeTelegramAccess();
+
   /* =====================================
      MATRÍCULAS ATIVAS
   ===================================== */
@@ -526,6 +528,58 @@ async function renderCourse(course) {
 
 }
 
+
+/* ==========================================================
+   CONSULTORIA TELEGRAM - PAGAMENTO APROVADO E ADICIONAL ATIVO
+========================================================== */
+
+async function telegramAccessRequest(action) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session?.access_token) throw new Error("Faça login novamente.");
+  const response = await fetch(SUPABASE_URL + "/functions/v1/telegram-access", {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": "Bearer " + session.access_token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({action})
+  });
+  if (!response.ok) throw new Error("Não foi possível confirmar seu acesso. Tente novamente.");
+  return response.json();
+}
+
+async function initializeTelegramAccess() {
+  const card = document.getElementById("telegramStudentCard");
+  const button = document.getElementById("openTelegramGroup");
+  if (!card || !button) return;
+  try {
+    const status = await telegramAccessRequest("check");
+    if (!status.eligible) return;
+    card.hidden = false;
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      const newTab = window.open("", "_blank");
+      try {
+        const result = await telegramAccessRequest("open");
+        if (!result.eligible || !result.url) throw new Error("Este acesso não está disponível para sua conta.");
+        if (newTab) {
+          newTab.opener = null;
+          newTab.location.href = result.url;
+        } else {
+          window.location.assign(result.url);
+        }
+      } catch (error) {
+        if (newTab) newTab.close();
+        alert(error.message || "Não foi possível abrir o grupo.");
+      } finally {
+        button.disabled = false;
+      }
+    });
+  } catch (error) {
+    console.warn("Não foi possível verificar o acesso ao Telegram.", error);
+  }
+}
 
 /* =====================================
    LOGOUT
