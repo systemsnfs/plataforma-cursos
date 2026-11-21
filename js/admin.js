@@ -129,6 +129,16 @@ async function load() {
     payments = paymentsResult.data || [];
   }
 
+  let telegramOverrides = [];
+  if ($("#students")) {
+    const overridesResult = await adminSb.from("telegram_access_overrides").select("user_id, allowed");
+    if (overridesResult.error) {
+      message.textContent = "Não foi possível consultar permissões do Telegram: " + overridesResult.error.message;
+      return;
+    }
+    telegramOverrides = overridesResult.data || [];
+  }
+
   renderStats(
     coursesResult.data || [],
     studentsResult.data || [],
@@ -143,7 +153,8 @@ async function load() {
     studentsResult.data || [],
     coursesResult.data || [],
     enrollmentsResult.data || [],
-    payments
+    payments,
+    telegramOverrides
   );
 
   addCourseButtons();
@@ -309,8 +320,10 @@ function renderCourses(coursesData) {
 $("#courseSearch")?.addEventListener("input", () => renderCourses(allAdminCourses));
 $("#courseStatusFilter")?.addEventListener("change", () => renderCourses(allAdminCourses));
 
-function hasStudentTelegramAccess(student, enrollments, payments) {
+function hasStudentTelegramAccess(student, enrollments, payments, overrides = []) {
   if (!student.active) return false;
+  const manual = overrides.find(entry => entry.user_id === student.id);
+  if (manual) return manual.allowed === true;
   const activeIds = new Set(
     enrollments.filter(e => e.user_id === student.id && e.status === "active").map(e => e.course_id)
   );
@@ -318,7 +331,7 @@ function hasStudentTelegramAccess(student, enrollments, payments) {
     p.status === "approved" && p.telegram_addon === true && activeIds.has(p.course_id));
 }
 
-function renderStudents(studentsData, coursesData = [], enrollmentsData = [], paymentsData = []) {
+function renderStudents(studentsData, coursesData = [], enrollmentsData = [], paymentsData = [], overrideData = []) {
 
   const students = $("#students");
 
@@ -368,7 +381,7 @@ function renderStudents(studentsData, coursesData = [], enrollmentsData = [], pa
         const accessibleTitles = activeEnrollments.map(enrollment =>
           coursesData.find(course => course.id === enrollment.course_id)?.title || "Curso indisponível"
         );
-        const telegramApproved = hasStudentTelegramAccess(student, enrollmentsData, paymentsData);
+        const telegramApproved = hasStudentTelegramAccess(student, enrollmentsData, paymentsData, overrideData);
 
 
         return `
@@ -1212,10 +1225,20 @@ window.manageAccess = async function(studentId) {
     alert("Não foi possível consultar o Telegram: " + telegramPaymentsError.message);
     return;
   }
+  const {data: manualOverride, error: overrideError} = await adminSb
+    .from("telegram_access_overrides")
+    .select("allowed")
+    .eq("user_id", studentId)
+    .maybeSingle();
+  if (overrideError) {
+    alert("Não foi possível consultar a permissão manual: " + overrideError.message);
+    return;
+  }
   const telegramEligible = hasStudentTelegramAccess(
     {id:studentId, active: student.active},
     enrollments || [],
-    (telegramPayments || []).map(p => ({...p, user_id:studentId}))
+    (telegramPayments || []).map(p => ({...p, user_id:studentId})),
+    manualOverride ? [{user_id:studentId, allowed:manualOverride.allowed}] : []
   );
   const telegramPurchased = (telegramPayments || []).some(p =>
     p.status === "approved" && p.telegram_addon === true
@@ -1314,12 +1337,17 @@ window.manageAccess = async function(studentId) {
 
 
       <section class="legion-modal-telegram-status ${telegramEligible ? "is-eligible" : "is-ineligible"}">
-        <div>
+        <div style="flex:1;min-width:0">
           <span class="legion-student-access-label">CONSULTORIA TELEGRAM</span>
-          <strong>✈ ${escapeHtml(telegramLabel)}</strong>
-          <p>O botão do grupo aparece na área do aluno somente quando há adicional aprovado e matrícula ativa no curso correspondente. Esta informação não confirma se o aluno entrou no grupo.</p>
+          <strong id="telegramAccessText">✈ ${telegramEligible ? "Acesso liberado" : "Sem acesso"}</strong>
+          <p>Você pode liberar ou bloquear manualmente o acesso deste aluno ao botão do Telegram. Sem alteração manual, vale a compra aprovada.</p>
+          <label class="legion-telegram-admin-toggle" for="telegramAccessToggle">
+            <input type="checkbox" id="telegramAccessToggle" ${telegramEligible ? "checked" : ""}>
+            <span id="telegramToggleLabel">${telegramEligible ? "Permitir acesso ao Telegram" : "Dar acesso ao Telegram"}</span>
+          </label>
+          <small class="legion-telegram-admin-help">A escolha será aplicada ao salvar. Contas desativadas não podem abrir o grupo.</small>
         </div>
-        <span class="legion-modal-telegram-marker">${telegramEligible ? "✓" : "—"}</span>
+        <span class="legion-modal-telegram-marker" id="telegramAccessMarker">${telegramEligible ? "✓" : "—"}</span>
       </section>
 
       <!-- CURSOS -->
@@ -1561,6 +1589,20 @@ window.manageAccess = async function(studentId) {
     });
 
 
+  const telegramToggle = box.querySelector("#telegramAccessToggle");
+  telegramToggle?.addEventListener("change", () => {
+    const approved = telegramToggle.checked;
+    const label = box.querySelector("#telegramToggleLabel");
+    const text = box.querySelector("#telegramAccessText");
+    const marker = box.querySelector("#telegramAccessMarker");
+    const section = box.querySelector(".legion-modal-telegram-status");
+    if (label) label.textContent = approved ? "Permitir acesso ao Telegram" : "Dar acesso ao Telegram";
+    if (text) text.textContent = approved ? "✈ Acesso liberado" : "✈ Sem acesso";
+    if (marker) marker.textContent = approved ? "✓" : "—";
+    section?.classList.toggle("is-eligible", approved);
+    section?.classList.toggle("is-ineligible", !approved);
+  });
+
   /* SALVAR */
 
   const saveButton =
@@ -1699,6 +1741,26 @@ window.manageAccess = async function(studentId) {
 
     }
 
+
+    const selectedTelegram = telegramToggle?.checked === true;
+    // Registrar uma decisão manual só quando alterada, mantendo a regra automática da compra caso contrário.
+    if (telegramToggle && selectedTelegram !== telegramEligible) {
+      const { data: { user: adminUser } } = await adminSb.auth.getUser();
+      const { error: telegramSaveError } = await adminSb
+        .from("telegram_access_overrides")
+        .upsert({
+          user_id: studentId,
+          allowed: selectedTelegram,
+          updated_by: adminUser?.id || null,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "user_id" });
+      if (telegramSaveError) {
+        alert("Cursos salvos, mas não foi possível atualizar o Telegram: " + telegramSaveError.message);
+        saveButton.disabled = false;
+        saveButton.textContent = "Salvar acessos";
+        return;
+      }
+    }
 
     close();
 
