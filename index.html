@@ -31,6 +31,12 @@
     rel="stylesheet"
     href="css/style.css"
   >
+  <style>
+    .home-footer-brand { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .home-instagram-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-left: 12px; padding: 9px 14px; border: 1px solid #b89a60; border-radius: 8px; color: #f4e7c5; font: 600 13px/1.2 Arial, sans-serif; text-decoration: none; transition: background .2s, color .2s; }
+    .home-instagram-link:hover, .home-instagram-link:focus-visible { background: #b89a60; color: #14281e; }
+    @media (max-width: 760px) { .home-footer-brand { justify-content: center; } .home-instagram-link { margin-left: 0; } }
+  </style>
 </head>
 
 
@@ -604,6 +610,16 @@
       LEGION<span> ACADEMY</span>
     </strong>
 
+    <a
+      class="home-instagram-link"
+      href="https://www.instagram.com/missao.legiao?fqnt=NTNlY2liZGwxYXpl"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Visitar Instagram da Legion Academy: @missao.legiao"
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+      <span>Instagram</span>
+    </a>
   </div>
 
 
