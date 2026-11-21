@@ -264,3 +264,9 @@ body.admin-premium{--mil-bg:#303d33;--mil-panel:#435447;--mil-panel2:#4b5e4e;--m
 .admin-premium .legion-modal-telegram-marker{display:grid;place-items:center;flex:none;border-radius:50%;width:30px;height:30px;background:#e0ded3;color:#637063;font-weight:800}
 .admin-premium .legion-modal-telegram-status.is-eligible .legion-modal-telegram-marker{background:#2c6746;color:white}
 @media(max-width:780px){.admin-premium .legion-student-access-summary{width:100%}}
+
+
+/* Permissão manual para a consultoria Telegram no modal de alunos */
+.admin-premium .legion-telegram-admin-toggle{display:flex;align-items:center;gap:11px;margin-top:14px;padding:12px 14px;border:1px solid #c9c5ad;border-radius:10px;background:#fffaf0;color:#263d2e;font-size:13px;font-weight:800;cursor:pointer}
+.admin-premium .legion-telegram-admin-toggle input{width:21px;height:21px;flex-shrink:0;accent-color:#2d6744;cursor:pointer}
+.admin-premium .legion-telegram-admin-help{display:block;margin-top:9px;font-size:10px;line-height:1.6;color:#667265}
