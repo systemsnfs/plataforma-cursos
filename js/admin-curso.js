@@ -165,8 +165,15 @@ async function loadModules() {
   }
 
 
-  currentModules =
-    data || [];
+  currentModules = data || [];
+  const lessonCount = currentModules.reduce((n, module) => n + (module.lessons || []).length, 0);
+  const publishedCount = currentModules.reduce((n, module) =>
+    n + (module.lessons || []).filter(lesson => lesson.published === true).length, 0);
+  if ($("#moduleTotal")) $("#moduleTotal").textContent = currentModules.length;
+  if ($("#lessonTotal")) $("#lessonTotal").textContent = lessonCount;
+  if ($("#publishedTotal")) $("#publishedTotal").textContent = publishedCount;
+  if ($("#moduleCountLabel")) $("#moduleCountLabel").textContent =
+    `${currentModules.length} ${currentModules.length === 1 ? "módulo" : "módulos"}`;
 
 
   renderModuleSelects();
@@ -303,6 +310,7 @@ function renderModules() {
 
 
               <div class="module-actions">
+                <button type="button" class="module-action-btn legion-module-add-lesson" data-id="${module.id}">＋ Aula</button>
 
                 <button
                   type="button"
@@ -359,8 +367,7 @@ function renderModules() {
                         </strong>
 
                         <small>
-                          Use o formulário "Nova aula"
-                          para adicionar conteúdo.
+                          Clique em "Nova aula" para adicionar conteúdo a este módulo.
                         </small>
 
                       </div>
@@ -495,6 +502,10 @@ function renderLesson(
 ===================================== */
 
 function activateButtons() {
+  document.querySelectorAll(".legion-module-add-lesson").forEach(button => {
+    button.onclick = () => openNewLessonModal(button.dataset.id);
+  });
+
 
   document
     .querySelectorAll(
@@ -560,6 +571,58 @@ function activateButtons() {
 
 
 /* =====================================
+   NOVOS MÓDULO E AULA EM JANELAS
+===================================== */
+function openCreateModal(id) {
+  const modal = $(id);
+  if (!modal) return;
+  modal.style.display = "flex";
+  document.body.classList.add("legion-manager-modal-open");
+}
+function closeCreateModuleModal() {
+  $("#createModuleModal").style.display = "none";
+  document.body.classList.remove("legion-manager-modal-open");
+}
+function closeCreateLessonModal() {
+  $("#createLessonModal").style.display = "none";
+  document.body.classList.remove("legion-manager-modal-open");
+}
+function openNewLessonModal(selectedModuleId) {
+  if (!currentModules.length) {
+    msgA.textContent = "Crie um módulo antes de adicionar aulas.";
+    openCreateModal("#createModuleModal");
+    return;
+  }
+  if (selectedModuleId && currentModules.some(module => module.id === selectedModuleId)) {
+    moduleSelect.value = selectedModuleId;
+  }
+  openCreateModal("#createLessonModal");
+  $("#lessonTitle")?.focus();
+}
+$("#openModuleCreate")?.addEventListener("click", () => {
+  openCreateModal("#createModuleModal");
+  $("#moduleTitle")?.focus();
+});
+$("#openLessonCreate")?.addEventListener("click", () => openNewLessonModal());
+$("#closeCreateModule")?.addEventListener("click", closeCreateModuleModal);
+$("#cancelCreateModule")?.addEventListener("click", closeCreateModuleModal);
+$("#closeCreateLesson")?.addEventListener("click", closeCreateLessonModal);
+$("#cancelCreateLesson")?.addEventListener("click", closeCreateLessonModal);
+for (const [id, close] of [
+  ["#createModuleModal", closeCreateModuleModal],
+  ["#createLessonModal", closeCreateLessonModal]
+]) {
+  $(id)?.addEventListener("click", event => {
+    if (event.target === $(id)) close();
+  });
+}
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  if ($("#createModuleModal")?.style.display === "flex") closeCreateModuleModal();
+  if ($("#createLessonModal")?.style.display === "flex") closeCreateLessonModal();
+});
+
+/* =====================================
    CRIAR MÓDULO
 ===================================== */
 
@@ -620,6 +683,7 @@ moduleForm.addEventListener(
 
 
     moduleForm.reset();
+    closeCreateModuleModal();
 
 
     msgA.textContent =
@@ -1011,6 +1075,45 @@ async function uploadLessonPdf() {
 }
 
 /* =====================================
+   UPLOAD DE VÍDEO PARA SUPABASE STORAGE
+===================================== */
+const lessonVideo = $("#lessonVideo");
+const videoFileName = $("#videoFileName");
+$("#selectVideoButton")?.addEventListener("click", () => lessonVideo?.click());
+lessonVideo?.addEventListener("change", () => {
+  const file = lessonVideo.files?.[0];
+  if (!file) {
+    videoFileName.textContent = "Nenhum vídeo selecionado";
+    return;
+  }
+  const allowed = ["video/mp4", "video/webm", "video/quicktime"];
+  if (!allowed.includes(file.type) && !/\.(mp4|webm|mov)$/i.test(file.name)) {
+    alert("Selecione um vídeo MP4, WebM ou MOV.");
+    lessonVideo.value = "";
+    videoFileName.textContent = "Nenhum vídeo selecionado";
+    return;
+  }
+  videoFileName.textContent = file.name;
+});
+async function uploadLessonVideo() {
+  const file = lessonVideo?.files?.[0];
+  if (!file) return null;
+  if (!["video/mp4", "video/webm", "video/quicktime"].includes(file.type) &&
+      !/\.(mp4|webm|mov)$/i.test(file.name)) {
+    throw new Error("Selecione um vídeo MP4, WebM ou MOV.");
+  }
+  const extension = file.name.split(".").pop().toLowerCase();
+  const path = `${courseId}/${crypto.randomUUID()}.${extension}`;
+  const mime = file.type || (extension === "mov" ? "video/quicktime" : `video/${extension}`);
+  const { error } = await sbA.storage.from("videos").upload(path, file, {
+    contentType: mime,
+    upsert: false
+  });
+  if (error) throw error;
+  return sbA.storage.from("videos").getPublicUrl(path).data.publicUrl;
+}
+
+/* =====================================
    CRIAR AULA
 ===================================== */
 
@@ -1050,35 +1153,20 @@ lessonForm.addEventListener(
       return;
     }
 
-/* =========================
-   ENVIAR PDF
-========================= */
-
 let materialUrl = null;
-
-try {
-
-  msgA.textContent =
-    "Enviando material...";
-
-  materialUrl =
-    await uploadLessonPdf();
-
-}
-catch (error) {
-
-  console.error(
-    "Erro no upload:",
-    error
-  );
-
-  msgA.textContent =
-    "Erro ao enviar PDF: " +
-    error.message;
-
-  return;
-
-}
+    let videoUrl = null;
+    const submitButton = lessonForm.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+    try {
+      msgA.textContent = "Enviando arquivos...";
+      materialUrl = await uploadLessonPdf();
+      videoUrl = await uploadLessonVideo();
+    } catch (error) {
+      console.error("Erro ao enviar arquivo:", error);
+      msgA.textContent = "Erro no envio: " + error.message;
+      if (submitButton) submitButton.disabled = false;
+      return;
+    }
     const {
       count
     } = await sbA
@@ -1109,10 +1197,7 @@ catch (error) {
             .value
             .trim(),
 
-        video_url:
-          $("#videoUrl")
-            .value
-            .trim() || null,
+        video_url: videoUrl,
 
         material_url:
   materialUrl,
@@ -1133,21 +1218,16 @@ catch (error) {
 
 
     if (error) {
-
-      msgA.textContent =
-        error.message;
-
+      msgA.textContent = error.message;
+      if (submitButton) submitButton.disabled = false;
       return;
     }
 
-
+    if (submitButton) submitButton.disabled = false;
     lessonForm.reset();
-if (pdfFileName) {
-
-  pdfFileName.textContent =
-    "Nenhum PDF selecionado";
-
-}
+    closeCreateLessonModal();
+if (pdfFileName) pdfFileName.textContent = "Nenhum PDF selecionado";
+if (videoFileName) videoFileName.textContent = "Nenhum vídeo selecionado";
 
     msgA.textContent =
       "Aula criada com sucesso!";
