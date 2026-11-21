@@ -157,6 +157,18 @@
 
         <p class="telegram-total-note" id="telegramTotalNote" aria-live="polite">Curso sem consultoria adicional</p>
 
+        <div id="checkoutBuyerDetails" style="display:grid;gap:14px;margin:20px 0;">
+          <div class="premium-login-field">
+            <label for="buyerName" style="display:block;margin-bottom:6px;">Nome completo</label>
+            <input id="buyerName" type="text" autocomplete="name" placeholder="Seu nome completo" minlength="2" maxlength="120" required style="width:100%;padding:13px;border:1px solid #c4b491;border-radius:8px;background:#fff;box-sizing:border-box;">
+          </div>
+          <div class="premium-login-field">
+            <label for="buyerEmail" style="display:block;margin-bottom:6px;">E-mail para criar sua conta após a compra</label>
+            <input id="buyerEmail" type="email" autocomplete="email" placeholder="seu@email.com" required style="width:100%;padding:13px;border:1px solid #c4b491;border-radius:8px;background:#fff;box-sizing:border-box;">
+          </div>
+          <small style="color:#526354;">Use um e-mail que você possa confirmar. Após o pagamento, ele será utilizado para liberar seu acesso.</small>
+        </div>
+
         <button
           type="button"
           id="payButton"
@@ -170,12 +182,12 @@
 
         <div id="checkoutMessage" class="checkout-message" role="status" aria-live="polite"></div>
 
-        <div id="checkoutAccountActions" class="checkout-account-actions">
-          <p><strong>É necessário criar uma conta para continuar com a compra.</strong></p>
-          <button type="button" id="switchStudentAccount" class="checkout-account-action checkout-account-login">Entrar</button>
-          <button type="button" id="createStudentAccount" class="checkout-account-action checkout-account-register">Criar Conta</button>
+        <div id="checkoutAfterPayment" hidden style="padding:16px;border:1px solid #b9a16f;background:#f6ecdc;border-radius:10px;margin-top:15px;">
+          <strong style="color:#21382b;">Próximo passo: crie seu acesso</strong>
+          <p style="font-size:13px;line-height:1.5;color:#526354;">Use o mesmo e-mail informado no pagamento. A matrícula será liberada quando o Mercado Pago confirmar a aprovação.</p>
+          <a id="registerAfterPayment" class="checkout-pay-button" style="display:block;text-align:center;text-decoration:none;padding:13px;" href="cadastro.html">Criar minha conta →</a>
+          <a id="loginAfterPayment" href="login.html" style="display:block;text-align:center;margin-top:14px;color:#244632;">Já tenho conta — Entrar</a>
         </div>
-
 
         <noscript><p>Ative o JavaScript para fazer login e concluir o pagamento.</p></noscript>
         <div class="checkout-secure">
@@ -210,7 +222,7 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
-  <script src="js/checkout.js?v=4"></script>
+  <script src="js/checkout.js?v=5"></script>
 
 </body>
 
