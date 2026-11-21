@@ -106,3 +106,126 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page .course-manager-heading h2{color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.55)}
 .course-manager-page .course-manager-heading p{color:#f1e9d9!important;text-shadow:0 2px 8px rgba(0,0,0,.6)}
 @media(max-width:760px){.course-manager-page .course-manager-heading{min-height:210px!important;padding:25px!important;background-position:60% center!important}}
+
+/* Legion Academy — catálogo de módulos com ações em modais */
+.course-manager-page .legion-content-toolbar{
+ display:flex;justify-content:space-between;align-items:center;gap:22px;margin:25px 0 20px;
+}
+.course-manager-page .legion-content-toolbar h2{
+ font-family:"Playfair Display",serif;color:#fff9ed;font-size:29px;margin:6px 0;
+}
+.course-manager-page .legion-content-toolbar p{font-size:13px;margin:0;color:#d9e2d7}
+.course-manager-page .legion-content-buttons{display:flex;flex-wrap:wrap;gap:10px}
+.course-manager-page .legion-content-buttons .btn{
+ display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:42px;
+ padding:11px 18px;border-radius:9px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;
+}
+.course-manager-page .legion-content-buttons .legion-new-module{
+ background:#cba66a!important;color:#192b20!important;border:1px solid #edd49e!important;
+}
+.course-manager-page .legion-content-buttons .legion-new-lesson{
+ background:#233b2d!important;color:#f2d39f!important;border:1px solid #bda171!important;
+}
+.course-manager-page .legion-content-metrics{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:24px;
+}
+.course-manager-page .legion-content-metric{
+ background:#435649;border:1px solid #788975;border-radius:14px;
+ display:flex;flex-direction:column;gap:10px;padding:19px 22px;
+}
+.course-manager-page .legion-content-metric span{font-size:12px;font-weight:600;color:#dbe4d7}
+.course-manager-page .legion-content-metric strong{font:700 30px "Playfair Display",serif;color:#f5cf90}
+.course-manager-page .legion-module-panel{padding:27px!important;max-width:none;width:100%}
+.course-manager-page .legion-module-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:21px}
+.course-manager-page .legion-module-panel-head h2{font-family:"Playfair Display",serif;font-size:25px}
+.course-manager-page .legion-module-count{border-radius:99px;background:#314737;border:1px solid #617761;color:#f2d39e;font-weight:700;font-size:11px;padding:8px 12px;white-space:nowrap}
+.course-manager-page .legion-module-list{display:flex;flex-direction:column;gap:15px}
+.course-manager-page .legion-module-list .premium-module-card{
+ overflow:hidden;background:#34483a!important;border:1px solid #83927b!important;
+ border-radius:12px!important;box-shadow:none!important;
+}
+.course-manager-page .legion-module-list .premium-module-header{
+ background:#34483a!important;color:#f7f2e6!important;border-bottom:1px solid #6e806d!important;
+}
+.course-manager-page .legion-module-list .premium-module-header h3,
+.course-manager-page .legion-module-list .premium-module-header strong{
+ color:#fff9eb!important;
+}
+.course-manager-page .legion-module-list .premium-module-header small,
+.course-manager-page .legion-module-list .module-label{color:#e8d0a7!important}
+.course-manager-page .legion-module-list .premium-lessons{
+ background:#3c5242!important;
+}
+.course-manager-page .legion-module-list .premium-lesson-row{
+ background:#3c5242!important;border-color:#758775!important;color:#fff8ec!important;
+}
+.course-manager-page .legion-module-list .premium-lesson-info strong{color:#fff9ea!important}
+.course-manager-page .legion-module-list .premium-lesson-info span,
+.course-manager-page .legion-module-list .lesson-meta{color:#e6eddf!important}
+.course-manager-page .legion-module-list .module-empty-lessons{background:#34493b!important;color:#f0eadf!important}
+.course-manager-page .legion-module-list .module-empty-lessons strong{color:#fff9ea!important}
+.course-manager-page .legion-module-list .module-empty-lessons small{color:#dbe5d7!important}
+.course-manager-page .legion-module-list .module-action-btn,
+.course-manager-page .legion-module-list .lesson-action-btn{
+ min-height:33px;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;
+ border:1px solid #a99370;background:#ebdbb9;color:#283b2c;white-space:nowrap;
+}
+.course-manager-page .legion-module-list .legion-module-add-lesson{
+ background:#cba66a!important;color:#1d3022!important;border-color:#ddbf86!important;
+}
+.course-manager-page .legion-module-list .delete-action{border-color:#bc8a83!important;color:#f6d1cc!important;background:#693f3b!important}
+.course-manager-page .legion-module-list .module-number,
+.course-manager-page .legion-module-list .lesson-order{
+ background:#be9b60!important;color:#1c3121!important;border-radius:8px;
+}
+.course-manager-page .course-content-empty{
+ background:#354d3f!important;color:#f4f0e5!important;border:1px dashed #869988;border-radius:14px;
+}
+.course-manager-page .course-content-empty strong{color:#fff8ed!important}
+.course-manager-page .course-content-empty span{color:#e1e8dc!important}
+
+/* Modal visual, foco em formulários */
+.course-manager-page.legion-manager-modal-open{overflow:hidden}
+.course-manager-page .legion-content-modal,
+.course-manager-page #editModuleModal,
+.course-manager-page #editLessonModal{align-items:center;justify-content:center;padding:18px;overflow-y:auto;z-index:1000}
+.course-manager-page .legion-content-modal-inner,
+.course-manager-page .course-edit-modal,
+.course-manager-page .lesson-edit-modal{
+ width:min(650px,100%);max-height:min(90vh,900px);overflow-y:auto;
+ border-radius:18px;border:1px solid #a99675!important;background:#435649!important;
+ box-shadow:0 22px 80px #101a13c9!important;color:#fff8ed!important;
+}
+.course-manager-page .legion-content-modal-inner .modal-header h2,
+.course-manager-page .course-edit-modal .modal-header h2,
+.course-manager-page .lesson-edit-modal .modal-header h2{font-family:"Playfair Display",serif;color:#fffaf0!important}
+.course-manager-page .legion-content-modal-inner .modal-header p,
+.course-manager-page .course-edit-modal .modal-header p,
+.course-manager-page .lesson-edit-modal .modal-header p{color:#dbe6d8!important}
+.course-manager-page .legion-content-modal-inner .form-group label,
+.course-manager-page .course-edit-modal .form-group label,
+.course-manager-page .lesson-edit-modal .form-group label{color:#f5f2e8!important}
+.course-manager-page .legion-content-modal-inner input:not([type="file"]),
+.course-manager-page .legion-content-modal-inner select,
+.course-manager-page .legion-content-modal-inner textarea{
+ background:#273c30!important;color:#fff9ed!important;border-color:#849983!important;
+}
+.course-manager-page .legion-content-modal-inner .premium-form{display:flex;flex-direction:column;gap:15px}
+.course-manager-page .legion-content-modal-inner .pdf-upload-box{background:#344a3a!important}
+.course-manager-page .legion-content-modal-inner .pdf-file-info strong{color:#fff8ef!important}
+.course-manager-page .legion-content-modal-inner .pdf-file-info small{color:#dee8d9!important}
+.course-manager-page .legion-modal-cancel-row{display:flex;justify-content:flex-end;padding-top:12px}
+.course-manager-page .legion-cancel-button{
+ padding:10px 17px;border:1px solid #c0ad88;border-radius:8px;
+ background:#344b3b;color:#f6e5c5;cursor:pointer;font-size:12px;font-weight:700;
+}
+@media(max-width:900px){
+ .course-manager-page .legion-content-toolbar{flex-direction:column;align-items:flex-start}
+ .course-manager-page .legion-content-metrics{grid-template-columns:1fr}
+ .course-manager-page .legion-module-panel{padding:17px!important}
+ .course-manager-page .legion-content-buttons{width:100%}
+}
+@media(max-width:560px){
+ .course-manager-page .legion-content-buttons .btn{flex:1}
+ .course-manager-page .legion-module-panel-head{align-items:flex-start;flex-direction:column}
+}
