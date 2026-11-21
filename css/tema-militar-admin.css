@@ -70,3 +70,15 @@ body.admin-premium{--mil-bg:#303d33;--mil-panel:#435447;--mil-panel2:#4b5e4e;--m
 .admin-premium .premium-course-list .btn,.admin-premium .premium-student-list .btn{font-weight:700!important}
 .admin-premium .premium-course-list .btn:not(.btn-outline),.admin-premium .premium-student-list .btn:not(.btn-outline){background:#d0ab70!important;color:#17231b!important}
 .admin-premium input,.admin-premium select,.admin-premium textarea{background:#233329!important;color:#fff9ed!important;border-color:#879586!important}
+
+
+/* Ação de exclusão de aluno – visível no tema militar */
+.admin-premium .premium-student-list .student-actions .student-delete-btn{
+  background:#fff1ed!important;
+  color:#9b302a!important;
+  border:1px solid #d09b94!important;
+}
+.admin-premium .premium-student-list .student-actions .student-delete-btn:hover{
+  background:#f7dcd6!important;
+  color:#79201b!important;
+}
