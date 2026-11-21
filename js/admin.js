@@ -454,6 +454,15 @@ function renderStudents(studentsData) {
                 Acessos
               </button>
 
+              <button
+                type="button"
+                class="btn student-delete-btn"
+                onclick="deleteStudent('${student.id}')"
+                title="Excluir permanentemente este aluno"
+              >
+                Excluir aluno
+              </button>
+
             </div>
 
           </div>
@@ -1025,6 +1034,69 @@ async function(
 
 
 /* ========================
+   EXCLUIR ALUNO
+   Apenas administradores; exclusão executada de forma segura no servidor
+======================== */
+
+window.deleteStudent = async function(studentId) {
+  const { data: student, error: studentError } = await adminSb
+    .from("profiles")
+    .select("id, full_name, role")
+    .eq("id", studentId)
+    .maybeSingle();
+
+  if (studentError || !student || student.role !== "student") {
+    alert(studentError?.message || "Aluno não encontrado.");
+    return;
+  }
+
+  const name = student.full_name || "este aluno";
+  const confirmed = confirm(
+    `Excluir permanentemente "${name}"?\n\nA conta de login e os acessos aos cursos serão removidos. Esta ação não pode ser desfeita. Os registros financeiros serão preservados.`
+  );
+  if (!confirmed) return;
+
+  const finalConfirmation = confirm(
+    `Confirme a exclusão definitiva de "${name}". Deseja continuar?`
+  );
+  if (!finalConfirmation) return;
+
+  message.textContent = `Excluindo aluno "${name}"...`;
+
+  const { data: { session }, error: sessionError } = await adminSb.auth.getSession();
+  if (sessionError || !session?.access_token) {
+    message.textContent = "Sua sessão expirou. Faça login novamente.";
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/delete-student`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ student_id: studentId })
+      }
+    );
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Não foi possível excluir o aluno.");
+    }
+
+    message.textContent = `Aluno "${name}" excluído com sucesso.`;
+    await load();
+  } catch (error) {
+    console.error("Erro ao excluir aluno", error);
+    message.textContent = error.message || "Erro ao excluir aluno.";
+    alert(message.textContent);
+  }
+};
+
+/* ========================
    ACESSOS DO ALUNO
 ======================== */
 
@@ -1520,7 +1592,7 @@ window.manageAccess = async function(studentId) {
           await adminSb
             .from("enrollments")
             .update({
-              status: "inactive"
+              status: "cancelled"
             })
             .eq(
               "id",
