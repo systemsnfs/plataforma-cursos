@@ -60,6 +60,21 @@ if (loginLink && courseId) {
 
 }
 
+async function activatePurchases() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session?.access_token) return;
+    const response = await fetch(SUPABASE_URL + "/functions/v1/claim-purchases", {
+      method: "POST",
+      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + session.access_token, "Content-Type": "application/json" },
+      body: "{}"
+    });
+    if (!response.ok) console.warn("Compra ainda não disponível para vinculação.");
+  } catch (error) {
+    console.warn("Não foi possível verificar compras no momento.", error);
+  }
+}
+
 /* =====================================================
    LOGIN
 ===================================================== */
@@ -183,6 +198,9 @@ if (loginForm) {
 
 if (profile.role === "student") {
 
+  message.textContent = "Verificando suas compras...";
+  await activatePurchases();
+
   if (safeNext) {
     location.href = safeNext;
     return;
@@ -271,15 +289,14 @@ if (registerForm) {
     }
 
 
-    if (data.session && courseId) {
-      location.href = `checkout.html?course_id=${encodeURIComponent(courseId)}`;
+    if (data.session) {
+      await activatePurchases();
+      location.href = "aluno.html";
       return;
     }
 
     message.textContent =
-      data.session
-        ? "Conta criada. Você já pode acessar sua área."
-        : "Conta criada. Confira seu e-mail para confirmar o cadastro e depois faça login.";
+      "Conta criada. Confirme seu e-mail e faça login para liberar o curso após a aprovação do pagamento.";
 
   });
 
