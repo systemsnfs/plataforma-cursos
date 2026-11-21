@@ -117,7 +117,7 @@ async function initCheckout() {
       : !profile
         ? "Esta sessão não possui um perfil de aluno. Entre ou crie uma conta de aluno."
         : profile.role !== "student"
-          ? "Você está conectado com uma conta administrativa. Para testar a compra, use uma conta de aluno."
+          ? ""
           : "Esta conta está desativada. Entre com outra conta de aluno.";
     return;
   }
