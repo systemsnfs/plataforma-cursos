@@ -229,3 +229,20 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
  .course-manager-page .legion-content-buttons .btn{flex:1}
  .course-manager-page .legion-module-panel-head{align-items:flex-start;flex-direction:column}
 }
+
+/* Retorno do salvamento visível dentro do modal de aula */
+.course-manager-page .legion-lesson-save-status{
+  display:block;padding:12px 15px;margin:14px 0 2px;border-radius:10px;
+  border:1px solid #c8ad75;background:#304a3c;color:#fff2d6;font-size:12px;
+  line-height:1.55;font-weight:600;overflow-wrap:anywhere;
+}
+.course-manager-page .legion-lesson-save-status[hidden]{display:none!important}
+.course-manager-page .legion-lesson-save-status[data-status="error"]{
+  background:#552f2e;color:#ffe5e2;border-color:#e4a5a0;
+}
+.course-manager-page .legion-lesson-save-status[data-status="success"]{
+  background:#234f39;color:#d8f4e2;border-color:#87c69a;
+}
+.course-manager-page #lessonForm button[type="submit"]:disabled{
+  opacity:.7;cursor:progress;
+}
