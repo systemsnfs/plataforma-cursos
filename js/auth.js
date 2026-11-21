@@ -38,7 +38,7 @@ const purchaseCourseId = courseId || (safeNext?.startsWith("checkout.html")
 const registerLink =
   document.getElementById("registerLink");
 
-if (registerLink && purchaseCourseId) {
+if (registerLink && purchaseCourseId && !params.get("pedido")) {
 
   registerLink.href =
     `cadastro.html?course_id=${encodeURIComponent(purchaseCourseId)}`;
@@ -53,7 +53,7 @@ if (registerLink && purchaseCourseId) {
 const loginLink =
   document.getElementById("loginLink");
 
-if (loginLink && courseId) {
+if (loginLink && courseId && !params.get("pedido")) {
 
   loginLink.href =
     `login.html?course_id=${encodeURIComponent(courseId)}`;
@@ -207,7 +207,7 @@ if (profile.role === "student") {
   }
 
   /* Veio da compra de um curso */
-  if (courseId) {
+  if (courseId && !params.get("pedido")) {
 
     location.href =
       `checkout.html?course_id=${encodeURIComponent(courseId)}`;
@@ -270,9 +270,7 @@ if (registerForm) {
 
         },
 
-      emailRedirectTo: courseId
-  ? `https://systemsnfs.github.io/plataforma-cursos/login.html?course_id=${encodeURIComponent(courseId)}`
-  : "https://systemsnfs.github.io/plataforma-cursos/login.html"
+      emailRedirectTo: "https://systemsnfs.github.io/plataforma-cursos/login.html"
 
       }
 
