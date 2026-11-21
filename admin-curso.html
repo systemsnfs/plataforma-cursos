@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <title>Gerenciar curso | Academia Online</title>
+  <title>Gerenciar conteúdo | Legion Academy</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
   >
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/legion-academy.css">
+  <link rel="stylesheet" href="css/legion-academy.css?v=7">
 </head>
 
 
@@ -42,7 +42,7 @@
           class="brand premium-brand"
           href="index.html"
         >
-          Academia<span>Online</span>
+          LEGION<span> ACADEMY</span>
         </a>
       </div>
 
@@ -61,7 +61,7 @@
 
 
       <a
-        href="admin.html#cursos"
+        href="admin-cursos.html"
         class="sidebar-link active"
       >
         <span class="sidebar-icon">▣</span>
@@ -70,7 +70,7 @@
 
 
       <a
-        href="admin.html#alunos"
+        href="admin-alunos.html"
         class="sidebar-link"
       >
         <span class="sidebar-icon">♙</span>
@@ -105,8 +105,8 @@
 
       <div class="course-topbar-back">
 
-        <a href="admin.html">
-          ← Voltar ao painel
+        <a href="admin-cursos.html">
+          ← Voltar aos cursos
         </a>
 
       </div>
@@ -170,72 +170,61 @@
 
 
 
-      <!-- =====================================
-           GRID
-      ====================================== -->
+      <!-- INDICADORES E AÇÕES -->
+      <section class="legion-content-toolbar" aria-label="Gerenciamento de conteúdo">
+        <div>
+          <span class="premium-eyebrow">ORGANIZAÇÃO DO CURSO</span>
+          <h2>Estrutura e aulas</h2>
+          <p>Organize módulos, acompanhe suas aulas e gerencie os materiais.</p>
+        </div>
+        <div class="legion-content-buttons">
+          <button type="button" class="btn legion-new-module" id="openModuleCreate">＋ Novo módulo</button>
+          <button type="button" class="btn legion-new-lesson" id="openLessonCreate">＋ Nova aula</button>
+        </div>
+      </section>
 
-      <section class="course-manager-grid">
+      <section class="legion-content-metrics" aria-label="Resumo do conteúdo">
+        <div class="legion-content-metric"><span>Módulos</span><strong id="moduleTotal">0</strong></div>
+        <div class="legion-content-metric"><span>Aulas</span><strong id="lessonTotal">0</strong></div>
+        <div class="legion-content-metric"><span>Aulas publicadas</span><strong id="publishedTotal">0</strong></div>
+      </section>
 
-
-        <!-- ================================
-             MÓDULOS
-        ================================= -->
-
-        <div class="premium-panel module-manager-panel">
-
-
-          <div class="premium-panel-header">
-
-            <div>
-
-              <span class="premium-eyebrow">
-                ESTRUTURA
-              </span>
-
-              <h2>
-                Módulos
-              </h2>
-
-              <p>
-                Organize o conteúdo do curso em módulos.
-              </p>
-
-            </div>
-
-
-            <div class="panel-icon">
-              ▣
-            </div>
-
+      <section class="premium-panel module-manager-panel legion-module-panel" aria-labelledby="modulesHeading">
+        <div class="premium-panel-header legion-module-panel-head">
+          <div>
+            <span class="premium-eyebrow">ESTRUTURA DO TREINAMENTO</span>
+            <h2 id="modulesHeading">Módulos e aulas</h2>
+            <p>Acesse as aulas de cada módulo e edite o conteúdo quando precisar.</p>
           </div>
+          <span class="legion-module-count" id="moduleCountLabel"></span>
+        </div>
+        <div id="modules" class="premium-modules-list legion-module-list" aria-live="polite"></div>
+      </section>
+
+      <div
+        id="message"
+        class="message premium-message"
+      ></div>
+
+    </main>
+
+  </div>
+
+</div>
 
 
 
-          <!-- NOVO MÓDULO -->
-
-          <div class="manager-create-box">
-
-            <div class="create-box-header">
-
-              <div class="create-icon">
-                +
-              </div>
-
-              <div>
-
-                <h3>
-                  Novo módulo
-                </h3>
-
-                <p>
-                  Adicione uma nova etapa ao curso.
-                </p>
-
-              </div>
-
-            </div>
-
-
+<!-- CADASTRAR MÓDULO -->
+<div id="createModuleModal" class="modal legion-content-modal" role="dialog" aria-modal="true" aria-labelledby="createModuleHeading" style="display:none">
+  <div class="modal-content premium-modal legion-content-modal-inner">
+    <div class="modal-header premium-modal-header">
+      <div>
+        <span class="premium-eyebrow">ESTRUTURA</span>
+        <h2 id="createModuleHeading">Novo módulo</h2>
+        <p>Adicione uma etapa à estrutura do treinamento.</p>
+      </div>
+      <button type="button" class="modal-close" id="closeCreateModule" aria-label="Fechar">×</button>
+    </div>
             <form
               id="moduleForm"
               class="premium-form"
@@ -269,61 +258,21 @@
               </div>
 
             </form>
+    <div class="legion-modal-cancel-row"><button type="button" id="cancelCreateModule" class="btn legion-cancel-button">Cancelar</button></div>
+  </div>
+</div>
 
-          </div>
-
-
-
-          <div class="section-divider">
-            <span>MÓDULOS DO CURSO</span>
-          </div>
-
-
-          <!-- JS INSERE OS MÓDULOS AQUI -->
-
-          <div
-            id="modules"
-            class="premium-modules-list"
-          ></div>
-
-        </div>
-
-
-
-        <!-- ================================
-             AULAS
-        ================================= -->
-
-        <div class="premium-panel lesson-manager-panel">
-
-
-          <div class="premium-panel-header">
-
-            <div>
-
-              <span class="premium-eyebrow">
-                CONTEÚDO
-              </span>
-
-              <h2>
-                Nova aula
-              </h2>
-
-              <p>
-                Adicione vídeos e materiais aos módulos.
-              </p>
-
-            </div>
-
-
-            <div class="panel-icon">
-              ▷
-            </div>
-
-          </div>
-
-
-
+<!-- CADASTRAR AULA -->
+<div id="createLessonModal" class="modal legion-content-modal" role="dialog" aria-modal="true" aria-labelledby="createLessonHeading" style="display:none">
+  <div class="modal-content premium-modal legion-content-modal-inner">
+    <div class="modal-header premium-modal-header">
+      <div>
+        <span class="premium-eyebrow">CONTEÚDO</span>
+        <h2 id="createLessonHeading">Nova aula</h2>
+        <p>Cadastre aulas com vídeo, material em PDF ou ambos.</p>
+      </div>
+      <button type="button" class="modal-close" id="closeCreateLesson" aria-label="Fechar">×</button>
+    </div>
           <form
             id="lessonForm"
             class="premium-form lesson-create-form"
@@ -496,25 +445,9 @@
             </div>
 
           </form>
-
-        </div>
-
-      </section>
-
-
-
-      <div
-        id="message"
-        class="message premium-message"
-      ></div>
-
-    </main>
-
+    <div class="legion-modal-cancel-row"><button type="button" id="cancelCreateLesson" class="btn legion-cancel-button">Cancelar</button></div>
   </div>
-
 </div>
-
-
 
 <!-- =================================================
      MODAL EDITAR MÓDULO
@@ -830,7 +763,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="js/config.js"></script>
-<script src="js/admin-curso.js"></script>
+<script src="js/admin-curso.js?v=7"></script>
 
 </body>
 </html>
