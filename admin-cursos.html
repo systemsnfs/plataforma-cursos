@@ -14,7 +14,7 @@
         rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/tema-militar-admin.css?v=3">
+  <link rel="stylesheet" href="css/tema-militar-admin.css?v=5">
 </head>
 
 
@@ -123,53 +123,72 @@
         </div>
       </section>
 
-      <section class="admin-main-grid">
-        <div
-          class="premium-panel courses-panel"
-          id="cursos"
-        >
+      <section class="legion-courses-heading">
+        <div>
+          <span class="premium-eyebrow">GESTÃO ACADÊMICA</span>
+          <h2>Seus cursos</h2>
+          <p>Organize os treinamentos e mantenha o catálogo atualizado.</p>
+        </div>
+        <button type="button" class="btn legion-course-new" id="openNewCourse">＋ Novo curso</button>
+      </section>
 
-          <div class="premium-panel-header">
+      <section class="legion-course-kpis" aria-label="Indicadores de cursos">
+        <div class="legion-course-kpi"><span>Cursos cadastrados</span><strong id="coursesTotal">—</strong></div>
+        <div class="legion-course-kpi"><span>Cursos ativos</span><strong id="coursesActive">—</strong></div>
+        <div class="legion-course-kpi"><span>Cursos inativos</span><strong id="coursesInactive">—</strong></div>
+      </section>
 
-            <div>
-
-              <span class="premium-eyebrow">
-                GESTÃO
-              </span>
-
-              <h2>
-                Cursos
-              </h2>
-
-              <p>
-                Cadastre e gerencie os cursos da plataforma.
-              </p>
-
-            </div>
-
+      <section class="premium-panel courses-panel legion-courses-panel" id="cursos">
+        <header class="legion-courses-panel-top">
+          <div>
+            <span class="premium-eyebrow">CATÁLOGO</span>
+            <h2>Cursos cadastrados</h2>
+            <p>Pesquise, edite e gerencie seus cursos.</p>
           </div>
+          <span id="coursesCount" class="legion-courses-count"></span>
+        </header>
+        <div class="legion-course-toolbar">
+          <label class="legion-search-wrap" for="courseSearch">
+            <span aria-hidden="true">⌕</span>
+            <input type="search" id="courseSearch" placeholder="Buscar por nome ou identificador..." autocomplete="off">
+          </label>
+          <label class="legion-filter-wrap" for="courseStatusFilter">
+            <span>Status</span>
+            <select id="courseStatusFilter">
+              <option value="all">Todos os cursos</option>
+              <option value="active">Ativos</option>
+              <option value="inactive">Inativos</option>
+            </select>
+          </label>
+        </div>
+        <div id="courses" class="premium-course-list legion-course-results" aria-live="polite"></div>
+      </section>
+
+      <div
+        id="message"
+        class="message premium-message"
+      ></div>
+
+    </main>
+
+  </div>
+
+</div>
 
 
 
-          <!-- NOVO CURSO -->
-
-          <div class="course-create-box">
-
-            <div class="create-box-header">
-
-              <div class="create-icon">
-                +
-              </div>
-
-              <div>
-                <h3>Novo curso</h3>
-                <p>Preencha as informações para adicionar um curso.</p>
-              </div>
-
-            </div>
-
-
-            <form id="courseForm" class="premium-form">
+<!-- NOVO CURSO -->
+<div id="newCourseModal" class="modal legion-course-modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="newCourseModalTitle">
+  <div class="modal-content premium-modal legion-course-modal-content">
+    <div class="modal-header premium-modal-header">
+      <div>
+        <span class="premium-eyebrow">GESTÃO ACADÊMICA</span>
+        <h2 id="newCourseModalTitle">Novo curso</h2>
+        <p>Preencha as informações para adicionar um treinamento.</p>
+      </div>
+      <button id="closeNewCourse" class="modal-close" type="button" aria-label="Fechar formulário">×</button>
+    </div>
+            <form id="courseForm" class="premium-form legion-course-form">
 
               <div class="form-grid">
 
@@ -242,6 +261,13 @@
               </div>
 
 
+              <div class="form-group form-full legion-active-field">
+                <label for="createActive">Visibilidade</label>
+                <label class="legion-course-check">
+                  <input type="checkbox" id="createActive" checked>
+                  <span>Curso ativo — visível para visitantes</span>
+                </label>
+              </div>
               <div class="form-footer">
 
                 <button
@@ -249,46 +275,14 @@
                   type="submit"
                 >
                   <span>＋</span>
-                  Cadastrar curso
+                  Salvar curso
                 </button>
 
               </div>
 
             </form>
-
-          </div>
-
-
-
-          <!-- LISTA -->
-
-          <div class="section-divider">
-
-            <span>CURSOS CADASTRADOS</span>
-
-          </div>
-
-
-          <div
-            id="courses"
-            class="premium-course-list"
-          ></div>
-
-        </div>
-      </section>
-
-      <div
-        id="message"
-        class="message premium-message"
-      ></div>
-
-    </main>
-
   </div>
-
 </div>
-
-
 
 <!-- =================================================
      MODAL EDITAR CURSO
@@ -300,7 +294,7 @@
   style="display:none;"
 >
 
-  <div class="modal-content premium-modal">
+  <div class="modal-content premium-modal legion-course-modal-content">
 
     <div class="modal-header premium-modal-header">
 
@@ -418,6 +412,14 @@
       </div>
 
 
+      <div class="form-group legion-active-field">
+        <label for="editActive">Visibilidade</label>
+        <label class="legion-course-check">
+          <input type="checkbox" id="editActive">
+          <span>Curso ativo — visível para visitantes</span>
+        </label>
+      </div>
+
       <div class="modal-actions">
 
         <button
@@ -449,7 +451,7 @@
 
 <script src="js/config.js"></script>
 
-<script src="js/admin.js?v=3"></script>
+<script src="js/admin.js?v=5"></script>
 
 </body>
 </html>
