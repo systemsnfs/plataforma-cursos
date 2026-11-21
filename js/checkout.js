@@ -1,234 +1,105 @@
-const sb = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-
-const params =
-  new URLSearchParams(window.location.search);
-
-const courseId =
-  params.get("course_id");
-
-
-const courseTitle =
-  document.getElementById("courseTitle");
-
-const courseDescription =
-  document.getElementById("courseDescription");
-
-const coursePrice =
-  document.getElementById("coursePrice");
-
-const payButton =
-  document.getElementById("payButton");
-
-const checkoutMessage =
-  document.getElementById("checkoutMessage");
-
-
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const params = new URLSearchParams(location.search);
+const courseId = params.get("course_id");
+const courseTitle = document.getElementById("courseTitle");
+const courseDescription = document.getElementById("courseDescription");
+const coursePrice = document.getElementById("coursePrice");
+const payButton = document.getElementById("payButton");
+const checkoutMessage = document.getElementById("checkoutMessage");
 const telegramAddon = document.getElementById("telegramAddon");
 const telegramTotalNote = document.getElementById("telegramTotalNote");
-const accountActions = document.getElementById("checkoutAccountActions");
-const switchStudentAccount = document.getElementById("switchStudentAccount");
-const createStudentAccount = document.getElementById("createStudentAccount");
-const TELEGRAM_ADDON_PRICE = 9.99;
-
-async function startStudentAccountFlow(mode) {
-  switchStudentAccount.disabled = true;
-  createStudentAccount.disabled = true;
-  checkoutMessage.textContent = "Preparando o acesso à sua conta...";
-  const { error } = await sb.auth.signOut();
-  if (error) {
-    checkoutMessage.textContent = "Não foi possível trocar de conta. Tente novamente.";
-    switchStudentAccount.disabled = false;
-    createStudentAccount.disabled = false;
-    return;
-  }
-  location.replace(`${mode}.html?course_id=${encodeURIComponent(courseId)}`);
-}
-
-switchStudentAccount.addEventListener("click", () => startStudentAccountFlow("login"));
-createStudentAccount.addEventListener("click", () => startStudentAccountFlow("cadastro"));
+const buyerName = document.getElementById("buyerName");
+const buyerEmail = document.getElementById("buyerEmail");
+const buyerDetails = document.getElementById("checkoutBuyerDetails");
+const afterPayment = document.getElementById("checkoutAfterPayment");
+const registerAfterPayment = document.getElementById("registerAfterPayment");
+const loginAfterPayment = document.getElementById("loginAfterPayment");
 let baseCoursePrice = 0;
 
-function formatCheckoutBRL(value) {
+function brl(value) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 function updateCheckoutTotal() {
-  const selected = telegramAddon.checked;
-  const totalCents = Math.round(baseCoursePrice * 100) + (selected ? 999 : 0);
-  coursePrice.textContent = formatCheckoutBRL(totalCents / 100);
-  telegramTotalNote.textContent = selected
+  const amount = Math.round(baseCoursePrice * 100) + (telegramAddon.checked ? 999 : 0);
+  coursePrice.textContent = brl(amount / 100);
+  telegramTotalNote.textContent = telegramAddon.checked
     ? "Curso + consultoria vitalícia pelo Telegram"
     : "Curso sem consultoria adicional";
+}
+
+function showReturn() {
+  const status = params.get("retorno");
+  if (!status) return;
+  if (status === "sucesso") {
+    payButton.hidden = true;
+    buyerDetails.hidden = true;
+    afterPayment.hidden = false;
+    const qp = new URLSearchParams();
+    if (courseId) qp.set("course_id", courseId);
+    if (params.get("pedido")) qp.set("pedido", params.get("pedido"));
+    registerAfterPayment.href = "cadastro.html?" + qp.toString();
+    loginAfterPayment.href = "login.html?" + qp.toString();
+    checkoutMessage.textContent = "Retorno do pagamento recebido. Crie sua conta com o MESMO e-mail informado na compra. O acesso só será liberado após a confirmação do Mercado Pago.";
+  } else if (status === "pendente") {
+    checkoutMessage.textContent = "Pagamento pendente. Aguarde a aprovação antes de criar sua conta.";
+    payButton.disabled = true;
+  } else if (status === "falha") {
+    checkoutMessage.textContent = "Pagamento não concluído. Confira seus dados e tente novamente.";
+  }
 }
 
 telegramAddon.addEventListener("change", updateCheckoutTotal);
 
 async function initCheckout() {
-
-  /* =====================================
-     VERIFICAR CURSO
-  ===================================== */
-
   if (!courseId) {
-
-    checkoutMessage.textContent =
-      "Curso não informado.";
-
-    courseTitle.textContent =
-      "Curso indisponível";
-
-    courseDescription.textContent =
-      "Volte para a página inicial e escolha um curso.";
-
+    courseTitle.textContent = "Curso indisponível";
+    checkoutMessage.textContent = "Volte para a página inicial e selecione o curso.";
     return;
   }
-
-
-  /* =====================================
-     VERIFICAR LOGIN
-  ===================================== */
-
-  const {
-    data: { user }
-  } = await sb.auth.getUser();
-
-
-  if (!user) {
-    location.replace(`login.html?course_id=${encodeURIComponent(courseId)}`);
+  const { data: course, error } = await sb.from("courses")
+    .select("id,title,description,price,active").eq("id", courseId).maybeSingle();
+  if (error || !course || !course.active) {
+    courseTitle.textContent = "Curso indisponível";
+    checkoutMessage.textContent = "Não foi possível carregar o curso.";
     return;
   }
-
-  // O pagamento exige uma conta de aluno registrada e ativa.
-  const { data: profile, error: profileError } = await sb
-    .from("profiles")
-    .select("role,active")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (profileError || !profile || profile.active !== true || profile.role !== "student") {
-    payButton.disabled = true;
-    accountActions.hidden = false;
-    checkoutMessage.textContent = profileError
-      ? "Não foi possível validar sua conta. Entre novamente como aluno."
-      : !profile
-        ? "Esta sessão não possui um perfil de aluno. Entre ou crie uma conta de aluno."
-        : profile.role !== "student"
-          ? ""
-          : "Esta conta está desativada. Entre com outra conta de aluno.";
-    return;
-  }
-
-
-  /* =====================================
-     BUSCAR CURSO
-  ===================================== */
-
-  const {
-    data: course,
-    error
-  } = await sb
-    .from("courses")
-    .select(`
-      id,
-      title,
-      description,
-      price
-    `)
-    .eq("id", courseId)
-    .maybeSingle();
-
-
-  if (error || !course) {
-
-    console.error(
-      "Erro ao carregar curso:",
-      error
-    );
-
-    courseTitle.textContent =
-      "Curso indisponível";
-
-    courseDescription.textContent =
-      "Não foi possível carregar este curso.";
-
-    checkoutMessage.textContent =
-      "Verifique o curso selecionado e tente novamente.";
-
-    return;
-  }
-
-
-  /* =====================================
-     MOSTRAR DADOS
-  ===================================== */
-
-  courseTitle.textContent =
-    course.title || "Curso";
-
-
-  courseDescription.textContent =
-    course.description ||
-    "Curso online Academia Online.";
-
-
+  courseTitle.textContent = course.title;
+  courseDescription.textContent = course.description || "Aulas e materiais da Legion Academy.";
   baseCoursePrice = Number(course.price || 0);
   updateCheckoutTotal();
-
-  accountActions.hidden = true;
-  checkoutMessage.textContent = params.get("retorno") ? checkoutMessage.textContent : "";
   payButton.disabled = false;
-
+  showReturn();
+  const { data: { user } } = await sb.auth.getUser();
+  if (user?.email) buyerEmail.value = user.email;
+  if (user?.user_metadata?.full_name) buyerName.value = user.user_metadata.full_name;
 }
 
-
 payButton.addEventListener("click", async () => {
+  if (!buyerName.reportValidity() || !buyerEmail.reportValidity()) return;
   payButton.disabled = true;
-  checkoutMessage.textContent = "Preparando seu pagamento seguro...";
+  checkoutMessage.textContent = "Preparando o pagamento seguro...";
   try {
-    const { data: { session }, error: sessionError } = await sb.auth.getSession();
-    if (sessionError || !session?.access_token) {
-      location.href = `login.html?course_id=${encodeURIComponent(courseId)}`;
-      return;
+    const response = await fetch(SUPABASE_URL + "/functions/v1/create-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY },
+      body: JSON.stringify({
+        course_id: courseId,
+        name: buyerName.value.trim(),
+        email: buyerEmail.value.trim(),
+        telegram_addon: telegramAddon.checked
+      })
+    });
+    const data = await response.json();
+    if (!response.ok || !data.checkout_url) {
+      throw new Error(data.error || "Não foi possível iniciar o pagamento.");
     }
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/create-payment`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          course_id: courseId,
-          telegram_addon: telegramAddon.checked
-        })
-      }
-    );
-    const result = await response.json();
-    if (!response.ok || !result.checkout_url) {
-      throw new Error(result.error || "Não foi possível iniciar o pagamento.");
-    }
-    checkoutMessage.textContent = "Redirecionando ao Mercado Pago...";
-    location.assign(result.checkout_url);
+    checkoutMessage.textContent = "Redirecionando para o Mercado Pago...";
+    location.assign(data.checkout_url);
   } catch (error) {
-    checkoutMessage.textContent = error.message || "Tente novamente.";
+    checkoutMessage.textContent = error.message || "Não foi possível realizar a operação.";
     payButton.disabled = false;
   }
 });
-
-
-if (params.get("retorno")) {
-  const messages = {
-    sucesso: "Retorno recebido. O acesso será liberado somente após a confirmação do Mercado Pago.",
-    falha: "O pagamento não foi concluído. Você pode tentar novamente.",
-    pendente: "Pagamento pendente. O acesso será liberado quando houver confirmação."
-  };
-  checkoutMessage.textContent = messages[params.get("retorno")] || "";
-}
 
 initCheckout();
