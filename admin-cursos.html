@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Cursos | Legion Academy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tema-militar-admin.css?v=3">
+</head>
+
+
+<body class="admin-premium admin-single-page">
+
+<div class="admin-layout">
+
+
+  <!-- ================================
+       MENU LATERAL
+  ================================= -->
+
+  <aside class="admin-sidebar">
+
+    <div class="sidebar-logo">
+
+      <div class="sidebar-logo-icon">
+        ◇
+      </div>
+
+      <div>
+        <a class="brand premium-brand" href="index.html">
+          LEGION<span> ACADEMY</span>
+        </a>
+        
+      </div>
+
+    </div>
+
+
+    <nav class="sidebar-menu">
+
+      <a href="admin.html" class="sidebar-link" data-section="dashboard">
+        <span class="sidebar-icon">⌂</span>
+        Dashboard
+      </a>
+
+      <a href="admin-cursos.html" class="sidebar-link active" data-section="cursos" aria-current="page">
+        <span class="sidebar-icon">▣</span>
+        Cursos
+      </a>
+
+      <a href="admin-alunos.html" class="sidebar-link" data-section="alunos">
+        <span class="sidebar-icon">♙</span>
+        Alunos
+      </a>
+
+      <a href="aluno.html" class="sidebar-link">
+        <span class="sidebar-icon">▷</span>
+        Área do aluno
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+
+  <!-- ================================
+       CONTEÚDO
+  ================================= -->
+
+  <div class="admin-content">
+
+
+    <!-- TOPO -->
+
+    <header class="admin-topbar">
+
+     
+      <div class="admin-user">
+
+        <div class="admin-avatar">
+          A
+        </div>
+
+        <div class="admin-user-info">
+          <strong>Administrador</strong>
+          <span>Painel de gestão</span>
+        </div>
+
+        <button
+          id="logout"
+          class="admin-logout"
+          type="button"
+        >
+          Sair
+        </button>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- CONTEÚDO PRINCIPAL -->
+
+    <main class="premium-dashboard">
+
+
+      <section class="dashboard-heading">
+        <div>
+          <span class="premium-eyebrow">PAINEL ADMINISTRATIVO</span>
+          <h1>Cursos</h1>
+          <p>Cadastre, edite e gerencie seus cursos em uma página exclusiva.</p>
+        </div>
+      </section>
+
+      <section class="admin-main-grid">
+        <div
+          class="premium-panel courses-panel"
+          id="cursos"
+        >
+
+          <div class="premium-panel-header">
+
+            <div>
+
+              <span class="premium-eyebrow">
+                GESTÃO
+              </span>
+
+              <h2>
+                Cursos
+              </h2>
+
+              <p>
+                Cadastre e gerencie os cursos da plataforma.
+              </p>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- NOVO CURSO -->
+
+          <div class="course-create-box">
+
+            <div class="create-box-header">
+
+              <div class="create-icon">
+                +
+              </div>
+
+              <div>
+                <h3>Novo curso</h3>
+                <p>Preencha as informações para adicionar um curso.</p>
+              </div>
+
+            </div>
+
+
+            <form id="courseForm" class="premium-form">
+
+              <div class="form-grid">
+
+                <div class="form-group form-full">
+
+                  <label for="title">
+                    Nome do curso
+                  </label>
+
+                  <input
+                    id="title"
+                    placeholder="Ex.: Curso Completo de Excel"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="slug">
+                    Slug
+                  </label>
+
+                  <input
+                    id="slug"
+                    placeholder="curso-completo-excel"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="price">
+                    Preço
+                  </label>
+
+                  <div class="price-input">
+
+                    <span>R$</span>
+
+                    <input
+                      id="price"
+                      type="number"
+                      step="0.01"
+                      placeholder="0,00"
+                    >
+
+                  </div>
+
+                </div>
+
+
+                <div class="form-group form-full">
+
+                  <label for="description">
+                    Descrição
+                  </label>
+
+                  <textarea
+                    id="description"
+                    rows="4"
+                    placeholder="Descreva o conteúdo e os objetivos do curso..."
+                  ></textarea>
+
+                </div>
+
+              </div>
+
+
+              <div class="form-footer">
+
+                <button
+                  class="btn premium-btn"
+                  type="submit"
+                >
+                  <span>＋</span>
+                  Cadastrar curso
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+
+
+          <!-- LISTA -->
+
+          <div class="section-divider">
+
+            <span>CURSOS CADASTRADOS</span>
+
+          </div>
+
+
+          <div
+            id="courses"
+            class="premium-course-list"
+          ></div>
+
+        </div>
+      </section>
+
+      <div
+        id="message"
+        class="message premium-message"
+      ></div>
+
+    </main>
+
+  </div>
+
+</div>
+
+
+
+<!-- =================================================
+     MODAL EDITAR CURSO
+================================================= -->
+
+<div
+  id="editCourseModal"
+  class="modal"
+  style="display:none;"
+>
+
+  <div class="modal-content premium-modal">
+
+    <div class="modal-header premium-modal-header">
+
+      <div>
+
+        <span class="premium-eyebrow">
+          CURSO
+        </span>
+
+        <h2>
+          Editar curso
+        </h2>
+
+        <p>
+          Atualize as informações do curso.
+        </p>
+
+      </div>
+
+
+      <button
+        id="closeEditCourse"
+        type="button"
+        class="modal-close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form
+      id="editCourseForm"
+      class="premium-form"
+    >
+
+      <input
+        id="editCourseId"
+        type="hidden"
+      >
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="editTitle"
+        >
+          Nome do curso
+        </label>
+
+        <input
+          id="editTitle"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="editSlug"
+        >
+          Slug
+        </label>
+
+        <input
+          id="editSlug"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="editPrice"
+        >
+          Preço
+        </label>
+
+        <div class="price-input">
+
+          <span>R$</span>
+
+          <input
+            id="editPrice"
+            type="number"
+            step="0.01"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="editDescription"
+        >
+          Descrição
+        </label>
+
+        <textarea
+          id="editDescription"
+          rows="5"
+        ></textarea>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          id="cancelEditCourse"
+          type="button"
+          class="btn btn-outline premium-cancel"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="btn premium-btn"
+        >
+          Salvar alterações
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/config.js"></script>
+
+<script src="js/admin.js?v=3"></script>
+
+</body>
+</html>
