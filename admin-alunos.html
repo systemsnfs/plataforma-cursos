@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Alunos | Legion Academy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tema-militar-admin.css?v=3">
+</head>
+
+
+<body class="admin-premium admin-single-page">
+
+<div class="admin-layout">
+
+
+  <!-- ================================
+       MENU LATERAL
+  ================================= -->
+
+  <aside class="admin-sidebar">
+
+    <div class="sidebar-logo">
+
+      <div class="sidebar-logo-icon">
+        ◇
+      </div>
+
+      <div>
+        <a class="brand premium-brand" href="index.html">
+          LEGION<span> ACADEMY</span>
+        </a>
+        
+      </div>
+
+    </div>
+
+
+    <nav class="sidebar-menu">
+
+      <a href="admin.html" class="sidebar-link" data-section="dashboard">
+        <span class="sidebar-icon">⌂</span>
+        Dashboard
+      </a>
+
+      <a href="admin-cursos.html" class="sidebar-link" data-section="cursos">
+        <span class="sidebar-icon">▣</span>
+        Cursos
+      </a>
+
+      <a href="admin-alunos.html" class="sidebar-link active" data-section="alunos" aria-current="page">
+        <span class="sidebar-icon">♙</span>
+        Alunos
+      </a>
+
+      <a href="aluno.html" class="sidebar-link">
+        <span class="sidebar-icon">▷</span>
+        Área do aluno
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+
+  <!-- ================================
+       CONTEÚDO
+  ================================= -->
+
+  <div class="admin-content">
+
+
+    <!-- TOPO -->
+
+    <header class="admin-topbar">
+
+     
+      <div class="admin-user">
+
+        <div class="admin-avatar">
+          A
+        </div>
+
+        <div class="admin-user-info">
+          <strong>Administrador</strong>
+          <span>Painel de gestão</span>
+        </div>
+
+        <button
+          id="logout"
+          class="admin-logout"
+          type="button"
+        >
+          Sair
+        </button>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- CONTEÚDO PRINCIPAL -->
+
+    <main class="premium-dashboard">
+
+
+      <section class="dashboard-heading">
+        <div>
+          <span class="premium-eyebrow">PAINEL ADMINISTRATIVO</span>
+          <h1>Alunos</h1>
+          <p>Gerencie alunos, acessos e permissões em uma página exclusiva.</p>
+        </div>
+      </section>
+
+      <section class="admin-main-grid">
+        <div
+          class="premium-panel students-panel"
+          id="alunos"
+        >
+
+          <div class="premium-panel-header">
+
+            <div>
+
+              <span class="premium-eyebrow">
+                USUÁRIOS
+              </span>
+
+              <h2>
+                Alunos
+              </h2>
+
+              <p>
+                Controle usuários e acessos aos cursos.
+              </p>
+
+            </div>
+
+
+            <div class="panel-icon">
+              ♙
+            </div>
+
+          </div>
+
+
+          <div
+            id="students"
+            class="premium-student-list"
+          ></div>
+
+        </div>
+      </section>
+
+      <div
+        id="message"
+        class="message premium-message"
+      ></div>
+
+    </main>
+
+  </div>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/config.js"></script>
+
+<script src="js/admin.js?v=3"></script>
+
+</body>
+</html>
