@@ -1,0 +1,35 @@
+/* Legion Academy — Fórum das aulas */
+.legion-lesson .legion-discussion{background:#f8f5ed;border:1px solid #d5c7aa;border-radius:17px;padding:30px;margin:28px 0;color:#233a2b;box-shadow:0 8px 28px rgba(20,38,26,.06)}
+.legion-lesson .legion-discussion-header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:21px;flex-wrap:wrap}
+.legion-lesson .legion-discussion-header .premium-eyebrow{font-size:10px;color:#a47c36}
+.legion-lesson .legion-discussion-header h2{font:700 26px "Playfair Display",serif;color:#213b2b;margin:7px 0}
+.legion-lesson .legion-discussion-header p{font-size:12px;line-height:1.7;color:#67756a;margin:0}
+.legion-lesson .legion-discussion-count{background:#eee3c9;border:1px solid #d6bf90;border-radius:99px;padding:8px 13px;font-size:11px;color:#695229;white-space:nowrap;font-weight:800}
+.legion-lesson .legion-discussion-list{border-top:1px solid #e6dcc6;padding-top:18px;display:flex;flex-direction:column;gap:13px}
+.legion-lesson .legion-discussion-empty{padding:22px;color:#718071;font-size:13px;text-align:center}
+.legion-lesson .legion-discussion-message{display:flex;gap:12px;background:#fffdf7;border:1px solid #e2dbcb;border-radius:12px;padding:15px}
+.legion-lesson .legion-discussion-avatar{display:grid;place-items:center;flex:0 0 35px;height:35px;border-radius:50%;background:#e6d7b7;color:#78602d;font-weight:800}
+.legion-lesson .legion-discussion-message-content{flex:1;min-width:0}
+.legion-lesson .legion-discussion-message-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.legion-lesson .legion-discussion-message-head strong{font-size:12px;color:#243f2d}
+.legion-lesson .legion-discussion-message-head time{font-size:10px;color:#8b9388}
+.legion-lesson .legion-discussion-admin-badge{background:#dcebd8;color:#2b6140;font-size:10px;font-weight:800;border-radius:6px;padding:4px 7px}
+.legion-lesson .legion-discussion-message-text{white-space:pre-wrap;overflow-wrap:anywhere;color:#455548;font-size:13px;line-height:1.65;margin:10px 0 8px}
+.legion-lesson .legion-discussion-actions{display:flex;gap:16px}
+.legion-lesson .legion-discussion-actions button{color:#8e713d;background:transparent;border:0;padding:4px 0;cursor:pointer;font:700 11px "DM Sans",sans-serif}
+.legion-lesson .legion-discussion-actions button.is-delete{color:#a44b46}
+.legion-lesson .legion-discussion-replies{margin-left:37px;padding-left:13px;border-left:2px solid #d7c497;display:flex;flex-direction:column;gap:9px}
+.legion-lesson .legion-discussion-form{border-top:1px solid #e2d7bf;margin-top:24px;padding-top:22px}
+.legion-lesson .legion-discussion-form label{display:block;color:#213c2b;font-size:13px;font-weight:800;margin-bottom:10px}
+.legion-lesson .legion-discussion-form textarea{box-sizing:border-box;display:block;width:100%;resize:vertical;min-height:90px;padding:14px;border:1px solid #cfccb9;border-radius:9px;background:#fffefa;color:#22392b;font:13px/1.6 "DM Sans",sans-serif}
+.legion-lesson .legion-discussion-form textarea:focus{border-color:#b99a60;outline:2px solid #b99a6033}
+.legion-lesson .legion-discussion-form-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px}
+.legion-lesson .legion-discussion-form-footer small{color:#778074;font-size:11px;flex:1 1 230px}
+.legion-lesson .legion-discussion-form-footer button{border:0;border-radius:8px;padding:12px 17px;background:#bfa167;color:#1a3123;font-weight:800;font-size:12px;cursor:pointer}
+.legion-lesson .legion-discussion-form-footer button:disabled{opacity:.6;cursor:wait}
+.legion-lesson .legion-discussion-reply-info{display:flex;gap:12px;justify-content:space-between;align-items:center;background:#e9e6d7;border-radius:8px;padding:10px 12px;font-size:11px;margin:0 0 9px;color:#475b46}
+.legion-lesson .legion-discussion-reply-info[hidden]{display:none!important}
+.legion-lesson .legion-discussion-reply-info button{border:0;background:transparent;color:#956c2e;font-weight:700;cursor:pointer}
+.legion-lesson #discussionStatus{font-size:12px;color:#316543;margin-top:12px;min-height:4px}
+.legion-lesson #discussionStatus.is-error{color:#9f3939}
+@media(max-width:600px){.legion-lesson .legion-discussion{padding:19px 15px}.legion-lesson .legion-discussion-replies{margin-left:15px}.legion-lesson .legion-discussion-header h2{font-size:22px}}
