@@ -1297,8 +1297,7 @@ async function openLessonModal(
   const removeVideoButton = $("#removeLessonVideo");
   const removeVideoStatus = $("#removeVideoStatus");
   if (removeVideoButton) {
-    removeVideoButton.hidden = !lesson.video_url;
-    removeVideoButton.disabled = false;
+    removeVideoButton.disabled = !Boolean(lesson.video_url?.trim());
     removeVideoButton.textContent = "✕ Excluir vídeo";
   }
   if (removeVideoStatus) {
@@ -1319,8 +1318,7 @@ async function openLessonModal(
   if (removePdfStatus) { removePdfStatus.hidden = true; removePdfStatus.textContent = ""; }
   const removePdfButton = $("#removeLessonPdf");
   if (removePdfButton) {
-    removePdfButton.hidden = !lesson.material_url;
-    removePdfButton.disabled = false;
+    removePdfButton.disabled = !Boolean(lesson.material_url?.trim());
     removePdfButton.textContent = "✕ Excluir PDF";
   }
 
@@ -1408,7 +1406,7 @@ $("#removeLessonPdf")?.addEventListener("click", async () => {
   if (readError || !lesson) { report("Não foi possível verificar o PDF.",true); return; }
   if (!lesson.material_url) {
     $("#editMaterialUrl").value = "";
-    button.hidden = true;
+    button.disabled = true;
     report("Esta aula já está sem PDF.");
     return;
   }
@@ -1423,7 +1421,8 @@ $("#removeLessonPdf")?.addEventListener("click", async () => {
     $("#editMaterialUrl").value = "";
     if (editLessonPdfFile) editLessonPdfFile.value = "";
     if (editLessonPdfName) editLessonPdfName.textContent = "Nenhum novo PDF selecionado";
-    button.hidden = true;
+    button.disabled = true;
+    button.textContent = "✕ Excluir PDF";
     msgA.textContent = "PDF desvinculado da aula.";
     await loadModules();
 
@@ -1487,7 +1486,7 @@ removeLessonVideoButton?.addEventListener("click", async () => {
   }
   if (!lesson.video_url) {
     $("#editVideoUrl").value = "";
-    removeLessonVideoButton.hidden = true;
+    removeLessonVideoButton.disabled = true;
     showRemoveStatus("Esta aula já está sem vídeo.");
     return;
   }
@@ -1506,7 +1505,8 @@ removeLessonVideoButton?.addEventListener("click", async () => {
     if (!updated?.length) throw new Error("O vídeo foi alterado em outra janela. Abra a aula novamente.");
 
     $("#editVideoUrl").value = "";
-    removeLessonVideoButton.hidden = true;
+    removeLessonVideoButton.disabled = true;
+    removeLessonVideoButton.textContent = "✕ Excluir vídeo";
     msgA.textContent = "Vídeo desvinculado da aula.";
     await loadModules();
 
