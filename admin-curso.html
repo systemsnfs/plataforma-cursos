@@ -16,7 +16,7 @@
   >
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/legion-academy.css?v=12">
+  <link rel="stylesheet" href="css/legion-academy.css?v=13">
 </head>
 
 
@@ -680,7 +680,7 @@
         <div id="editLessonVideoStatus" class="legion-video-remove-status" role="status" aria-live="polite" hidden></div>
 
         <div class="legion-video-remove-row">
-          <button type="button" id="removeLessonVideo" class="btn legion-remove-video-btn" hidden>
+          <button type="button" id="removeLessonVideo" class="btn legion-remove-video-btn" disabled>
             <span aria-hidden="true">✕</span> Excluir vídeo
           </button>
           <small id="removeVideoHelp">A exclusão remove o vídeo desta aula, mas preserva o PDF e os demais dados.</small>
@@ -715,7 +715,7 @@
         </div>
         <div id="editLessonPdfStatus" class="legion-video-remove-status" role="status" aria-live="polite" hidden></div>
         <div class="legion-video-remove-row">
-          <button type="button" id="removeLessonPdf" class="btn legion-remove-video-btn" hidden>✕ Excluir PDF</button>
+          <button type="button" id="removeLessonPdf" class="btn legion-remove-video-btn" disabled>✕ Excluir PDF</button>
           <small>A exclusão do PDF preserva o vídeo, o título e os demais dados da aula.</small>
         </div>
         <div id="removePdfStatus" class="legion-video-remove-status" role="status" aria-live="polite" hidden></div>
@@ -800,7 +800,7 @@
 
 <script src="js/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="js/admin-curso.js?v=11"></script>
+<script src="js/admin-curso.js?v=12"></script>
 
 </body>
 </html>
