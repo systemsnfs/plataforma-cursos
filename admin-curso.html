@@ -16,7 +16,7 @@
   >
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/legion-academy.css?v=9">
+  <link rel="stylesheet" href="css/legion-academy.css?v=10">
 </head>
 
 
@@ -666,7 +666,18 @@
 
         <input
           id="editVideoUrl"
+          placeholder="URL do vídeo, se houver"
         >
+
+        <div class="legion-edit-video-upload">
+          <input id="editLessonVideoFile" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" hidden>
+          <button id="selectEditLessonVideo" class="btn legion-video-upload-btn" type="button">＋ Selecionar novo vídeo</button>
+          <div class="legion-video-upload-copy">
+            <strong id="editLessonVideoName">Nenhum novo vídeo selecionado</strong>
+            <small>MP4, WebM ou MOV. Ao salvar, substitui o vídeo da aula ou adiciona um novo.</small>
+          </div>
+        </div>
+        <div id="editLessonVideoStatus" class="legion-video-remove-status" role="status" aria-live="polite" hidden></div>
 
         <div class="legion-video-remove-row">
           <button type="button" id="removeLessonVideo" class="btn legion-remove-video-btn" hidden>
@@ -773,7 +784,7 @@
 
 <script src="js/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="js/admin-curso.js?v=9"></script>
+<script src="js/admin-curso.js?v=10"></script>
 
 </body>
 </html>
