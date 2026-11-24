@@ -1103,8 +1103,7 @@ function setLessonStatus(text, kind = "info") {
   lessonStatus.textContent = text;
   if (kind === "error") lessonStatus.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
-async function uploadLessonVideo() {
-  const file = lessonVideo?.files?.[0];
+async function uploadLessonVideo(file = lessonVideo?.files?.[0], reportProgress = setLessonStatus) {
   if (!file) return null;
   if (!["video/mp4", "video/webm", "video/quicktime"].includes(file.type) &&
       !/\.(mp4|webm|mov)$/i.test(file.name)) {
@@ -1144,14 +1143,14 @@ async function uploadLessonVideo() {
         onError(error) { reject(error); },
         onProgress(uploaded, total) {
           const progress = total ? Math.round(uploaded * 100 / total) : 0;
-          setLessonStatus(`Enviando vídeo: ${progress}% — mantenha esta janela aberta.`);
+          reportProgress(`Enviando vídeo: ${progress}% — mantenha esta janela aberta.`);
         },
         onSuccess() { resolve(); }
       });
       upload.start();
     });
   } else {
-    setLessonStatus("Enviando vídeo... mantenha esta janela aberta.");
+    reportProgress("Enviando vídeo... mantenha esta janela aberta.");
     const { error } = await sbA.storage.from("videos").upload(path, file, {
       contentType: mime,
       upsert: false
@@ -1285,6 +1284,16 @@ async function openLessonModal(
   $("#editVideoUrl").value =
     lesson.video_url || "";
 
+  const editVideoFile = $("#editLessonVideoFile");
+  if (editVideoFile) editVideoFile.value = "";
+  const editVideoName = $("#editLessonVideoName");
+  if (editVideoName) editVideoName.textContent = "Nenhum novo vídeo selecionado";
+  const editVideoStatus = $("#editLessonVideoStatus");
+  if (editVideoStatus) {
+    editVideoStatus.hidden = true;
+    editVideoStatus.textContent = "";
+  }
+
   const removeVideoButton = $("#removeLessonVideo");
   const removeVideoStatus = $("#removeVideoStatus");
   if (removeVideoButton) {
@@ -1315,6 +1324,26 @@ async function openLessonModal(
       "flex";
 }
 
+
+/* ADICIONAR OU SUBSTITUIR VÍDEO EM AULA EXISTENTE */
+const editLessonVideoFile = $("#editLessonVideoFile");
+const editLessonVideoName = $("#editLessonVideoName");
+$("#selectEditLessonVideo")?.addEventListener("click", () => editLessonVideoFile?.click());
+editLessonVideoFile?.addEventListener("change", () => {
+  const file = editLessonVideoFile.files?.[0];
+  if (!file) {
+    if (editLessonVideoName) editLessonVideoName.textContent = "Nenhum novo vídeo selecionado";
+    return;
+  }
+  const allowed = ["video/mp4", "video/webm", "video/quicktime"];
+  if (!allowed.includes(file.type) && !/\.(mp4|webm|mov)$/i.test(file.name)) {
+    alert("Selecione um vídeo MP4, WebM ou MOV.");
+    editLessonVideoFile.value = "";
+    if (editLessonVideoName) editLessonVideoName.textContent = "Nenhum novo vídeo selecionado";
+    return;
+  }
+  if (editLessonVideoName) editLessonVideoName.textContent = file.name;
+});
 
 /* REMOVER SOMENTE O VÍDEO DA AULA */
 const removeLessonVideoButton = $("#removeLessonVideo");
@@ -1402,101 +1431,72 @@ removeLessonVideoButton?.addEventListener("click", async () => {
   }
 });
 
-/* SALVAR AULA */
+/* SALVAR AULA E, SE SELECIONADO, ENVIAR NOVO VÍDEO */
 
-$("#editLessonForm")
-  .addEventListener(
-    "submit",
-    async event => {
+$("#editLessonForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const lessonId = $("#editLessonId").value;
+  const title = $("#editLessonTitle").value.trim();
+  if (!title) {
+    alert("Informe o título da aula.");
+    return;
+  }
 
-      event.preventDefault();
+  const saveButton = $("#editLessonForm").querySelector('button[type="submit"]');
+  if (saveButton.disabled) return;
+  saveButton.disabled = true;
+  const buttonContent = saveButton.innerHTML;
+  saveButton.textContent = "Salvando aula...";
 
+  const statusBox = $("#editLessonVideoStatus");
+  const setEditStatus = (text, error = false) => {
+    if (!statusBox) return;
+    statusBox.hidden = false;
+    statusBox.dataset.status = error ? "error" : "success";
+    statusBox.textContent = text;
+  };
 
-      const lessonId =
-        $("#editLessonId")
-          .value;
-
-
-      const title =
-        $("#editLessonTitle")
-          .value
-          .trim();
-
-
-      if (!title) {
-
-        alert(
-          "Informe o título da aula."
-        );
-
-        return;
-      }
-
-
-      const {
-        error
-      } = await sbA
-        .from("lessons")
-        .update({
-
-          module_id:
-            $("#editLessonModule")
-              .value,
-
-          title,
-
-          description:
-            $("#editLessonDescription")
-              .value
-              .trim(),
-
-          video_url:
-            $("#editVideoUrl")
-              .value
-              .trim() || null,
-
-          material_url:
-            $("#editMaterialUrl")
-              .value
-              .trim() || null,
-
-          duration_minutes:
-            Number(
-              $("#editDuration")
-                .value || 0
-            ),
-
-          published:
-            $("#editPublished")
-              .checked
-
-        })
-        .eq(
-          "id",
-          lessonId
-        );
-
-
-      if (error) {
-
-        alert(
-          error.message
-        );
-
-        return;
-      }
-
-
-      closeLessonModal();
-
-
-      msgA.textContent =
-        "Aula atualizada com sucesso!";
-
-
-      await loadModules();
+  let newVideoUrl = $("#editVideoUrl").value.trim() || null;
+  try {
+    const file = editLessonVideoFile?.files?.[0];
+    if (file) {
+      setEditStatus("Preparando novo vídeo...");
+      newVideoUrl = await uploadLessonVideo(file, message => setEditStatus(message));
+      setEditStatus("Vídeo enviado. Salvando as alterações da aula...");
     }
-  );
+
+    const { error } = await sbA.from("lessons")
+      .update({
+        module_id: $("#editLessonModule").value,
+        title,
+        description: $("#editLessonDescription").value.trim(),
+        video_url: newVideoUrl,
+        material_url: $("#editMaterialUrl").value.trim() || null,
+        duration_minutes: Number($("#editDuration").value || 0),
+        published: $("#editPublished").checked
+      })
+      .eq("id", lessonId);
+
+    if (error) throw error;
+    if (editLessonVideoFile) editLessonVideoFile.value = "";
+    if (editLessonVideoName) editLessonVideoName.textContent = "Nenhum novo vídeo selecionado";
+    closeLessonModal();
+    msgA.textContent = file
+      ? "Novo vídeo enviado e aula atualizada com sucesso!"
+      : "Aula atualizada com sucesso!";
+    await loadModules();
+  } catch (error) {
+    console.error("Erro ao salvar vídeo ou aula:", error);
+    const text = error?.message || "Erro inesperado.";
+    const sizeProblem = /413|exceeded|max.*size|payload too large|entity too large|size limit/i.test(text);
+    setEditStatus(sizeProblem
+      ? "O vídeo ultrapassa o limite de tamanho do Supabase. Reduza o arquivo ou revise o limite do seu plano."
+      : "Não foi possível salvar: " + text, true);
+  } finally {
+    saveButton.disabled = false;
+    saveButton.innerHTML = buttonContent;
+  }
+});
 
 
 function closeLessonModal() {
