@@ -354,3 +354,23 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
   .course-manager-page .legion-drag-handle{width:30px;height:34px}
   .course-manager-page .legion-lesson-move{width:22px}
 }
+
+/* Contraste e legibilidade do botão Cancelar na edição da aula */
+.course-manager-page #editLessonModal #cancelLessonEdit {
+  background:#f5ead5!important;
+  color:#243a2b!important;
+  border:1px solid #e4ca99!important;
+  opacity:1!important;
+  font-weight:800!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.course-manager-page #editLessonModal #cancelLessonEdit:hover,
+.course-manager-page #editLessonModal #cancelLessonEdit:focus-visible {
+  background:#e4ca99!important;
+  color:#182d21!important;
+  border-color:#fff0d4!important;
+}
+.course-manager-page #editLessonModal #editDuration,
+.course-manager-page #createLessonModal #duration {
+  font-variant-numeric:tabular-nums;
+}
