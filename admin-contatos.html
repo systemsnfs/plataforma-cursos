@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mensagens | Legion Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/tema-militar-admin.css?v=6">
+<style>
+.legion-inbox{max-width:1050px;margin:0 auto}.legion-inbox-intro{margin-bottom:28px}.legion-inbox-intro h1{font-family:"Playfair Display",serif;font-size:36px;color:#fff5e2}.legion-inbox-intro p{color:#dce5d9;font-size:13px}
+.legion-inbox-count{display:inline-flex;background:#cba66a;color:#1d3225;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;margin:12px 0}
+.legion-inbox-list{display:flex;flex-direction:column;gap:16px}.legion-inbox-card{background:#f8f4eb;color:#20382a;border:1px solid #d0bd99;border-radius:14px;padding:23px}.legion-inbox-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;flex-wrap:wrap}.legion-inbox-card h2{font:700 22px "Playfair Display",serif;margin:8px 0;color:#1e3927}.legion-inbox-card p{font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}.legion-inbox-meta{color:#657568;font-size:12px}.legion-inbox-meta a{color:#44724d}.legion-inbox-badge{background:#e1d3b6;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700}.legion-inbox-badge.new{background:#d7ebd8;color:#275a35}.legion-inbox-actions{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap}.legion-inbox-actions a,.legion-inbox-actions button{background:#2b5137;color:#fff8e9;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font:700 12px "DM Sans";text-decoration:none}.legion-inbox-actions button:disabled{opacity:.5;cursor:wait}.legion-inbox-empty{padding:40px;background:#f7f2e8;color:#334e39;border-radius:12px}.legion-inbox-status{color:#f6d2be;font-size:13px}
+</style></head>
+<body class="admin-premium admin-single-page"><div class="admin-layout">
+<aside class="admin-sidebar"><div class="sidebar-logo"><div class="sidebar-logo-icon">◇</div><div><a class="brand premium-brand" href="index.html">LEGION<span> ACADEMY</span></a></div></div>
+<nav class="sidebar-menu">
+<a href="admin.html" class="sidebar-link"><span class="sidebar-icon">⌂</span> Dashboard</a>
+<a href="admin-cursos.html" class="sidebar-link"><span class="sidebar-icon">▣</span> Cursos</a>
+<a href="admin-alunos.html" class="sidebar-link"><span class="sidebar-icon">♙</span> Alunos</a>
+<a href="admin-contatos.html" class="sidebar-link active" aria-current="page"><span class="sidebar-icon">✉</span> Mensagens</a>
+<a href="index.html" class="sidebar-link"><span class="sidebar-icon">↗</span> Ver site</a>
+</nav></aside>
+<div class="admin-content"><header class="admin-topbar"><div class="admin-user"><div class="admin-avatar">A</div><div class="admin-user-info"><strong>Administrador</strong><span>Painel de gestão</span></div><button id="logout" class="admin-logout" type="button">Sair</button></div></header>
+<main class="premium-dashboard legion-inbox"><div class="legion-inbox-intro"><span class="premium-eyebrow">PAINEL ADMINISTRATIVO</span><h1>Mensagens recebidas</h1><p>Solicitações enviadas pelo formulário Fale conosco da Legion Academy.</p><span class="legion-inbox-count" id="totalMessages">Carregando...</span></div>
+<div id="contactAdminStatus" class="legion-inbox-status" role="status" aria-live="polite"></div><section id="contactMessages" class="legion-inbox-list" aria-label="Mensagens recebidas"></section>
+</main></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="js/admin-contatos.js?v=1"></script>
+</body></html>
