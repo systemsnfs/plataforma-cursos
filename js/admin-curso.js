@@ -337,7 +337,7 @@ function renderModules() {
 
             <!-- AULAS -->
 
-            <div class="premium-lessons">
+            <div class="premium-lessons" data-module-id="${module.id}">
 
               ${
                 lessons.length
@@ -347,7 +347,9 @@ function renderModules() {
                         (lesson, lessonIndex) =>
                           renderLesson(
                             lesson,
-                            lessonIndex
+                            lessonIndex,
+                            module.id,
+                            lessons.length
                           )
                       )
                       .join("")
@@ -388,6 +390,7 @@ function renderModules() {
 
 
   activateButtons();
+  activateLessonOrdering();
 }
 /* =====================================
    MOSTRAR AULA
@@ -395,7 +398,9 @@ function renderModules() {
 
 function renderLesson(
   lesson,
-  lessonIndex
+  lessonIndex,
+  moduleId,
+  lessonCount
 ) {
 
   const lessonNumber =
@@ -411,8 +416,21 @@ function renderLesson(
 
   return `
 
-    <div class="premium-lesson-row">
+    <div class="premium-lesson-row" data-lesson-id="${lesson.id}" data-module-id="${moduleId}">
 
+      <!-- REORDENAR -->
+      <div class="legion-lesson-reorder" aria-label="Reorganizar esta aula">
+        <button type="button" class="legion-drag-handle" draggable="true"
+          data-id="${lesson.id}" data-module-id="${moduleId}"
+          title="Arraste para reorganizar ou use as setas do teclado"
+          aria-label="Arrastar aula ${escapeAttribute(lesson.title)} para alterar a ordem">☰</button>
+        <div class="legion-lesson-shift">
+          <button type="button" class="legion-lesson-move" data-id="${lesson.id}" data-module-id="${moduleId}" data-direction="-1"
+            aria-label="Subir aula ${escapeAttribute(lesson.title)}" title="Mover aula para cima" ${lessonIndex === 0 ? "disabled" : ""}>↑</button>
+          <button type="button" class="legion-lesson-move" data-id="${lesson.id}" data-module-id="${moduleId}" data-direction="1"
+            aria-label="Descer aula ${escapeAttribute(lesson.title)}" title="Mover aula para baixo" ${lessonIndex === lessonCount - 1 ? "disabled" : ""}>↓</button>
+        </div>
+      </div>
 
       <!-- ÍCONE -->
 
@@ -569,6 +587,123 @@ function activateButtons() {
     });
 }
 
+
+/* ==================================================
+   REORGANIZAR AULAS DENTRO DO MESMO MÓDULO
+================================================== */
+let lessonOrderingBusy = false;
+let draggedLesson = null;
+
+function lessonsSorted(module) {
+  return [...(module?.lessons || [])].sort((a,b) =>
+    (a.position ?? 0) - (b.position ?? 0) ||
+    String(a.id).localeCompare(String(b.id))
+  );
+}
+
+async function persistLessonOrder(moduleId, reorderedIds) {
+  if (lessonOrderingBusy) return;
+  const module = currentModules.find(item => item.id === moduleId);
+  if (!module) return;
+  const current = lessonsSorted(module);
+  if (reorderedIds.length !== current.length ||
+      reorderedIds.some(id => !current.some(item => item.id === id))) return;
+  if (reorderedIds.every((id,index) => id === current[index].id)) return;
+
+  lessonOrderingBusy = true;
+  modulesBox.classList.add("legion-order-saving");
+  msgA.textContent = "Salvando a nova ordem das aulas...";
+  try {
+    // Garante posições únicas e sequenciais no módulo, sem alterar conteúdos.
+    for (let index = 0; index < reorderedIds.length; index++) {
+      const {error} = await sbA.from("lessons")
+        .update({position:index + 1})
+        .eq("id", reorderedIds[index])
+        .eq("module_id",moduleId);
+      if (error) throw error;
+    }
+    msgA.textContent = "Ordem das aulas atualizada com sucesso!";
+  } catch (error) {
+    msgA.textContent = "Não foi possível reorganizar as aulas: " + (error?.message || "Tente novamente.");
+  } finally {
+    lessonOrderingBusy = false;
+    modulesBox.classList.remove("legion-order-saving");
+    await loadModules();
+  }
+}
+
+function reorderedLessonIds(moduleId, fromId, toId, placeAfter = false) {
+  const module = currentModules.find(item => item.id === moduleId);
+  if (!module) return [];
+  const ids = lessonsSorted(module).map(item => item.id);
+  const fromIndex = ids.indexOf(fromId);
+  if (fromIndex < 0 || !ids.includes(toId) || fromId === toId) return ids;
+  ids.splice(fromIndex,1);
+  const targetIndex = ids.indexOf(toId);
+  ids.splice(targetIndex + (placeAfter ? 1 : 0),0,fromId);
+  return ids;
+}
+
+function activateLessonOrdering() {
+  modulesBox.querySelectorAll(".legion-lesson-move").forEach(button => {
+    button.addEventListener("click", () => {
+      const module = currentModules.find(m => m.id === button.dataset.moduleId);
+      const ids = lessonsSorted(module).map(lesson => lesson.id);
+      const index = ids.indexOf(button.dataset.id);
+      const targetIndex = index + Number(button.dataset.direction);
+      if (index < 0 || targetIndex < 0 || targetIndex >= ids.length) return;
+      [ids[index], ids[targetIndex]] = [ids[targetIndex], ids[index]];
+      persistLessonOrder(button.dataset.moduleId,ids);
+    });
+  });
+
+  modulesBox.querySelectorAll(".legion-drag-handle").forEach(handle => {
+    handle.addEventListener("keydown",event => {
+      if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+      event.preventDefault();
+      const direction = event.key === "ArrowUp" ? "-1" : "1";
+      handle.closest(".legion-lesson-reorder")
+        ?.querySelector('.legion-lesson-move[data-direction="' + direction + '"]')?.click();
+    });
+    handle.addEventListener("dragstart",event => {
+      if (lessonOrderingBusy) {event.preventDefault();return;}
+      draggedLesson = {id:handle.dataset.id,moduleId:handle.dataset.moduleId};
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain",handle.dataset.id);
+      handle.closest(".premium-lesson-row")?.classList.add("legion-is-dragging");
+    });
+    handle.addEventListener("dragend", () => {
+      draggedLesson = null;
+      modulesBox.querySelectorAll(".premium-lesson-row").forEach(row => {
+        row.classList.remove("legion-is-dragging","legion-drop-before","legion-drop-after");
+      });
+    });
+  });
+
+  modulesBox.querySelectorAll(".premium-lesson-row[data-lesson-id]").forEach(row => {
+    row.addEventListener("dragover",event => {
+      if (!draggedLesson || lessonOrderingBusy ||
+          row.dataset.moduleId !== draggedLesson.moduleId ||
+          row.dataset.lessonId === draggedLesson.id) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+      const below = event.clientY > row.getBoundingClientRect().top + row.offsetHeight / 2;
+      modulesBox.querySelectorAll(".premium-lesson-row").forEach(item =>
+        item.classList.remove("legion-drop-before","legion-drop-after"));
+      row.classList.add(below ? "legion-drop-after" : "legion-drop-before");
+    });
+    row.addEventListener("drop",event => {
+      if (!draggedLesson || lessonOrderingBusy ||
+          row.dataset.moduleId !== draggedLesson.moduleId) return;
+      event.preventDefault();
+      const {id,moduleId}=draggedLesson;
+      const below = event.clientY > row.getBoundingClientRect().top + row.offsetHeight / 2;
+      draggedLesson = null;
+      const ids = reorderedLessonIds(moduleId,id,row.dataset.lessonId,below);
+      persistLessonOrder(moduleId,ids);
+    });
+  });
+}
 
 /* =====================================
    NOVOS MÓDULO E AULA EM JANELAS
