@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Moderação do fórum | Legion Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/tema-militar-admin.css?v=6">
+<style>
+.forum-admin{max-width:1150px;margin:0 auto;padding:22px}.forum-admin h1{font:700 35px "Playfair Display",serif;color:#fff5de}.forum-admin>p{color:#e2e9de;font-size:13px}
+.forum-admin-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:23px 0}
+.forum-admin-toolbar select,.forum-admin-toolbar button{border-radius:9px;padding:11px 15px;border:1px solid #c5b07e;background:#f9f5ea;color:#203b2b;font:700 12px "DM Sans",sans-serif}
+.forum-admin-toolbar button{cursor:pointer;background:#cba66a}
+.forum-admin-toolbar strong{color:#e7cf9a;font-size:13px}
+.forum-admin-list{display:flex;flex-direction:column;gap:14px}
+.forum-admin-card{background:#f8f5ec;color:#223b2c;border:1px solid #c8b894;border-radius:12px;padding:20px}
+.forum-admin-card h2{font:700 20px "Playfair Display",serif;margin:8px 0;color:#233b2d}
+.forum-admin-meta{font-size:11px;color:#758271;display:flex;gap:8px;flex-wrap:wrap}
+.forum-admin-card p{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;color:#495a4d}
+.forum-admin-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.forum-admin-actions a{font-size:12px;color:#396545}
+.forum-admin-actions button{background:#793f3b;color:#fff4ed;border:1px solid #bc7974;border-radius:8px;padding:10px 14px;cursor:pointer;font:700 12px "DM Sans",sans-serif}
+.forum-admin-actions button:disabled{opacity:.5}.forum-admin-error{color:#ffded6;font-size:12px}.forum-admin-empty{background:#f8f5ec;padding:32px;color:#4c604c;border-radius:12px}
+</style></head>
+<body class="admin-premium admin-single-page"><div class="admin-layout">
+<aside class="admin-sidebar"><div class="sidebar-logo"><div class="sidebar-logo-icon">◇</div><div><a class="brand premium-brand" href="index.html">LEGION<span> ACADEMY</span></a></div></div>
+<nav class="sidebar-menu"><a class="sidebar-link" href="admin.html"><span class="sidebar-icon">⌂</span> Dashboard</a>
+<a class="sidebar-link" href="admin-cursos.html"><span class="sidebar-icon">▣</span> Cursos</a>
+<a class="sidebar-link" href="admin-alunos.html"><span class="sidebar-icon">♙</span> Alunos</a>
+<a class="sidebar-link active" href="admin-forum.html" aria-current="page"><span class="sidebar-icon">☷</span> Discussões</a>
+<a class="sidebar-link" href="admin-contatos.html"><span class="sidebar-icon">✉</span> Mensagens</a>
+<a class="sidebar-link" href="index.html"><span class="sidebar-icon">↗</span> Ver site</a></nav></aside>
+<div class="admin-content"><header class="admin-topbar"><div class="admin-user"><div class="admin-avatar">A</div><div class="admin-user-info"><strong>Administrador</strong><span>Moderação de comentários</span></div><button id="forumLogout" type="button" class="admin-logout">Sair</button></div></header>
+<main class="forum-admin"><span class="premium-eyebrow">PAINEL ADMINISTRATIVO</span><h1>Discussões das aulas</h1><p>Os comentários são publicados imediatamente. Você pode excluí-los aqui quando necessário.</p>
+<div class="forum-admin-toolbar"><select id="forumLessonFilter" aria-label="Filtrar por aula"><option value="">Todas as aulas</option></select><button type="button" id="forumRefresh">Atualizar</button><strong id="forumCount">Carregando...</strong></div>
+<p id="forumAdminStatus" class="forum-admin-error" role="status" aria-live="polite"></p><section id="forumAdminList" class="forum-admin-list" aria-label="Mensagens dos alunos"></section>
+</main></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="js/admin-forum.js?v=1"></script>
+</body></html>
