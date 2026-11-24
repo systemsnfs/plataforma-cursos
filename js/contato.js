@@ -10,11 +10,11 @@ form.addEventListener("submit",async(event)=>{
  status.className="";
  try{
   const payload={
-    name:form.name.value.trim(),
-    email:form.email.value.trim(),
-    subject:form.subject.value,
-    message:form.message.value.trim(),
-    website:form.website.value
+    name:form.elements.namedItem("name").value.trim(),
+    email:form.elements.namedItem("email").value.trim(),
+    subject:form.elements.namedItem("subject").value,
+    message:form.elements.namedItem("message").value.trim(),
+    website:form.elements.namedItem("website").value
   };
   const response=await fetch(SUPABASE_URL+"/functions/v1/contact-submit",{
    method:"POST",
