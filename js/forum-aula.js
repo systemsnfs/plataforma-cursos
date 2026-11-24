@@ -15,11 +15,12 @@ async function initLessonDiscussion(lessonId) {
   let currentUserId = null;
 
   try {
-    const [{data:{user}}, {data:profile}] = await Promise.all([
-      sb2.auth.getUser(), sb2.from("profiles").select("role").eq("id",(await sb2.auth.getUser()).data.user?.id).maybeSingle()
-    ]);
-    currentUserId = user?.id || null;
-    canModerate = profile?.role === "admin";
+    const {data:{user}}=await sb2.auth.getUser();
+    if(user){
+      currentUserId=user.id;
+      const {data:profile}=await sb2.from("profiles").select("role").eq("id",user.id).maybeSingle();
+      canModerate=profile?.role==="admin";
+    }
   } catch (error) { console.warn("Não foi possível verificar a função do usuário.",error); }
 
   const dateLabel = value => new Date(value).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
