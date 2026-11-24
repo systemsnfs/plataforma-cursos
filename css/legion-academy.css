@@ -246,3 +246,24 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page #lessonForm button[type="submit"]:disabled{
   opacity:.7;cursor:progress;
 }
+
+
+/* Remoção segura do vídeo na edição da aula */
+.course-manager-page .legion-video-remove-row{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:13px;
+}
+.course-manager-page .legion-video-remove-row small{flex:1 1 210px;color:#e8dfd0!important;font-size:11px;line-height:1.5}
+.course-manager-page .legion-remove-video-btn{
+  background:#713e3d!important;color:#fff0e9!important;border:1px solid #e2a69f!important;
+  border-radius:8px;padding:10px 14px;min-height:38px;font-size:12px;font-weight:700;cursor:pointer;
+}
+.course-manager-page .legion-remove-video-btn:hover{background:#8b4947!important}
+.course-manager-page .legion-remove-video-btn[hidden],.course-manager-page .legion-video-remove-status[hidden]{display:none!important}
+.course-manager-page .legion-remove-video-btn:disabled{opacity:.65;cursor:progress}
+.course-manager-page .legion-video-remove-status{
+  margin-top:12px;padding:11px 13px;background:#264d38;color:#d9f1dd;border:1px solid #80ba90;
+  border-radius:8px;font-size:12px;line-height:1.5;overflow-wrap:anywhere;
+}
+.course-manager-page .legion-video-remove-status[data-status="error"]{
+  background:#623d3a;border-color:#e5a9a3;color:#ffe9e2;
+}
