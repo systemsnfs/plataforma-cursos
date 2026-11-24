@@ -17,6 +17,9 @@
 
   <link rel="stylesheet" href="css/style.css?v=20261124a">
   <style>
+    .student-contact-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #bda36d;border-radius:9px;padding:10px 15px;color:#f6e5bc;text-decoration:none;font-size:12px;font-weight:700;white-space:nowrap;transition:background .2s,color .2s}
+    .student-contact-link:hover,.student-contact-link:focus-visible{background:#c7a96d;color:#14291e}
+    @media(max-width:650px){.student-contact-link{padding:9px 11px;font-size:11px}}
     .student-telegram-access[hidden]{display:none!important}
     .student-telegram-access{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin:0 0 30px;padding:24px 27px;border:1px solid #b89c5a;border-radius:17px;background:linear-gradient(115deg,#1b3528,#294635);color:#fff7e4;box-shadow:0 12px 35px rgba(24,50,33,.12)}
     .student-telegram-icon{display:grid;place-items:center;flex:0 0 54px;height:54px;border-radius:13px;background:#d8bd7b;color:#1b3929}
@@ -54,6 +57,8 @@
 
 
     <div class="student-user">
+
+      <a href="contato.html" class="student-contact-link" aria-label="Fale conosco e envie sua mensagem para o suporte">✉ Fale conosco</a>
 
       <div class="student-user-avatar" id="studentAvatar">
         A
