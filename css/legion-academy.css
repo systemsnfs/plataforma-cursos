@@ -285,3 +285,28 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page .legion-video-upload-copy strong{color:#fff8eb;font-size:12px;overflow-wrap:anywhere}
 .course-manager-page .legion-video-upload-copy small{color:#d9e5d7;font-size:11px;line-height:1.5}
 .course-manager-page #editLessonForm button[type="submit"]:disabled{opacity:.7;cursor:progress}
+
+/* Botões compactos de exclusão de vídeo e PDF no modal de edição */
+.course-manager-page #editLessonForm .legion-video-remove-row {
+  justify-content:flex-start;
+  align-items:center;
+}
+.course-manager-page #editLessonForm .legion-remove-video-btn {
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  align-items:center;
+  justify-content:center;
+  align-self:flex-start;
+  width:auto!important;
+  max-width:max-content!important;
+  min-width:0!important;
+  min-height:32px!important;
+  padding:6px 11px!important;
+  font-size:11px!important;
+  line-height:1.25!important;
+  white-space:nowrap;
+  border-radius:7px;
+}
+.course-manager-page #editLessonForm .legion-video-remove-row small {
+  flex:1 1 180px;
+}
