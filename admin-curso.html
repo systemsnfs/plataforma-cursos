@@ -16,7 +16,7 @@
   >
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/legion-academy.css?v=10">
+  <link rel="stylesheet" href="css/legion-academy.css?v=11">
 </head>
 
 
@@ -702,7 +702,23 @@
 
         <input
           id="editMaterialUrl"
+          placeholder="URL do PDF, se houver"
         >
+
+        <div class="legion-edit-video-upload">
+          <input id="editLessonPdfFile" type="file" accept="application/pdf,.pdf" hidden>
+          <button id="selectEditLessonPdf" class="btn legion-video-upload-btn" type="button">＋ Selecionar novo PDF</button>
+          <div class="legion-video-upload-copy">
+            <strong id="editLessonPdfName">Nenhum novo PDF selecionado</strong>
+            <small>Ao salvar, adiciona ou substitui o material da aula sem apagar o vídeo.</small>
+          </div>
+        </div>
+        <div id="editLessonPdfStatus" class="legion-video-remove-status" role="status" aria-live="polite" hidden></div>
+        <div class="legion-video-remove-row">
+          <button type="button" id="removeLessonPdf" class="btn legion-remove-video-btn" hidden>✕ Excluir PDF</button>
+          <small>A exclusão do PDF preserva o vídeo, o título e os demais dados da aula.</small>
+        </div>
+        <div id="removePdfStatus" class="legion-video-remove-status" role="status" aria-live="polite" hidden></div>
 
       </div>
 
@@ -784,7 +800,7 @@
 
 <script src="js/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="js/admin-curso.js?v=10"></script>
+<script src="js/admin-curso.js?v=11"></script>
 
 </body>
 </html>
