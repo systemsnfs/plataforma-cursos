@@ -267,3 +267,21 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page .legion-video-remove-status[data-status="error"]{
   background:#623d3a;border-color:#e5a9a3;color:#ffe9e2;
 }
+
+
+/* Enviar novo vídeo para uma aula já existente */
+.course-manager-page .legion-edit-video-upload{
+  display:flex;align-items:center;gap:13px;flex-wrap:wrap;padding:14px;
+  margin-top:14px;border-radius:10px;border:1px solid #a9946f;background:#354b3c;
+}
+.course-manager-page .legion-video-upload-btn{
+  flex-shrink:0;min-height:42px;padding:10px 15px;border-radius:8px;
+  border:1px solid #e2bd7e!important;background:#ddbb7d!important;
+  color:#1a3022!important;font-size:12px;font-weight:800;cursor:pointer;
+}
+.course-manager-page .legion-video-upload-copy{
+  display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 210px;
+}
+.course-manager-page .legion-video-upload-copy strong{color:#fff8eb;font-size:12px;overflow-wrap:anywhere}
+.course-manager-page .legion-video-upload-copy small{color:#d9e5d7;font-size:11px;line-height:1.5}
+.course-manager-page #editLessonForm button[type="submit"]:disabled{opacity:.7;cursor:progress}
