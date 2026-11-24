@@ -29,6 +29,30 @@ let currentModules = [];
 
 
 /* =====================================
+   DURAÇÃO EM MM:SS
+   O banco mantém minutos fracionários.
+===================================== */
+function parseLessonDuration(rawValue) {
+  const value = String(rawValue ?? "").trim();
+  if (!value) return 0;
+  const match = /^(\\d+)(?::([0-5]\\d))?$/.exec(value);
+  if (!match) throw new Error("Informe a duração em minutos:segundos, por exemplo 2:34.");
+  const minutes = Number(match[1]);
+  const seconds = Number(match[2] || 0);
+  if (!Number.isSafeInteger(minutes) || minutes > 999999) {
+    throw new Error("A duração informada é muito grande.");
+  }
+  return Math.round((minutes + seconds / 60) * 1000000) / 1000000;
+}
+
+function formatLessonDuration(minutesValue) {
+  const value = Number(minutesValue || 0);
+  if (!Number.isFinite(value) || value < 0) return "0:00";
+  const totalSeconds = Math.round(value * 60);
+  return Math.floor(totalSeconds / 60) + ":" + String(totalSeconds % 60).padStart(2, "0");
+}
+
+/* =====================================
    INICIAR
 ===================================== */
 
@@ -408,10 +432,7 @@ function renderLesson(
       .padStart(2, "0");
 
 
-  const duration =
-    Number(
-      lesson.duration_minutes || 0
-    );
+  const duration = formatLessonDuration(lesson.duration_minutes);
 
 
   return `
@@ -452,7 +473,6 @@ function renderLesson(
 
           <span>
             ${duration}
-            ${duration === 1 ? "minuto" : "minutos"}
           </span>
 
 
@@ -1312,6 +1332,13 @@ lessonForm.addEventListener("submit", async event => {
     return;
   }
 
+  try {
+    parseLessonDuration($("#duration").value);
+  } catch (error) {
+    setLessonStatus(error.message, "error");
+    return;
+  }
+
   const submitButton = lessonForm.querySelector('button[type="submit"]');
   if (submitButton?.disabled) return;
   submitButton.disabled = true;
@@ -1341,7 +1368,7 @@ lessonForm.addEventListener("submit", async event => {
       description: $("#lessonDescription").value.trim(),
       video_url: videoUrl,
       material_url: materialUrl,
-      duration_minutes: Number($("#duration").value || 0),
+      duration_minutes: parseLessonDuration($("#duration").value),
       position: (count || 0) + 1,
       published: true
     });
@@ -1459,7 +1486,7 @@ async function openLessonModal(
 
 
   $("#editDuration").value =
-    lesson.duration_minutes || 0;
+    formatLessonDuration(lesson.duration_minutes);
 
 
   $("#editPublished").checked =
@@ -1696,6 +1723,13 @@ $("#editLessonForm").addEventListener("submit", async event => {
     return;
   }
 
+  try {
+    parseLessonDuration($("#editDuration").value);
+  } catch (error) {
+    alert(error.message);
+    return;
+  }
+
   const saveButton = $("#editLessonForm").querySelector('button[type="submit"]');
   if (saveButton.disabled) return;
   saveButton.disabled = true;
@@ -1734,7 +1768,7 @@ $("#editLessonForm").addEventListener("submit", async event => {
         description: $("#editLessonDescription").value.trim(),
         video_url: newVideoUrl,
         material_url: newPdfUrl,
-        duration_minutes: Number($("#editDuration").value || 0),
+        duration_minutes: parseLessonDuration($("#editDuration").value),
         published: $("#editPublished").checked
       })
       .eq("id", lessonId);
