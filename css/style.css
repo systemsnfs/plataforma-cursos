@@ -8567,3 +8567,18 @@ body.legion-student{background:#e7e3d8;color:#1e2b23;font-family:"DM Sans",sans-
 .legion-home .legion-telegram-offer-foot span{font-size:12px;font-weight:700;color:#5e4928}
 .legion-home .legion-telegram-offer-foot small{font-size:11px;line-height:1.5;color:#677164}
 @media(max-width:600px){.legion-home .legion-telegram-offer{padding:20px}}
+
+/* Descrição das aulas na lista da área do aluno */
+.legion-student .student-lesson-info .legion-student-lesson-description {
+  margin:7px 0 5px;
+  color:#596c5b!important;
+  font-size:12px;
+  line-height:1.55;
+  font-weight:400;
+  white-space:pre-line;
+  overflow-wrap:anywhere;
+}
+.legion-student .student-lesson-info small {
+  display:block;
+  margin-top:5px;
+}
