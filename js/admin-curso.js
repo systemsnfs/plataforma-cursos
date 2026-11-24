@@ -35,7 +35,7 @@ let currentModules = [];
 function parseLessonDuration(rawValue) {
   const value = String(rawValue ?? "").trim();
   if (!value) return 0;
-  const match = /^(\\d+)(?::([0-5]\\d))?$/.exec(value);
+  const match = /^(\d+)(?::([0-5]\d))?$/.exec(value);
   if (!match) throw new Error("Informe a duração em minutos:segundos, por exemplo 2:34.");
   const minutes = Number(match[1]);
   const seconds = Number(match[2] || 0);
