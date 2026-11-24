@@ -340,6 +340,9 @@ async function renderCourse(course) {
                     )}
                   </strong>
 
+                  ${lesson.description?.trim()
+                    ? `<p class="legion-student-lesson-description">${escapeHtml(lesson.description.trim())}</p>`
+                    : ""}
                   <small>
                     Aula disponível
                   </small>
