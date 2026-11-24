@@ -443,6 +443,32 @@ ${
         `
       : ""
 }
+    <!-- FÓRUM DE DISCUSSÃO DA AULA -->
+    <section class="legion-discussion" id="lessonDiscussion" aria-labelledby="discussionHeading">
+      <div class="legion-discussion-header">
+        <div>
+          <span class="premium-eyebrow">COMUNIDADE DE ALUNOS</span>
+          <h2 id="discussionHeading">Discussão da aula</h2>
+          <p>Compartilhe dúvidas e experiências sobre o conteúdo desta aula.</p>
+        </div>
+        <span id="discussionCount" class="legion-discussion-count">Carregando...</span>
+      </div>
+      <div id="discussionList" class="legion-discussion-list" aria-live="polite"></div>
+      <form id="discussionForm" class="legion-discussion-form">
+        <label for="discussionMessage">Participar da discussão</label>
+        <div id="discussionReplyInfo" class="legion-discussion-reply-info" hidden>
+          <span></span>
+          <button type="button" id="discussionCancelReply">Cancelar resposta</button>
+        </div>
+        <textarea id="discussionMessage" rows="3" maxlength="2000" minlength="3" required placeholder="Escreva uma dúvida ou compartilhe uma experiência..."></textarea>
+        <div class="legion-discussion-form-footer">
+          <small>Seja respeitoso. As mensagens ficam visíveis imediatamente aos demais alunos.</small>
+          <button type="submit" id="discussionSend">Publicar comentário →</button>
+        </div>
+      </form>
+      <div id="discussionStatus" role="status" aria-live="polite"></div>
+    </section>
+
     <!-- NAVEGAÇÃO -->
 
     <div class="premium-lesson-navigation">
@@ -577,6 +603,7 @@ ${
     ></div>
 
   `;
+  await initLessonDiscussion(lesson.id);
 }
 
 
