@@ -310,3 +310,16 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page #editLessonForm .legion-video-remove-row small {
   flex:1 1 180px;
 }
+
+/* Excluir só é clicável quando há um vídeo ou PDF já salvo na aula. */
+.course-manager-page #editLessonForm .legion-remove-video-btn:disabled {
+  opacity:.55!important;
+  cursor:not-allowed!important;
+  background:#5b635c!important;
+  color:#d6dad2!important;
+  border-color:#858d82!important;
+  box-shadow:none!important;
+}
+.course-manager-page #editLessonForm .legion-remove-video-btn:disabled:hover {
+  background:#5b635c!important;
+}
