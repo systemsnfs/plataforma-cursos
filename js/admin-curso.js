@@ -1310,6 +1310,20 @@ async function openLessonModal(
   $("#editMaterialUrl").value =
     lesson.material_url || "";
 
+  const editPdfFile = $("#editLessonPdfFile");
+  if (editPdfFile) editPdfFile.value = "";
+  if ($("#editLessonPdfName")) $("#editLessonPdfName").textContent = "Nenhum novo PDF selecionado";
+  const pdfStatus = $("#editLessonPdfStatus");
+  if (pdfStatus) { pdfStatus.hidden = true; pdfStatus.textContent = ""; }
+  const removePdfStatus = $("#removePdfStatus");
+  if (removePdfStatus) { removePdfStatus.hidden = true; removePdfStatus.textContent = ""; }
+  const removePdfButton = $("#removeLessonPdf");
+  if (removePdfButton) {
+    removePdfButton.hidden = !lesson.material_url;
+    removePdfButton.disabled = false;
+    removePdfButton.textContent = "✕ Excluir PDF";
+  }
+
 
   $("#editDuration").value =
     lesson.duration_minutes || 0;
@@ -1343,6 +1357,111 @@ editLessonVideoFile?.addEventListener("change", () => {
     return;
   }
   if (editLessonVideoName) editLessonVideoName.textContent = file.name;
+});
+
+/* ADICIONAR OU SUBSTITUIR PDF EM AULA EXISTENTE */
+const editLessonPdfFile = $("#editLessonPdfFile");
+const editLessonPdfName = $("#editLessonPdfName");
+$("#selectEditLessonPdf")?.addEventListener("click", () => editLessonPdfFile?.click());
+editLessonPdfFile?.addEventListener("change", () => {
+  const file = editLessonPdfFile.files?.[0];
+  if (!file) {
+    if (editLessonPdfName) editLessonPdfName.textContent = "Nenhum novo PDF selecionado";
+    return;
+  }
+  if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
+    alert("Selecione apenas arquivos PDF.");
+    editLessonPdfFile.value = "";
+    if (editLessonPdfName) editLessonPdfName.textContent = "Nenhum novo PDF selecionado";
+    return;
+  }
+  if (editLessonPdfName) editLessonPdfName.textContent = file.name;
+});
+
+async function uploadEditedLessonPdf(file) {
+  if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
+    throw new Error("O material precisa ser um PDF.");
+  }
+  const path = `${courseId}/${crypto.randomUUID()}.pdf`;
+  const {error} = await sbA.storage.from("materiais").upload(path, file, {
+    contentType:"application/pdf",
+    upsert:false
+  });
+  if (error) throw error;
+  return sbA.storage.from("materiais").getPublicUrl(path).data.publicUrl;
+}
+
+/* EXCLUIR SOMENTE O PDF SEM APAGAR A AULA */
+$("#removeLessonPdf")?.addEventListener("click", async () => {
+  const button = $("#removeLessonPdf");
+  const lessonId = $("#editLessonId")?.value;
+  if (!lessonId || button.disabled) return;
+  const status = $("#removePdfStatus");
+  const report = (text, error = false) => {
+    if (!status) return;
+    status.hidden = false;
+    status.dataset.status = error ? "error" : "success";
+    status.textContent = text;
+  };
+  const {data:lesson,error:readError} = await sbA.from("lessons")
+    .select("id,material_url").eq("id",lessonId).maybeSingle();
+  if (readError || !lesson) { report("Não foi possível verificar o PDF.",true); return; }
+  if (!lesson.material_url) {
+    $("#editMaterialUrl").value = "";
+    button.hidden = true;
+    report("Esta aula já está sem PDF.");
+    return;
+  }
+  if (!confirm("Excluir o PDF desta aula? O vídeo e os demais dados serão preservados. Esta ação não pode ser desfeita.")) return;
+  button.disabled = true;
+  button.textContent = "Excluindo PDF...";
+  try {
+    const {data:updated,error:updateError}=await sbA.from("lessons")
+      .update({material_url:null}).eq("id",lessonId).eq("material_url",lesson.material_url).select("id");
+    if (updateError) throw updateError;
+    if (!updated?.length) throw new Error("O material foi alterado. Abra a aula novamente.");
+    $("#editMaterialUrl").value = "";
+    if (editLessonPdfFile) editLessonPdfFile.value = "";
+    if (editLessonPdfName) editLessonPdfName.textContent = "Nenhum novo PDF selecionado";
+    button.hidden = true;
+    msgA.textContent = "PDF desvinculado da aula.";
+    await loadModules();
+
+    let storagePath = null;
+    try {
+      const url = new URL(lesson.material_url);
+      const projectHost = new URL(SUPABASE_URL).hostname;
+      const storageHost = projectHost.replace(".supabase.co", ".storage.supabase.co");
+      const prefix = "/storage/v1/object/public/materiais/";
+      if ((url.hostname === projectHost || url.hostname === storageHost) && url.pathname.startsWith(prefix)) {
+        const path = decodeURIComponent(url.pathname.slice(prefix.length));
+        if (path.startsWith(courseId + "/") && !path.includes("..")) storagePath = path;
+      }
+    } catch (_) { /* PDF externo: desvincula mas não o apaga */ }
+
+    if (storagePath) {
+      const {count,error:refsError}=await sbA.from("lessons")
+        .select("id",{count:"exact",head:true}).eq("material_url",lesson.material_url);
+      if (refsError) {
+        report("PDF removido da aula, mas o arquivo foi preservado por não ser possível verificar outras referências.",true);
+        return;
+      }
+      if ((count || 0) === 0) {
+        const {error:storageError}=await sbA.storage.from("materiais").remove([storagePath]);
+        if (storageError) {
+          report("PDF removido da aula. Não foi possível apagar o arquivo do armazenamento: " + storageError.message,true);
+          return;
+        }
+        report("PDF excluído da aula e do armazenamento. O vídeo foi preservado.");
+        return;
+      }
+    }
+    report("PDF removido da aula. Arquivos externos ou utilizados em outras aulas são preservados.");
+  } catch(e) {
+    report("Não foi possível excluir o PDF: " + (e?.message || "Erro inesperado."),true);
+    button.disabled = false;
+    button.textContent = "✕ Excluir PDF";
+  }
 });
 
 /* REMOVER SOMENTE O VÍDEO DA AULA */
@@ -1457,7 +1576,15 @@ $("#editLessonForm").addEventListener("submit", async event => {
   };
 
   let newVideoUrl = $("#editVideoUrl").value.trim() || null;
+  let newPdfUrl = $("#editMaterialUrl").value.trim() || null;
   try {
+    const pdfFile = editLessonPdfFile?.files?.[0];
+    if (pdfFile) {
+      const pdfStatus = $("#editLessonPdfStatus");
+      if (pdfStatus) { pdfStatus.hidden = false; pdfStatus.dataset.status = "success"; pdfStatus.textContent = "Enviando novo PDF..."; }
+      newPdfUrl = await uploadEditedLessonPdf(pdfFile);
+      if (pdfStatus) pdfStatus.textContent = "PDF enviado. Salvando a aula...";
+    }
     const file = editLessonVideoFile?.files?.[0];
     if (file) {
       setEditStatus("Preparando novo vídeo...");
@@ -1471,18 +1598,20 @@ $("#editLessonForm").addEventListener("submit", async event => {
         title,
         description: $("#editLessonDescription").value.trim(),
         video_url: newVideoUrl,
-        material_url: $("#editMaterialUrl").value.trim() || null,
+        material_url: newPdfUrl,
         duration_minutes: Number($("#editDuration").value || 0),
         published: $("#editPublished").checked
       })
       .eq("id", lessonId);
 
     if (error) throw error;
+    if (editLessonPdfFile) editLessonPdfFile.value = "";
+    if (editLessonPdfName) editLessonPdfName.textContent = "Nenhum novo PDF selecionado";
     if (editLessonVideoFile) editLessonVideoFile.value = "";
     if (editLessonVideoName) editLessonVideoName.textContent = "Nenhum novo vídeo selecionado";
     closeLessonModal();
-    msgA.textContent = file
-      ? "Novo vídeo enviado e aula atualizada com sucesso!"
+    msgA.textContent = file || pdfFile
+      ? "Materiais enviados e aula atualizada com sucesso!"
       : "Aula atualizada com sucesso!";
     await loadModules();
   } catch (error) {
@@ -1490,7 +1619,7 @@ $("#editLessonForm").addEventListener("submit", async event => {
     const text = error?.message || "Erro inesperado.";
     const sizeProblem = /413|exceeded|max.*size|payload too large|entity too large|size limit/i.test(text);
     setEditStatus(sizeProblem
-      ? "O vídeo ultrapassa o limite de tamanho do Supabase. Reduza o arquivo ou revise o limite do seu plano."
+      ? "O arquivo ultrapassa o limite de tamanho do Supabase. Reduza o arquivo ou revise o limite do seu plano."
       : "Não foi possível salvar: " + text, true);
   } finally {
     saveButton.disabled = false;
