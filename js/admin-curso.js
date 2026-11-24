@@ -1285,6 +1285,18 @@ async function openLessonModal(
   $("#editVideoUrl").value =
     lesson.video_url || "";
 
+  const removeVideoButton = $("#removeLessonVideo");
+  const removeVideoStatus = $("#removeVideoStatus");
+  if (removeVideoButton) {
+    removeVideoButton.hidden = !lesson.video_url;
+    removeVideoButton.disabled = false;
+    removeVideoButton.textContent = "✕ Excluir vídeo";
+  }
+  if (removeVideoStatus) {
+    removeVideoStatus.hidden = true;
+    removeVideoStatus.textContent = "";
+  }
+
 
   $("#editMaterialUrl").value =
     lesson.material_url || "";
@@ -1303,6 +1315,92 @@ async function openLessonModal(
       "flex";
 }
 
+
+/* REMOVER SOMENTE O VÍDEO DA AULA */
+const removeLessonVideoButton = $("#removeLessonVideo");
+removeLessonVideoButton?.addEventListener("click", async () => {
+  const lessonId = $("#editLessonId")?.value;
+  if (!lessonId || removeLessonVideoButton.disabled) return;
+
+  const statusElement = $("#removeVideoStatus");
+  const showRemoveStatus = (text, isError = false) => {
+    if (!statusElement) return;
+    statusElement.hidden = false;
+    statusElement.dataset.status = isError ? "error" : "success";
+    statusElement.textContent = text;
+  };
+
+  // Reconsulta o vídeo realmente salvo antes de remover, evitando agir sobre uma URL não salva.
+  const {data: lesson, error: lessonError} = await sbA
+    .from("lessons").select("id,video_url").eq("id", lessonId).maybeSingle();
+  if (lessonError || !lesson) {
+    showRemoveStatus("Não foi possível verificar o vídeo desta aula.", true);
+    return;
+  }
+  if (!lesson.video_url) {
+    $("#editVideoUrl").value = "";
+    removeLessonVideoButton.hidden = true;
+    showRemoveStatus("Esta aula já está sem vídeo.");
+    return;
+  }
+  if (!confirm("Excluir o vídeo desta aula? A aula, o PDF e o restante do conteúdo serão preservados. Esta ação não poderá ser desfeita.")) return;
+
+  removeLessonVideoButton.disabled = true;
+  removeLessonVideoButton.textContent = "Excluindo vídeo...";
+  try {
+    // Primeiro desvincula o vídeo da aula, para não manter uma URL quebrada.
+    const {data:updated, error:updateError} = await sbA.from("lessons")
+      .update({video_url:null})
+      .eq("id", lessonId)
+      .eq("video_url", lesson.video_url)
+      .select("id");
+    if (updateError) throw updateError;
+    if (!updated?.length) throw new Error("O vídeo foi alterado em outra janela. Abra a aula novamente.");
+
+    $("#editVideoUrl").value = "";
+    removeLessonVideoButton.hidden = true;
+    msgA.textContent = "Vídeo desvinculado da aula.";
+    await loadModules();
+
+    // Exclui do Storage apenas arquivos deste curso e do bucket videos.
+    // URLs externas (YouTube, outros serviços) nunca são excluídas.
+    let storagePath = null;
+    try {
+      const url = new URL(lesson.video_url);
+      const projectHost = new URL(SUPABASE_URL).hostname;
+      const storageHost = projectHost.replace(".supabase.co", ".storage.supabase.co");
+      const prefix = "/storage/v1/object/public/videos/";
+      if ((url.hostname === projectHost || url.hostname === storageHost) && url.pathname.startsWith(prefix)) {
+        const candidate = decodeURIComponent(url.pathname.slice(prefix.length));
+        if (candidate.startsWith(courseId + "/") && !candidate.includes("..")) storagePath = candidate;
+      }
+    } catch (_) { /* URL externa ou inválida: apenas desvinculada */ }
+
+    if (storagePath) {
+      const {count, error:refsError} = await sbA.from("lessons")
+        .select("id", {count:"exact", head:true})
+        .eq("video_url", lesson.video_url);
+      if (refsError) {
+        showRemoveStatus("Vídeo retirado da aula. Não foi possível verificar se o arquivo é usado em outras aulas, então ele foi preservado no armazenamento.", true);
+        return;
+      }
+      if ((count || 0) === 0) {
+        const {error:storageError} = await sbA.storage.from("videos").remove([storagePath]);
+        if (storageError) {
+          showRemoveStatus("Vídeo removido da aula, mas não foi possível apagar o arquivo do armazenamento: " + storageError.message, true);
+          return;
+        }
+        showRemoveStatus("Vídeo excluído da aula e do armazenamento. Os outros materiais foram preservados.");
+        return;
+      }
+    }
+    showRemoveStatus("Vídeo removido da aula. O arquivo original foi preservado por ser externo ou estar em uso em outra aula.");
+  } catch (error) {
+    showRemoveStatus("Não foi possível excluir o vídeo: " + (error?.message || "Erro inesperado."), true);
+    removeLessonVideoButton.disabled = false;
+    removeLessonVideoButton.textContent = "✕ Excluir vídeo";
+  }
+});
 
 /* SALVAR AULA */
 
