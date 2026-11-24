@@ -323,3 +323,34 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page #editLessonForm .legion-remove-video-btn:disabled:hover {
   background:#5b635c!important;
 }
+
+/* Reorganização de aulas com alça de três linhas e setas */
+.course-manager-page .legion-lesson-reorder{
+  display:flex;flex:0 0 auto;align-items:center;gap:5px;margin-right:10px;
+}
+.course-manager-page .legion-drag-handle{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:38px;padding:0;border:1px solid #b8a477;border-radius:8px;
+  color:#f6dcac;background:#284235;cursor:grab;font-size:22px;line-height:1;
+  touch-action:manipulation;user-select:none;
+}
+.course-manager-page .legion-drag-handle:active{cursor:grabbing}
+.course-manager-page .legion-drag-handle:hover,.course-manager-page .legion-drag-handle:focus-visible{
+  background:#50684f;outline:2px solid #dbbc81;outline-offset:1px;
+}
+.course-manager-page .legion-lesson-shift{display:flex;flex-direction:column;gap:3px}
+.course-manager-page .legion-lesson-move{
+  display:inline-grid;place-items:center;width:24px;height:20px;padding:0;border-radius:5px;
+  background:#526b53;border:1px solid #8a9d83;color:#fff3d9;cursor:pointer;
+  font-size:13px;font-weight:700;line-height:1;
+}
+.course-manager-page .legion-lesson-move:disabled{opacity:.35;cursor:not-allowed}
+.course-manager-page .legion-is-dragging{opacity:.4!important}
+.course-manager-page .legion-drop-before{box-shadow:inset 0 3px 0 #efcf87!important}
+.course-manager-page .legion-drop-after{box-shadow:inset 0 -3px 0 #efcf87!important}
+.course-manager-page .legion-order-saving{opacity:.65;pointer-events:none}
+@media(max-width:560px){
+  .course-manager-page .legion-lesson-reorder{margin-right:3px;gap:3px}
+  .course-manager-page .legion-drag-handle{width:30px;height:34px}
+  .course-manager-page .legion-lesson-move{width:22px}
+}
