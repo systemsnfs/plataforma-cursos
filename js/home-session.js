@@ -6,10 +6,24 @@ async function refreshHomeAuth() {
   try {
     const { data: { user } } = await homeClient.auth.getUser();
     if (user) {
-      homeAuthLink.textContent = "Minha área";
-      homeAuthLink.href = "aluno.html";
-      homeLogoutButton.hidden = false;
-      homeLogoutButton.style.display = "inline-flex";
+      // O destino depende do papel atribuído ao usuário no Supabase.
+      const { data: profile, error: profileError } = await homeClient
+        .from("profiles")
+        .select("role, active")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (profileError || !profile || profile.active === false) {
+        homeAuthLink.textContent = "Entrar";
+        homeAuthLink.href = "login.html";
+        homeLogoutButton.hidden = false;
+        homeLogoutButton.style.display = "inline-flex";
+      } else {
+        homeAuthLink.textContent = profile.role === "admin" ? "Painel ADM" : "Minha área";
+        homeAuthLink.href = profile.role === "admin" ? "admin.html" : "aluno.html";
+        homeLogoutButton.hidden = false;
+        homeLogoutButton.style.display = "inline-flex";
+      }
     } else {
       homeAuthLink.textContent = "Entrar";
       homeAuthLink.href = "login.html";
