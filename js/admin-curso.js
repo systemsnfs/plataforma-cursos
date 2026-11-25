@@ -52,6 +52,28 @@ function formatLessonDuration(minutesValue) {
   return Math.floor(totalSeconds / 60) + ":" + String(totalSeconds % 60).padStart(2, "0");
 }
 
+/* Ler duração do arquivo selecionado, preservando correções digitadas pelo administrador. */
+async function detectSelectedVideoDuration(file, inputSelector, hintSelector, fileSelector) {
+  const field = $(inputSelector), hint = $(hintSelector);
+  if (!field || !file) return;
+  const prior = field.value;
+  if (hint) hint.textContent = "Identificando duração do vídeo...";
+  try {
+    const seconds = await window.LegionVideoDuration.read(file);
+    if ($(fileSelector)?.files?.[0] !== file) return;
+    const formatted = window.LegionVideoDuration.format(seconds);
+    if (field.value !== prior) {
+      if (hint) hint.textContent = "Duração detectada: " + formatted + ". Mantido o valor alterado manualmente.";
+      return;
+    }
+    field.value = formatted;
+    if (hint) hint.textContent = "Detectado automaticamente: " + formatted + ". Você pode ajustar manualmente.";
+  } catch(error) {
+    if (hint) hint.textContent = "Não foi possível detectar o tempo. Informe a duração manualmente (ex.: 2:34).";
+    console.warn("Duração de vídeo indisponível:",error);
+  }
+}
+
 /* =====================================
    INICIAR
 ===================================== */
@@ -1249,6 +1271,7 @@ lessonVideo?.addEventListener("change", () => {
     return;
   }
   videoFileName.textContent = file.name;
+  detectSelectedVideoDuration(file, "#duration", "#durationAutoHint", "#lessonVideo");
 });
 const lessonStatus = $("#lessonSaveStatus");
 function setLessonStatus(text, kind = "info") {
@@ -1377,6 +1400,7 @@ lessonForm.addEventListener("submit", async event => {
     lessonForm.reset();
     if (pdfFileName) pdfFileName.textContent = "Nenhum PDF selecionado";
     if (videoFileName) videoFileName.textContent = "Nenhum vídeo selecionado";
+    if ($("#durationAutoHint")) $("#durationAutoHint").textContent = "Ao selecionar um vídeo, a duração será preenchida automaticamente. Você pode editar o valor.";
     setLessonStatus("Aula salva com sucesso!", "success");
     closeCreateLessonModal();
     msgA.textContent = "Aula criada com sucesso!";
@@ -1446,6 +1470,7 @@ async function openLessonModal(
   $("#editVideoUrl").value =
     lesson.video_url || "";
 
+  if ($("#editDurationAutoHint")) $("#editDurationAutoHint").textContent = "Ao selecionar um novo vídeo, a duração é preenchida automaticamente. Você também pode informar manualmente.";
   const editVideoFile = $("#editLessonVideoFile");
   if (editVideoFile) editVideoFile.value = "";
   const editVideoName = $("#editLessonVideoName");
@@ -1517,6 +1542,36 @@ editLessonVideoFile?.addEventListener("change", () => {
     return;
   }
   if (editLessonVideoName) editLessonVideoName.textContent = file.name;
+  detectSelectedVideoDuration(file, "#editDuration", "#editDurationAutoHint", "#editLessonVideoFile");
+});
+
+$("#detectEditVideoDuration")?.addEventListener("click", async () => {
+  const button = $("#detectEditVideoDuration");
+  const field = $("#editDuration"), hint = $("#editDurationAutoHint");
+  const file = $("#editLessonVideoFile")?.files?.[0];
+  const url = $("#editVideoUrl")?.value.trim();
+  if (!file && !url) {
+    if (hint) hint.textContent = "Selecione um vídeo ou informe sua URL para detectar a duração.";
+    return;
+  }
+  button.disabled = true;
+  const lessonId = $("#editLessonId")?.value;
+  try {
+    if (file) {
+      await detectSelectedVideoDuration(file, "#editDuration", "#editDurationAutoHint", "#editLessonVideoFile");
+    } else {
+      if (hint) hint.textContent = "Lendo duração da URL...";
+      const seconds = await window.LegionVideoDuration.read(url);
+      if ($("#editLessonId")?.value !== lessonId || $("#editVideoUrl")?.value.trim() !== url) return;
+      field.value = window.LegionVideoDuration.format(seconds);
+      if (hint) hint.textContent = "Duração identificada: " + field.value + ". Você pode corrigir manualmente.";
+    }
+  } catch(error) {
+    if (hint) hint.textContent = "Não foi possível detectar pela URL. Vídeos do YouTube e links sem metadados precisam de preenchimento manual.";
+    console.warn("Duração indisponível pela URL:",error);
+  } finally {
+    button.disabled = false;
+  }
 });
 
 /* ADICIONAR OU SUBSTITUIR PDF EM AULA EXISTENTE */
