@@ -374,3 +374,20 @@ body.course-manager-page{--legion-green:#34493b;--legion-deep:#1b2b22;--legion-g
 .course-manager-page #createLessonModal #duration {
   font-variant-numeric:tabular-nums;
 }
+
+/* Tempo do vídeo detectado automaticamente no cadastro e edição */
+.course-manager-page .legion-duration-hint{
+  display:block;margin-top:9px;font-size:11px;line-height:1.55;
+  color:#e5e9d9!important;
+}
+.course-manager-page .legion-duration-tools{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px;
+}
+.course-manager-page .legion-detect-duration-btn{
+  width:auto!important;min-width:0!important;flex:0 0 auto!important;
+  padding:9px 12px!important;min-height:34px!important;
+  border-radius:8px;background:#dfc28a!important;color:#203527!important;
+  border:1px solid #e8cf98!important;font-size:11px;font-weight:800;cursor:pointer;
+}
+.course-manager-page .legion-detect-duration-btn:disabled{opacity:.65;cursor:wait}
+.course-manager-page .legion-duration-tools .legion-duration-hint{flex:1 1 200px;margin:0}
