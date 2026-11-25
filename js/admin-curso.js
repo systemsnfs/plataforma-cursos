@@ -763,6 +763,7 @@ function closeCreateModuleModal() {
 function closeCreateLessonModal() {
   $("#createLessonModal").style.display = "none";
   document.body.classList.remove("legion-manager-modal-open");
+  clearLessonSaveStatus();
 }
 function openNewLessonModal(selectedModuleId) {
   if (!currentModules.length) {
@@ -773,6 +774,7 @@ function openNewLessonModal(selectedModuleId) {
   if (selectedModuleId && currentModules.some(module => module.id === selectedModuleId)) {
     moduleSelect.value = selectedModuleId;
   }
+  clearLessonSaveStatus();
   openCreateModal("#createLessonModal");
   $("#lessonTitle")?.focus();
 }
@@ -1274,6 +1276,12 @@ lessonVideo?.addEventListener("change", () => {
   detectSelectedVideoDuration(file, "#duration", "#durationAutoHint", "#lessonVideo");
 });
 const lessonStatus = $("#lessonSaveStatus");
+function clearLessonSaveStatus() {
+  if (!lessonStatus) return;
+  lessonStatus.hidden = true;
+  lessonStatus.textContent = "";
+  lessonStatus.removeAttribute("data-status");
+}
 function setLessonStatus(text, kind = "info") {
   if (!lessonStatus) return;
   lessonStatus.hidden = false;
@@ -1401,9 +1409,8 @@ lessonForm.addEventListener("submit", async event => {
     if (pdfFileName) pdfFileName.textContent = "Nenhum PDF selecionado";
     if (videoFileName) videoFileName.textContent = "Nenhum vídeo selecionado";
     if ($("#durationAutoHint")) $("#durationAutoHint").textContent = "Ao selecionar um vídeo, a duração será preenchida automaticamente. Você pode editar o valor.";
-    setLessonStatus("Aula salva com sucesso!", "success");
     closeCreateLessonModal();
-    msgA.textContent = "Aula criada com sucesso!";
+    msgA.textContent = "Aula salva com sucesso!";
     await loadModules();
   } catch (error) {
     console.error("Erro ao cadastrar aula:", error);
