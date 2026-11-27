@@ -27,10 +27,11 @@ function brl(value) {
 function updateCheckoutTotal() {
   const selected = telegramAddon.checked;
   const amountCents = Math.round(baseCoursePrice * 100) + (selected ? (bundledTelegramCents ?? 0) : 0);
-  // A parcela apresentada é uma simulação aritmética. A cobrança efetiva
-  // e as opções de parcelamento são determinadas pelo Mercado Pago.
-  const installmentCents = Math.round(amountCents / 10);
-  installmentsPrice.textContent = "10x de " + brl(installmentCents / 100);
+  // Valores ilustrativos informados para a oferta. São exemplos com juros
+  // e NÃO representam uma cotação ou condição garantida pelo Mercado Pago.
+  installmentsPrice.textContent = selected
+    ? "10x de " + brl(6.98)
+    : "9x de " + brl(6.37);
   coursePrice.textContent = brl(amountCents / 100);
   telegramTotalNote.textContent = selected
     ? "Curso + consultoria vitalícia pelo Telegram"
