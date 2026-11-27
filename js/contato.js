@@ -8,7 +8,7 @@ if (contactTopic === "Consultoria pelo Telegram") {
   if (topicField) topicField.value = contactTopic;
   const messageField = form.elements.namedItem("message");
   if (messageField && !messageField.value) {
-    messageField.value = "Olá! Já sou aluno da Legion Academy e gostaria de adquirir a consultoria vitalícia pelo Telegram por R$ 9,99. Como faço para realizar a compra?";
+    messageField.value = "Olá! Já sou aluno da Legion Academy e gostaria de adquirir a consultoria vitalícia pelo Telegram por R$ 27,99. Como faço para realizar a compra?";
   }
 }
 
