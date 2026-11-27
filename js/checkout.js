@@ -114,7 +114,8 @@ payButton.addEventListener("click", async () => {
         course_id: courseId,
         name: buyerName.value.trim(),
         email: buyerEmail.value.trim(),
-        telegram_addon: telegramAddon.checked
+        telegram_addon: telegramAddon.checked,
+        expected_telegram_cents: bundledTelegramCents
       })
     });
     const data = await response.json();
