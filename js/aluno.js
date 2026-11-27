@@ -564,7 +564,19 @@ async function initializeTelegramAccess() {
     const status = await telegramAccessRequest("check");
     if (!status.eligible) {
       card.hidden = true;
-      if (offerCard) offerCard.hidden = false;
+      // Só exibe a oferta depois de consultar o preço mais recente.
+      if (offerCard) {
+        const {data:pricing,error:pricingError} = await sb.from("telegram_pricing")
+          .select("later_price_cents").eq("id",1).single();
+        const cents = pricing?.later_price_cents;
+        if (pricingError || !Number.isSafeInteger(cents) || cents<=0) {
+          console.warn("Preço da oferta Telegram indisponível.",pricingError);
+          return;
+        }
+        const priceNode = document.getElementById("telegramLaterPrice");
+        if (priceNode) priceNode.textContent=(cents/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+        offerCard.hidden = false;
+      }
       return;
     }
     if (offerCard) offerCard.hidden = true;
