@@ -234,6 +234,26 @@
     .legion-checkout .checkout-price-panel #coursePrice{font-size:22px;color:#254233;white-space:nowrap}
     .legion-checkout .checkout-price-panel #telegramTotalNote{font-size:11px;color:#647464;line-height:1.45}
     .legion-checkout .checkout-installment-note{font-size:10px;line-height:1.55;color:#7c806e;margin:13px 0 0}
+    /* Oferta do Telegram em vermelho, mantendo contraste nos dois estados. */
+    .legion-checkout .telegram-offer,
+    .legion-checkout .telegram-offer.is-selected{
+      background:linear-gradient(135deg,#8f2d2d 0%,#a33c3b 100%);
+      border-color:#d69583;
+      box-shadow:0 7px 25px rgba(105,29,29,.2);
+    }
+    .legion-checkout .telegram-offer.is-selected{
+      border-color:#f1c485;
+      box-shadow:0 0 0 3px rgba(238,188,109,.28),0 7px 25px rgba(105,29,29,.2);
+    }
+    .legion-checkout .telegram-offer .telegram-special-badge{background:#5f1d1d;color:#fff4e4}
+    .legion-checkout .telegram-offer .telegram-extra-price{color:#ffe1a8}
+    .legion-checkout .telegram-offer .telegram-offer-copy,
+    .legion-checkout .telegram-offer .telegram-offer-title{color:#fffaf2}
+    .legion-checkout .telegram-offer .telegram-offer-copy small{color:#ffe8df}
+    .legion-checkout .telegram-offer .telegram-offer-title svg{color:#ffd99a}
+    .legion-checkout .telegram-offer .telegram-select-hint,
+    .legion-checkout .telegram-offer.is-selected .telegram-select-hint{color:#ffe2aa}
+    .legion-checkout .telegram-offer .telegram-offer-choice input{accent-color:#efd3a2}
     @media(max-width:480px){.legion-checkout .telegram-offer-title{font-size:17px}.legion-checkout .checkout-price-panel{padding:16px}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
