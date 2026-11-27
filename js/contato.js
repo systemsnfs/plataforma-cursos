@@ -1,6 +1,17 @@
 const form=document.getElementById("contactForm");
 const status=document.getElementById("contactStatus");
 const submit=document.getElementById("submitContact");
+// Preenche o assunto quando o aluno solicita a oferta de consultoria.
+const contactTopic = new URLSearchParams(location.search).get("assunto");
+if (contactTopic === "Consultoria pelo Telegram") {
+  const topicField = form.elements.namedItem("subject");
+  if (topicField) topicField.value = contactTopic;
+  const messageField = form.elements.namedItem("message");
+  if (messageField && !messageField.value) {
+    messageField.value = "Olá! Já sou aluno da Legion Academy e gostaria de adquirir a consultoria vitalícia pelo Telegram por R$ 9,99. Como faço para realizar a compra?";
+  }
+}
+
 form.addEventListener("submit",async(event)=>{
  event.preventDefault();
  if(!form.reportValidity())return;
