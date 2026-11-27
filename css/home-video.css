@@ -26,3 +26,34 @@
   position:absolute;bottom:25px;left:25px;right:25px;z-index:12;
   padding:12px;border-radius:8px;background:#68302b;color:#fff0e5;font-size:12px;
 }
+
+/* Quadro de pré-visualização do vídeo sob os textos e o botão ▶. */
+.legion-home .home-feature-card .home-hero-preview{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center center;
+  z-index:0;pointer-events:none;
+  background:#14281c;
+}
+.legion-home .home-feature-card .home-hero-preview[hidden],
+.legion-home .home-feature-card .home-hero-preview-shade[hidden]{
+  display:none!important;
+}
+.legion-home .home-feature-card .home-hero-preview-shade{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(10,25,16,.52) 0%,rgba(14,33,21,.15) 32%,rgba(12,29,18,.45) 63%,rgba(9,25,17,.93) 100%);
+}
+.legion-home .home-feature-card .home-card-decoration{
+  z-index:2;pointer-events:none;
+}
+.legion-home .home-feature-card .home-feature-top,
+.legion-home .home-feature-card .home-feature-bottom,
+.legion-home .home-feature-card .home-play{
+  position:relative;z-index:3;
+}
+.legion-home .home-feature-card .home-video-trigger{
+  position:relative;z-index:4;
+  flex:0 0 78px;
+}
+.legion-home .home-feature-card .home-feature-bottom{
+  text-shadow:0 2px 12px rgba(0,0,0,.55);
+}
