@@ -120,8 +120,6 @@ if (studentAvatar) {
     }
   } catch (error) { console.warn("Falha ao consultar pagamentos:", error); }
 
-  await initializeTelegramAccess();
-
   /* =====================================
      MATRÍCULAS ATIVAS
   ===================================== */
@@ -153,6 +151,11 @@ if (studentAvatar) {
     return;
   }
 
+
+  // Mostra oferta somente a alunos com matrícula ativa, após checagem do benefício.
+  if (enrollments?.length) {
+    await initializeTelegramAccess();
+  }
 
   if (!enrollments?.length) {
 
@@ -554,11 +557,17 @@ async function telegramAccessRequest(action) {
 
 async function initializeTelegramAccess() {
   const card = document.getElementById("telegramStudentCard");
+  const offerCard = document.getElementById("telegramOfferStudentCard");
   const button = document.getElementById("openTelegramGroup");
   if (!card || !button) return;
   try {
     const status = await telegramAccessRequest("check");
-    if (!status.eligible) return;
+    if (!status.eligible) {
+      card.hidden = true;
+      if (offerCard) offerCard.hidden = false;
+      return;
+    }
+    if (offerCard) offerCard.hidden = true;
     card.hidden = false;
     button.addEventListener("click", async () => {
       button.disabled = true;
