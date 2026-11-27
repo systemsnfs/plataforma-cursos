@@ -31,6 +31,8 @@
     rel="stylesheet"
     href="css/style.css"
   >
+  <link rel="stylesheet" href="css/home-video.css?v=1"
+  >
   <style>
     .home-footer-brand { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
     .home-instagram-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-left: 12px; padding: 9px 14px; border: 1px solid #b89a60; border-radius: 8px; color: #f4e7c5; font: 600 13px/1.2 Arial, sans-serif; text-decoration: none; transition: background .2s, color .2s; }
@@ -187,11 +189,9 @@
 
 
     <div class="home-play">
-
-      <div class="home-play-circle">
+      <button type="button" class="home-play-circle home-video-trigger" id="homeHeroPlay" disabled aria-label="Vídeo de apresentação ainda não disponível">
         ▶
-      </div>
-
+      </button>
     </div>
 
 
@@ -212,6 +212,11 @@
       </p>
 
     </div>
+
+    <!-- Vídeo enviado pelo administrador; sem vídeo, o card original permanece. -->
+    <video id="homeHeroVideo" class="home-hero-video" controls preload="none" playsinline hidden aria-label="Vídeo de apresentação da Legion Academy"></video>
+    <button type="button" id="homeHeroClose" class="home-hero-close" hidden aria-label="Fechar vídeo e voltar à apresentação">✕ Fechar</button>
+    <p id="homeHeroVideoError" class="home-hero-video-error" role="status" hidden></p>
 
   </div>
 
@@ -642,6 +647,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/home-session.js?v=4"></script>
+  <script src="js/home-video.js?v=1"></script>
 
 </body>
 
