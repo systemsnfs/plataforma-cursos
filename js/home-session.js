@@ -83,3 +83,19 @@ async function loadHomeCoursePrice() {
   }
 }
 loadHomeCoursePrice();
+
+/* Preço promocional do Telegram sempre sincronizado com as configurações do ADM. */
+async function loadHomeTelegramPrice() {
+  const element = document.getElementById("homeTelegramPrice");
+  if (!element) return;
+  try {
+    const {data,error} = await homeClient.from("telegram_pricing")
+      .select("bundled_price_cents").eq("id",1).single();
+    if(error||!Number.isSafeInteger(data?.bundled_price_cents))throw error||new Error("Preço indisponível");
+    element.textContent="+ "+(data.bundled_price_cents/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  } catch (error) {
+    element.textContent="Consulte o valor";
+    console.warn("Não foi possível carregar preço Telegram da página inicial:",error);
+  }
+}
+loadHomeTelegramPrice();
