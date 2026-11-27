@@ -1,0 +1,28 @@
+/* Vídeo da capa da Legion Academy — mantém aparência original sem vídeo. */
+.legion-home .home-feature-card .home-video-trigger{
+  padding:0 0 0 4px;cursor:pointer;font:inherit;
+  appearance:none;-webkit-appearance:none;z-index:3;
+  transition:background .2s,transform .2s;
+}
+.legion-home .home-feature-card .home-video-trigger:not(:disabled):hover,
+.legion-home .home-feature-card .home-video-trigger:not(:disabled):focus-visible{
+  background:rgba(201,158,81,.25);transform:scale(1.05);outline:2px solid #d8b46e;
+}
+.legion-home .home-feature-card .home-video-trigger:disabled{cursor:default;opacity:1}
+.legion-home .home-feature-card .home-hero-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  display:block;object-fit:contain;background:#0f2117;z-index:10;
+}
+.legion-home .home-feature-card .home-hero-video[hidden],
+.legion-home .home-feature-card .home-hero-close[hidden],
+.legion-home .home-feature-card .home-hero-video-error[hidden]{display:none!important}
+.legion-home .home-feature-card .home-hero-close{
+  position:absolute;top:15px;right:15px;z-index:12;
+  border:1px solid #d6b674;border-radius:9px;
+  padding:9px 13px;background:rgba(17,35,24,.96);color:#fff6da;
+  font:700 12px "DM Sans",sans-serif;cursor:pointer;
+}
+.legion-home .home-feature-card .home-hero-video-error{
+  position:absolute;bottom:25px;left:25px;right:25px;z-index:12;
+  padding:12px;border-radius:8px;background:#68302b;color:#fff0e5;font-size:12px;
+}
