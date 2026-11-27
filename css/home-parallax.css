@@ -1,0 +1,53 @@
+/* Legion Academy: parallax suave na home, sem comprometer acessibilidade. */
+.legion-home .premium-home-hero{
+  --la-parallax-image:0px;
+  --la-parallax-copy:0px;
+  --la-parallax-card:0px;
+  background-position:center calc(35% + var(--la-parallax-image))!important;
+}
+.legion-home .premium-home-hero .home-hero-content{
+  transform:translate3d(0,var(--la-parallax-copy),0);
+  will-change:transform;
+}
+.legion-home .premium-home-hero .home-feature-card{
+  transform:translate3d(0,var(--la-parallax-card),0);
+  will-change:transform;
+}
+.legion-home .premium-home-hero .home-card-decoration{
+  transform:translate3d(0,calc(var(--la-parallax-card) * -.5),0);
+}
+.legion-home .la-reveal-ready{
+  opacity:0;
+  transform:translate3d(0,23px,0);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1);
+}
+.legion-home .la-reveal-ready.la-reveal-visible{
+  opacity:1;
+  transform:translate3d(0,0,0);
+}
+@media (max-width:760px){
+  .legion-home .premium-home-hero{
+    background-position:center calc(35% + var(--la-parallax-image))!important;
+  }
+  .legion-home .premium-home-hero .home-hero-content,
+  .legion-home .premium-home-hero .home-feature-card,
+  .legion-home .premium-home-hero .home-card-decoration{
+    will-change:auto;
+  }
+  .legion-home .la-reveal-ready{
+    transform:translate3d(0,14px,0);
+    transition-duration:.5s;
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .legion-home .premium-home-hero{background-position:center 35%!important}
+  .legion-home .premium-home-hero .home-hero-content,
+  .legion-home .premium-home-hero .home-feature-card,
+  .legion-home .premium-home-hero .home-card-decoration,
+  .legion-home .la-reveal-ready{
+    transform:none!important;
+    opacity:1!important;
+    transition:none!important;
+    will-change:auto!important;
+  }
+}
