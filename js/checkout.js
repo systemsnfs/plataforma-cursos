@@ -18,6 +18,7 @@ const afterPayment = document.getElementById("checkoutAfterPayment");
 const registerAfterPayment = document.getElementById("registerAfterPayment");
 const loginAfterPayment = document.getElementById("loginAfterPayment");
 let baseCoursePrice = 0;
+let bundledTelegramCents = null;
 
 function brl(value) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -25,7 +26,7 @@ function brl(value) {
 
 function updateCheckoutTotal() {
   const selected = telegramAddon.checked;
-  const amountCents = Math.round(baseCoursePrice * 100) + (selected ? 999 : 0);
+  const amountCents = Math.round(baseCoursePrice * 100) + (selected ? (bundledTelegramCents ?? 0) : 0);
   // A parcela apresentada é uma simulação aritmética. A cobrança efetiva
   // e as opções de parcelamento são determinadas pelo Mercado Pago.
   const installmentCents = Math.round(amountCents / 10);
@@ -79,6 +80,16 @@ async function initCheckout() {
   courseTitle.textContent = course.title;
   courseDescription.textContent = course.description || "Aulas e materiais da Legion Academy.";
   baseCoursePrice = Number(course.price || 0);
+  // Lê o valor público que também é usado pelo servidor ao criar a cobrança.
+  const {data:telegramPricing,error:pricingError} = await sb.from("telegram_pricing")
+    .select("bundled_price_cents").eq("id",1).single();
+  if(pricingError || !telegramPricing || !Number.isSafeInteger(telegramPricing.bundled_price_cents)){
+    checkoutMessage.textContent = "Não foi possível consultar o preço da consultoria. Atualize a página para tentar novamente.";
+    return;
+  }
+  bundledTelegramCents = telegramPricing.bundled_price_cents;
+  const priceBadge = document.querySelector(".telegram-extra-price");
+  if(priceBadge) priceBadge.textContent = "+ " + brl(bundledTelegramCents/100);
   updateCheckoutTotal();
   payButton.disabled = false;
   showReturn();
@@ -89,6 +100,10 @@ async function initCheckout() {
 
 payButton.addEventListener("click", async () => {
   if (!buyerName.reportValidity() || !buyerEmail.reportValidity()) return;
+  if(bundledTelegramCents===null){
+    checkoutMessage.textContent="Preço do Telegram indisponível. Atualize a página e tente novamente.";
+    return;
+  }
   payButton.disabled = true;
   checkoutMessage.textContent = "Preparando o pagamento seguro...";
   try {
