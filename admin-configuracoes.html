@@ -1,0 +1,36 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configurações do Telegram | Legion Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/tema-militar-admin.css?v=6">
+<style>
+.legion-settings{max-width:950px;margin:0 auto;padding:20px 0 35px}.legion-settings h1{font:700 34px "Playfair Display",serif;color:#fff5df;margin:10px 0}.legion-settings .intro{font-size:13px;color:#dce7da;line-height:1.65;margin-bottom:26px}
+.legion-settings-card{background:#f8f4eb;color:#273d2e;border:1px solid #d0bb94;border-radius:16px;padding:28px;box-shadow:0 12px 30px #13251920}
+.legion-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.legion-setting{display:flex;flex-direction:column;gap:10px}.legion-setting label{color:#233c2b;font-size:13px;font-weight:800}
+.legion-setting input{width:100%;box-sizing:border-box;border:1px solid #b9aa88;border-radius:10px;background:#fff;color:#203a29;padding:15px 13px;font:700 21px "DM Sans",sans-serif}
+.legion-setting small{font-size:11px;line-height:1.5;color:#647467}
+.legion-setting input:focus{outline:2px solid #c7a56f;outline-offset:1px}
+.legion-settings-footer{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;border-top:1px solid #dfd5c2;margin-top:23px;padding-top:21px}
+.legion-settings-footer button{background:#284e36;color:#fff8e8;border:0;border-radius:9px;padding:13px 23px;font:700 13px "DM Sans",sans-serif;cursor:pointer}
+.legion-settings-footer button:disabled{opacity:.55;cursor:wait}
+.legion-settings-status{font-size:12px;color:#2c6440;flex:1}.legion-settings-status.error{color:#aa332b}
+.legion-settings-note{margin-top:20px;color:#e4e2d6;font-size:12px;line-height:1.75}
+@media(max-width:650px){.legion-settings-grid{grid-template-columns:1fr}.legion-settings-card{padding:21px}}
+</style></head>
+<body class="admin-premium admin-single-page"><div class="admin-layout">
+<aside class="admin-sidebar"><div class="sidebar-logo"><div class="sidebar-logo-icon">◇</div><a class="brand premium-brand" href="index.html">LEGION<span> ACADEMY</span></a></div>
+<nav class="sidebar-menu"><a href="admin.html" class="sidebar-link"><span class="sidebar-icon">⌂</span> Dashboard</a><a href="admin-cursos.html" class="sidebar-link"><span class="sidebar-icon">▣</span> Cursos</a><a href="admin-alunos.html" class="sidebar-link"><span class="sidebar-icon">♙</span> Alunos</a><a href="admin-forum.html" class="sidebar-link"><span class="sidebar-icon">☷</span> Discussões</a><a href="admin-contatos.html" class="sidebar-link"><span class="sidebar-icon">✉</span> Mensagens</a><a href="admin-configuracoes.html" class="sidebar-link active" aria-current="page"><span class="sidebar-icon">⚙</span> Configurações</a><a href="aluno.html" class="sidebar-link"><span class="sidebar-icon">▷</span> Área do aluno</a></nav>
+</aside>
+<div class="admin-content"><header class="admin-topbar"><div class="admin-user"><div class="admin-avatar">A</div><div class="admin-user-info"><strong>Administrador</strong><span>Configurações da plataforma</span></div><button id="logoutSettings" type="button" class="admin-logout">Sair</button></div></header>
+<main class="premium-dashboard legion-settings"><span class="premium-eyebrow">PAINEL ADMINISTRATIVO</span><h1>Preços da consultoria Telegram</h1><p class="intro">Altere o valor promocional vendido com o curso e o preço da oferta disponível depois da inscrição.</p>
+<form id="telegramPricingForm" class="legion-settings-card" hidden>
+<div class="legion-settings-grid">
+<div class="legion-setting"><label for="bundlePrice">Junto com o curso (R$)</label><input type="text" id="bundlePrice" inputmode="decimal" autocomplete="off" required placeholder="9,99" aria-describedby="bundlePriceHelp"><small id="bundlePriceHelp">Este valor será somado ao curso no checkout inicial.</small></div>
+<div class="legion-setting"><label for="laterPrice">Depois de comprar o curso (R$)</label><input type="text" id="laterPrice" inputmode="decimal" autocomplete="off" required placeholder="27,99" aria-describedby="laterPriceHelp"><small id="laterPriceHelp">Exibido no card do aluno e no formulário para solicitar compra posterior. O checkout posterior ainda não é automático.</small></div>
+</div>
+<div class="legion-settings-footer"><div id="pricingFormStatus" class="legion-settings-status" role="status" aria-live="polite"></div><button id="saveTelegramPrices" type="submit">Salvar alterações</button></div>
+</form>
+<p id="pricingLoadStatus" class="legion-settings-note" role="status">Carregando configurações...</p>
+<p class="legion-settings-note">Os novos valores serão aplicados às próximas compras e ofertas. Pedidos já criados não são alterados. O Mercado Pago ainda utiliza o ambiente de testes configurado no sistema.</p>
+</main></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="js/admin-configuracoes.js?v=1"></script></body></html>
