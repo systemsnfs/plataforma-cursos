@@ -16,6 +16,24 @@
 .legion-settings-status{font-size:12px;color:#2c6440;flex:1}.legion-settings-status.error{color:#aa332b}
 .legion-settings-note{margin-top:20px;color:#e4e2d6;font-size:12px;line-height:1.75}
 @media(max-width:650px){.legion-settings-grid{grid-template-columns:1fr}.legion-settings-card{padding:21px}}
+
+/* Vídeo de apresentação da página inicial */
+.legion-media-heading{margin:34px 0 16px;color:#fff3dc;font:700 25px "Playfair Display",serif}
+.legion-media-card{background:#f8f4eb;border:1px solid #d0bb94;border-radius:16px;padding:26px;color:#253a2e;box-shadow:0 12px 30px #13251920}
+.legion-media-card p{color:#54685a;font-size:12px;line-height:1.7;margin:6px 0 15px}
+.legion-media-card .media-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.legion-media-card button{border:1px solid #bd9c62;border-radius:9px;padding:12px 17px;background:#274733;color:#fff5dd;font:700 12px "DM Sans",sans-serif;cursor:pointer}
+.legion-media-card button.media-remove{background:#fff9ee;color:#8e3834;border-color:#b9857d}
+.legion-media-card button:disabled{opacity:.55;cursor:wait}
+.legion-media-card .media-file-name{font-size:12px;font-weight:700;color:#3a5c43;overflow-wrap:anywhere}
+.legion-media-card .media-status{margin-top:14px;font-size:12px;font-weight:600;color:#28613d;min-height:16px}
+.legion-media-card .media-status.error{color:#a3332a}
+.legion-media-card video{width:100%;max-height:360px;display:block;border-radius:11px;background:#17271e;margin:14px 0}
+.legion-media-card .media-preview[hidden]{display:none!important}
+.legion-media-card #homeVideoExisting{color:#4e6855;font-size:12px}
+.legion-media-card progress{width:100%;height:9px;margin-top:10px;accent-color:#b89a62}
+.legion-media-card progress[hidden]{display:none!important}
+@media(max-width:650px){.legion-media-card{padding:20px}}
 </style></head>
 <body class="admin-premium admin-single-page"><div class="admin-layout">
 <aside class="admin-sidebar"><div class="sidebar-logo"><div class="sidebar-logo-icon">◇</div><a class="brand premium-brand" href="index.html">LEGION<span> ACADEMY</span></a></div>
@@ -30,7 +48,27 @@
 </div>
 <div class="legion-settings-footer"><div id="pricingFormStatus" class="legion-settings-status" role="status" aria-live="polite"></div><button id="saveTelegramPrices" type="submit">Salvar alterações</button></div>
 </form>
+<h2 class="legion-media-heading" id="homeVideoHeading">Vídeo de apresentação da página inicial</h2>
+<section class="legion-media-card" id="homeVideoSection" hidden aria-labelledby="homeVideoHeading">
+  <strong>Vídeo do destaque principal</strong>
+  <p>Adicione o vídeo que será reproduzido ao clicar no botão ▶ do card verde da página inicial. Aceita MP4, WebM e MOV; recomendamos MP4 (H.264).</p>
+  <div id="homeVideoExisting">Verificando vídeo atual...</div>
+  <div class="media-preview" id="homeVideoPreview" hidden>
+    <video id="homeVideoPreviewPlayer" controls preload="metadata" playsinline aria-label="Prévia do vídeo de apresentação"></video>
+  </div>
+  <input id="homeVideoFile" type="file" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" hidden>
+  <div class="media-actions">
+    <button id="homeVideoChoose" type="button">＋ Selecionar vídeo</button>
+    <span id="homeVideoFilename" class="media-file-name">Nenhum arquivo selecionado</span>
+  </div>
+  <div class="media-actions">
+    <button id="homeVideoSave" type="button" disabled>Salvar vídeo na página inicial</button>
+    <button id="homeVideoRemove" type="button" class="media-remove" disabled>Remover vídeo atual</button>
+  </div>
+  <progress id="homeVideoProgress" max="100" value="0" hidden></progress>
+  <div id="homeVideoStatus" class="media-status" role="status" aria-live="polite"></div>
+</section>
 <p id="pricingLoadStatus" class="legion-settings-note" role="status">Carregando configurações...</p>
 <p class="legion-settings-note">Os novos valores serão aplicados às próximas compras e ofertas. Pedidos já criados não são alterados. O Mercado Pago ainda utiliza o ambiente de testes configurado no sistema.</p>
 </main></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="js/admin-configuracoes.js?v=1"></script></body></html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script><script src="js/admin-configuracoes.js?v=1"></script><script src="js/admin-home-video.js?v=1"></script></body></html>
