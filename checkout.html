@@ -275,7 +275,24 @@
     .legion-checkout .telegram-offer.is-selected .telegram-select-hint{color:#ffe2aa}
     .legion-checkout .telegram-offer .telegram-offer-choice input{accent-color:#efd3a2}
     @media(max-width:480px){.legion-checkout .telegram-offer-title{font-size:17px}.legion-checkout .checkout-price-panel{padding:16px}}
-  </style>
+  
+    /* Destaque dos preços: verde vibrante, acessível e coerente com a marca */
+    .legion-checkout .checkout-promo-main #checkoutInstallments {
+      color: #137b3b !important;
+      -webkit-text-fill-color: #137b3b;
+      font-weight: 800 !important;
+      text-shadow: 0 1px 0 rgba(255,255,255,.22);
+    }
+    .legion-checkout .checkout-promo-prefix {
+      color: #137b3b !important;
+      font-weight: 800;
+    }
+    .legion-checkout .checkout-price-panel #coursePrice {
+      color: #137b3b !important;
+      -webkit-text-fill-color: #137b3b;
+      font-weight: 800 !important;
+    }
+</style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/checkout.js?v=9"></script>
