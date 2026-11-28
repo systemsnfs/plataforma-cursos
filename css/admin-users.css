@@ -32,3 +32,16 @@
 .legion-users-empty{padding:25px;border:1px dashed #c7b493;border-radius:9px;font-size:12px;color:#6a786e}
 @media(max-width:860px){.legion-users-fields{grid-template-columns:1fr 1fr}.legion-users-fields label:last-child{grid-column:span 2}}
 @media(max-width:550px){.legion-users-content,.legion-users-intro{padding:19px 14px}.legion-users-form{padding:16px}.legion-users-fields{grid-template-columns:1fr}.legion-users-fields label:last-child{grid-column:auto}.legion-users-form button{width:100%}}
+
+/* Reenvio de convite apenas para contas com e-mail pendente */
+.legion-user-resend-button{
+  border:1px solid #b59760;border-radius:8px;
+  background:#ebdcc0;color:#624721;padding:11px 14px;
+  cursor:pointer;font:700 12px "DM Sans",sans-serif;
+  transition:background .18s,color .18s;
+}
+.legion-user-resend-button:hover:not(:disabled),
+.legion-user-resend-button:focus-visible:not(:disabled){
+  background:#cfb27b;color:#253829;
+}
+.legion-user-resend-button:disabled{opacity:.55;cursor:not-allowed}
