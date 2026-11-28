@@ -626,7 +626,7 @@ async function applyLessonBannerBackground() {
     if (error) throw error;
 
     const path = data?.background_image_path;
-    if (!path || !/^homepage\\/hero-[0-9a-f-]{36}\\.(jpg|jpeg|png|webp)$/.test(path)) return;
+    if (typeof path !== "string" || !/^homepage[/]hero-[0-9a-f-]{36}[.](jpg|jpeg|png|webp)$/.test(path)) return;
 
     const publicUrl = sb2.storage.from("materiais").getPublicUrl(path).data.publicUrl;
     const imageUrl = new URL(publicUrl);
