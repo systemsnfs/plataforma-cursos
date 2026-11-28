@@ -270,3 +270,22 @@ body.admin-premium{--mil-bg:#303d33;--mil-panel:#435447;--mil-panel2:#4b5e4e;--m
 .admin-premium .legion-telegram-admin-toggle{display:flex;align-items:center;gap:11px;margin-top:14px;padding:12px 14px;border:1px solid #c9c5ad;border-radius:10px;background:#fffaf0;color:#263d2e;font-size:13px;font-weight:800;cursor:pointer}
 .admin-premium .legion-telegram-admin-toggle input{width:21px;height:21px;flex-shrink:0;accent-color:#2d6744;cursor:pointer}
 .admin-premium .legion-telegram-admin-help{display:block;margin-top:9px;font-size:10px;line-height:1.6;color:#667265}
+
+/* Contraste do texto na permissão manual do Telegram */
+.admin-premium .legion-modal-telegram-status .legion-telegram-admin-toggle,
+.admin-premium .legion-modal-telegram-status .legion-telegram-admin-toggle span,
+.admin-premium .legion-modal-telegram-status #telegramToggleLabel {
+  color: #233629 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #233629;
+  font-weight: 700;
+  text-shadow: none;
+}
+.admin-premium .legion-modal-telegram-status .legion-telegram-admin-toggle {
+  background: #fffaf0;
+  border-color: #b5b49f;
+}
+.admin-premium .legion-modal-telegram-status .legion-telegram-admin-toggle input[type="checkbox"] {
+  opacity: 1;
+  accent-color: #2d6744;
+}
