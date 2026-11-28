@@ -1172,7 +1172,7 @@ window.manageAccess = async function(studentId) {
     error: studentError
   } = await adminSb
     .from("profiles")
-    .select("full_name, active")
+    .select("full_name, active, role")
     .eq("id", studentId)
     .single();
 
@@ -1295,7 +1295,7 @@ window.manageAccess = async function(studentId) {
             </h2>
 
             <p>
-              Defina quais cursos este aluno poderá acessar.
+              Defina quais cursos este usuário poderá acessar.
             </p>
 
           </div>
@@ -1325,7 +1325,7 @@ window.manageAccess = async function(studentId) {
 
         <div>
 
-          <span>ALUNO</span>
+          <span>${student.role==="admin"?"ADMINISTRADOR":"ALUNO"}</span>
 
           <strong>
             ${escapeHtml(studentName)}
@@ -1336,6 +1336,7 @@ window.manageAccess = async function(studentId) {
       </div>
 
 
+      ${student.role==="admin" ? '<p class="legion-admin-course-note">Administradores podem receber acesso aos cursos por esta tela. A consultoria Telegram é exclusiva de contas de alunos.</p>' : `
       <section class="legion-modal-telegram-status ${telegramEligible ? "is-eligible" : "is-ineligible"}">
         <div style="flex:1;min-width:0">
           <span class="legion-student-access-label">CONSULTORIA TELEGRAM</span>
@@ -1348,7 +1349,7 @@ window.manageAccess = async function(studentId) {
           <small class="legion-telegram-admin-help">A escolha será aplicada ao salvar. Contas desativadas não podem abrir o grupo.</small>
         </div>
         <span class="legion-modal-telegram-marker" id="telegramAccessMarker">${telegramEligible ? "✓" : "—"}</span>
-      </section>
+      </section>`}
 
       <!-- CURSOS -->
 
@@ -1744,7 +1745,7 @@ window.manageAccess = async function(studentId) {
 
     const selectedTelegram = telegramToggle?.checked === true;
     // Registrar uma decisão manual só quando alterada, mantendo a regra automática da compra caso contrário.
-    if (telegramToggle && selectedTelegram !== telegramEligible) {
+    if (student.role!=="admin" && telegramToggle && selectedTelegram !== telegramEligible) {
       const { data: { user: adminUser } } = await adminSb.auth.getUser();
       const { error: telegramSaveError } = await adminSb
         .from("telegram_access_overrides")
