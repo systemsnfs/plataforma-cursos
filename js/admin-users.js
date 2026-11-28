@@ -44,7 +44,7 @@
          ${u.invited_at&&!u.confirmed&&u.email?
            `<button type="button" class="legion-user-resend-button" data-id="${escape(u.id)}" data-email="${escape(u.email)}" ${resentRecently.has(u.id)?"disabled title='Reenvio solicitado recentemente'":""}>✉ Reenviar e-mail</button>`:""}
          <button type="button" class="legion-user-role-button ${isAdmin?"demote":""}" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}" data-role="${isAdmin?"student":"admin"}" ${canChange?"":"disabled"}>${text}</button>
-         <button type="button" class="legion-user-access-button" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}">Acessos</button>
+         <button type="button" class="legion-user-access-button" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}">Dar / editar acessos</button>
          <button type="button" class="legion-user-delete-button" data-id="${escape(u.id)}" data-email="${escape(u.email||"")}" ${own?"disabled title='Não é possível excluir sua própria conta'":""}>Excluir usuário</button>
        </div>
      </article>`;
