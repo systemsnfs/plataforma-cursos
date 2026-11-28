@@ -1,5 +1,14 @@
 const homeAuthLink = document.getElementById("homeAuthLink");
 const homeLogoutButton = document.getElementById("homeLogoutButton");
+const homeHeroCourseButton = document.getElementById("homeHeroCourseButton");
+const homeHeroLoginButton = document.getElementById("homeHeroLoginButton");
+const homeHeroMyAreaButton = document.getElementById("homeHeroMyAreaButton");
+
+function updateHomeHeroActions(isLoggedIn) {
+  if (homeHeroCourseButton) homeHeroCourseButton.hidden = isLoggedIn;
+  if (homeHeroLoginButton) homeHeroLoginButton.hidden = isLoggedIn;
+  if (homeHeroMyAreaButton) homeHeroMyAreaButton.hidden = !isLoggedIn;
+}
 const homeClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function refreshHomeAuth() {
@@ -14,23 +23,27 @@ async function refreshHomeAuth() {
         .maybeSingle();
 
       if (profileError || !profile || profile.active === false) {
+        updateHomeHeroActions(false);
         homeAuthLink.textContent = "Entrar";
         homeAuthLink.href = "login.html";
         homeLogoutButton.hidden = false;
         homeLogoutButton.style.display = "inline-flex";
       } else {
+        updateHomeHeroActions(true);
         homeAuthLink.textContent = profile.role === "admin" ? "Painel ADM" : "Minha área";
         homeAuthLink.href = profile.role === "admin" ? "admin.html" : "aluno.html";
         homeLogoutButton.hidden = false;
         homeLogoutButton.style.display = "inline-flex";
       }
     } else {
+      updateHomeHeroActions(false);
       homeAuthLink.textContent = "Entrar";
       homeAuthLink.href = "login.html";
       homeLogoutButton.hidden = true;
       homeLogoutButton.style.display = "none";
     }
   } catch (error) {
+    updateHomeHeroActions(false);
     console.warn("Não foi possível verificar a sessão da página inicial", error);
   }
 }
