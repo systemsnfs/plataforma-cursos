@@ -74,3 +74,30 @@
   border:1px solid #d7c59e;border-radius:9px;
   font-size:12px;line-height:1.6;
 }
+
+/* Legibilidade dos campos de convite no painel administrativo */
+.admin-premium .legion-users-form .legion-users-fields label {
+  color: #263d2e !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #263d2e;
+  font-weight: 700;
+}
+.admin-premium .legion-users-form .legion-users-fields input,
+.admin-premium .legion-users-form .legion-users-fields select {
+  background: #23392d;
+  color: #fffdf4 !important;
+  -webkit-text-fill-color: #fffdf4;
+  opacity: 1 !important;
+  border-color: #4c6651;
+}
+.admin-premium .legion-users-form .legion-users-fields input::placeholder {
+  color: #e4e9e0 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #e4e9e0;
+}
+.admin-premium .legion-users-form .legion-users-invite-bottom p {
+  color: #3d5141 !important;
+  -webkit-text-fill-color: #3d5141;
+  opacity: 1 !important;
+  font-weight: 500;
+}
