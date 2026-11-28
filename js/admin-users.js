@@ -44,6 +44,7 @@
          ${u.invited_at&&!u.confirmed&&u.email?
            `<button type="button" class="legion-user-resend-button" data-id="${escape(u.id)}" data-email="${escape(u.email)}" ${resentRecently.has(u.id)?"disabled title='Reenvio solicitado recentemente'":""}>✉ Reenviar e-mail</button>`:""}
          <button type="button" class="legion-user-role-button ${isAdmin?"demote":""}" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}" data-role="${isAdmin?"student":"admin"}" ${canChange?"":"disabled"}>${text}</button>
+         <button type="button" class="legion-user-delete-button" data-id="${escape(u.id)}" data-email="${escape(u.email||"")}" ${own?"disabled title='Não é possível excluir sua própria conta'":""}>Excluir usuário</button>
        </div>
      </article>`;
    }).join("");
@@ -76,6 +77,34 @@
        try{
          const result=await request({action:"resend-invite",user_id:id});
          resentRecently.add(id);
+         await load(result.message);
+       }catch(error){
+         show(error.message,true);
+         button.disabled=false;
+       }finally{toggleBusy(false)}
+     });
+   }
+   for(const button of list.querySelectorAll(".legion-user-delete-button")){
+     button.addEventListener("click",async()=>{
+       if(busy||button.disabled)return;
+       const id=button.dataset.id;
+       const email=button.dataset.email;
+       const agree=confirm(
+         'Excluir DEFINITIVAMENTE a conta "'+email+'"?\\n\\n'+
+         'Isso remove o acesso, o perfil, as matrículas e as mensagens do fórum. '+ 
+         'Esta ação não pode ser desfeita.'
+       );
+       if(!agree)return;
+       const typed=prompt('Para confirmar a exclusão definitiva de "'+email+'", digite EXCLUIR:');
+       if(typed!=="EXCLUIR"){
+         if(typed!==null)show("Exclusão cancelada: digite EXCLUIR exatamente.",true);
+         return;
+       }
+       toggleBusy(true);
+       button.disabled=true;
+       show("Excluindo usuário e removendo seus acessos...");
+       try{
+         const result=await request({action:"delete-user",user_id:id,confirmation:"EXCLUIR"});
          await load(result.message);
        }catch(error){
          show(error.message,true);
