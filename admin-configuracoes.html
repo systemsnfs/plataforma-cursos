@@ -68,7 +68,24 @@
   <progress id="homeVideoProgress" max="100" value="0" hidden></progress>
   <div id="homeVideoStatus" class="media-status" role="status" aria-live="polite"></div>
 </section>
+<h2 class="legion-media-heading">Imagem de fundo da página inicial</h2>
+<section id="heroImageSection" class="legion-media-card" hidden aria-label="Imagem de fundo do site">
+ <strong>Imagem dos soldados no destaque principal</strong>
+ <p>Selecione uma foto para substituir a imagem militar que aparece atrás do título "Sua missão começa com a preparação". O efeito escuro e o parallax serão preservados.</p>
+ <img id="heroImagePreview" alt="Prévia da imagem de fundo selecionada" style="display:none;width:100%;max-height:320px;object-fit:cover;object-position:center;border-radius:10px;margin:15px 0">
+ <div id="heroImageCurrent" style="font-size:12px;color:#53695a;margin-bottom:10px">Carregando imagem atual...</div>
+ <input id="heroImageFile" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+ <div class="media-actions">
+  <button type="button" id="heroImageChoose">＋ Selecionar foto</button>
+  <span id="heroImageFilename" class="media-file-name">Nenhuma foto selecionada</span>
+ </div>
+ <div class="media-actions">
+  <button type="button" id="heroImageSave" disabled>Publicar imagem no site</button>
+  <button type="button" id="heroImageRemove" class="media-remove" disabled>Restaurar imagem anterior</button>
+ </div>
+ <div id="heroImageStatus" class="media-status" role="status" aria-live="polite"></div>
+</section>
 <p id="pricingLoadStatus" class="legion-settings-note" role="status">Carregando configurações...</p>
 <p class="legion-settings-note">Os novos valores serão aplicados às próximas compras e ofertas. Pedidos já criados não são alterados. O Mercado Pago ainda utiliza o ambiente de testes configurado no sistema.</p>
 </main></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script><script src="js/admin-configuracoes.js?v=1"></script><script src="js/admin-home-video.js?v=1"></script></body></html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script><script src="js/admin-configuracoes.js?v=1"></script><script src="js/admin-home-video.js?v=1"></script><script src="js/admin-hero-image.js?v=1"></script></body></html>
