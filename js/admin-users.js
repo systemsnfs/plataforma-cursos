@@ -44,6 +44,7 @@
          ${u.invited_at&&!u.confirmed&&u.email?
            `<button type="button" class="legion-user-resend-button" data-id="${escape(u.id)}" data-email="${escape(u.email)}" ${resentRecently.has(u.id)?"disabled title='Reenvio solicitado recentemente'":""}>✉ Reenviar e-mail</button>`:""}
          <button type="button" class="legion-user-role-button ${isAdmin?"demote":""}" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}" data-role="${isAdmin?"student":"admin"}" ${canChange?"":"disabled"}>${text}</button>
+         <button type="button" class="legion-user-access-button" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}">Acessos</button>
          <button type="button" class="legion-user-delete-button" data-id="${escape(u.id)}" data-email="${escape(u.email||"")}" ${own?"disabled title='Não é possível excluir sua própria conta'":""}>Excluir usuário</button>
        </div>
      </article>`;
@@ -82,6 +83,18 @@
          show(error.message,true);
          button.disabled=false;
        }finally{toggleBusy(false)}
+     });
+   }
+   for(const button of list.querySelectorAll(".legion-user-access-button")){
+     button.addEventListener("click",()=>{
+       if(busy)return;
+       if(typeof window.manageAccess!=="function"){
+         show("Não foi possível abrir o gerenciador de acessos. Atualize a página.",true);
+         return;
+       }
+       window.manageAccess(button.dataset.id).catch(error=>{
+         show("Erro ao abrir acessos: "+(error?.message||"Tente novamente."),true);
+       });
      });
    }
    for(const button of list.querySelectorAll(".legion-user-delete-button")){
