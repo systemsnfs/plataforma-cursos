@@ -603,9 +603,48 @@ ${
     ></div>
 
   `;
+  // Exibe nas aulas o mesmo fundo configurado pelo ADM para a área do aluno.
+  void applyLessonBannerBackground();
   await initLessonDiscussion(lesson.id);
 }
 
+
+/* =====================================
+   FUNDO DO CABEÇALHO DA AULA
+   Sincronizado com a área do aluno
+===================================== */
+async function applyLessonBannerBackground() {
+  const banner = box.querySelector(".premium-lesson-header");
+  if (!banner) return;
+
+  try {
+    const { data, error } = await sb2
+      .from("homepage_media")
+      .select("background_image_path")
+      .eq("id", 1)
+      .single();
+    if (error) throw error;
+
+    const path = data?.background_image_path;
+    if (!path || !/^homepage\\/hero-[0-9a-f-]{36}\\.(jpg|jpeg|png|webp)$/.test(path)) return;
+
+    const publicUrl = sb2.storage.from("materiais").getPublicUrl(path).data.publicUrl;
+    const imageUrl = new URL(publicUrl);
+    if (imageUrl.protocol !== "https:") return;
+
+    // A camada escura mantém título, descrição e progresso legíveis.
+    banner.style.setProperty(
+      "background-image",
+      "linear-gradient(90deg,rgba(14,30,21,.94) 0%,rgba(19,37,27,.75) 48%,rgba(18,34,25,.31) 100%),url('" + imageUrl.href + "')",
+      "important"
+    );
+    banner.style.setProperty("background-size", "cover", "important");
+    banner.style.setProperty("background-position", "center 35%", "important");
+    banner.style.setProperty("background-repeat", "no-repeat", "important");
+  } catch (error) {
+    console.warn("Não foi possível carregar o fundo da área do aluno na aula:", error);
+  }
+}
 
 /* =====================================
    ERROS
