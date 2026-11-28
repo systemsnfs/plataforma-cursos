@@ -45,3 +45,17 @@
   background:#cfb27b;color:#253829;
 }
 .legion-user-resend-button:disabled{opacity:.55;cursor:not-allowed}
+
+/* Exclusão definitiva de usuários: botão destacado, confirmação obrigatória. */
+.legion-user-delete-button{
+  border:1px solid #aa6d63;border-radius:8px;
+  background:#fcf4f0;color:#953f35;
+  padding:11px 14px;cursor:pointer;
+  font:700 12px "DM Sans",sans-serif;
+  transition:background .18s,border-color .18s;
+}
+.legion-user-delete-button:hover:not(:disabled),
+.legion-user-delete-button:focus-visible:not(:disabled){
+  background:#f4dad3;border-color:#934038;
+}
+.legion-user-delete-button:disabled{opacity:.5;cursor:not-allowed}
