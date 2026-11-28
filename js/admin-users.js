@@ -9,6 +9,7 @@
  const status=document.getElementById("adminUsersStatus");
  const refresh=document.getElementById("adminUsersRefresh");
  let selfId=null,busy=false;
+ const resentRecently=new Set();
  function show(text,error=false){status.textContent=text;status.classList.toggle("error",error)}
  function escape(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));}
  function toggleBusy(value){busy=value;submit.disabled=value;refresh.disabled=value;}
@@ -40,6 +41,8 @@
          <span class="legion-user-role ${isAdmin?"admin":""}">${isAdmin?"Administrador":"Aluno"}</span>
          ${!u.confirmed?'<span class="legion-user-role pending">E-mail pendente</span>':""}
          ${!u.active?'<span class="legion-user-role pending">Desativado</span>':""}
+         ${u.invited_at&&!u.confirmed&&u.email?
+           `<button type="button" class="legion-user-resend-button" data-id="${escape(u.id)}" data-email="${escape(u.email)}" ${resentRecently.has(u.id)?"disabled title='Reenvio solicitado recentemente'":""}>✉ Reenviar e-mail</button>`:""}
          <button type="button" class="legion-user-role-button ${isAdmin?"demote":""}" data-id="${escape(u.id)}" data-name="${escape(u.full_name||u.email||"usuário")}" data-role="${isAdmin?"student":"admin"}" ${canChange?"":"disabled"}>${text}</button>
        </div>
      </article>`;
@@ -59,6 +62,25 @@
          await load(result.message);
        }catch(error){show(error.message,true);button.disabled=false}
        finally{toggleBusy(false)}
+     });
+   }
+   for(const button of list.querySelectorAll(".legion-user-resend-button")){
+     button.addEventListener("click",async()=>{
+       if(busy||button.disabled)return;
+       const email=button.dataset.email;
+       const id=button.dataset.id;
+       if(!confirm('Reenviar o e-mail de acesso para "'+email+'"?'))return;
+       toggleBusy(true);
+       button.disabled=true;
+       show("Solicitando novo e-mail de acesso...");
+       try{
+         const result=await request({action:"resend-invite",user_id:id});
+         resentRecently.add(id);
+         await load(result.message);
+       }catch(error){
+         show(error.message,true);
+         button.disabled=false;
+       }finally{toggleBusy(false)}
      });
    }
    if(partial)show("A lista foi limitada aos 2.000 usuários mais recentes.");
