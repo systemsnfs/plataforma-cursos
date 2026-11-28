@@ -614,35 +614,42 @@ ${
    Sincronizado com a área do aluno
 ===================================== */
 async function applyLessonBannerBackground() {
+  // Todas as aulas, de qualquer curso, compartilham a mesma imagem.
   const banner = box.querySelector(".premium-lesson-header");
   if (!banner) return;
 
+  // Imagem padrão já publicada no Supabase, para evitar o fundo antigo caso
+  // a consulta de configuração falhe ou demore.
+  const fallbackPath = "homepage/hero-960d1500-b86f-4d78-a365-ac98e8db42cf.webp";
+
+  function setBanner(path) {
+    if (typeof path !== "string" ||
+        !/^homepage[/]hero-[0-9a-f-]{36}[.](jpg|jpeg|png|webp)$/.test(path)) return;
+    const publicUrl = sb2.storage.from("materiais").getPublicUrl(path).data.publicUrl;
+    const imageUrl = new URL(publicUrl);
+    if (imageUrl.protocol !== "https:") return;
+
+    banner.style.setProperty(
+      "background-image",
+      "linear-gradient(90deg,rgba(14,30,21,.94) 0%,rgba(19,37,27,.75) 48%,rgba(18,34,25,.31) 100%),url('" + imageUrl.href + "')",
+      "important"
+    );
+    banner.style.setProperty("background-position", "center 35%", "important");
+    banner.style.setProperty("background-size", "cover", "important");
+    banner.style.setProperty("background-repeat", "no-repeat", "important");
+  }
+
   try {
+    setBanner(fallbackPath);
     const { data, error } = await sb2
       .from("homepage_media")
       .select("background_image_path")
       .eq("id", 1)
       .single();
     if (error) throw error;
-
-    const path = data?.background_image_path;
-    if (typeof path !== "string" || !/^homepage[/]hero-[0-9a-f-]{36}[.](jpg|jpeg|png|webp)$/.test(path)) return;
-
-    const publicUrl = sb2.storage.from("materiais").getPublicUrl(path).data.publicUrl;
-    const imageUrl = new URL(publicUrl);
-    if (imageUrl.protocol !== "https:") return;
-
-    // A camada escura mantém título, descrição e progresso legíveis.
-    banner.style.setProperty(
-      "background-image",
-      "linear-gradient(90deg,rgba(14,30,21,.94) 0%,rgba(19,37,27,.75) 48%,rgba(18,34,25,.31) 100%),url('" + imageUrl.href + "')",
-      "important"
-    );
-    banner.style.setProperty("background-size", "cover", "important");
-    banner.style.setProperty("background-position", "center 35%", "important");
-    banner.style.setProperty("background-repeat", "no-repeat", "important");
+    if (data?.background_image_path) setBanner(data.background_image_path);
   } catch (error) {
-    console.warn("Não foi possível carregar o fundo da área do aluno na aula:", error);
+    console.warn("Usando o fundo padrão nas aulas:", error);
   }
 }
 
