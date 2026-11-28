@@ -1234,12 +1234,14 @@ window.manageAccess = async function(studentId) {
     alert("Não foi possível consultar a permissão manual: " + overrideError.message);
     return;
   }
-  const telegramEligible = hasStudentTelegramAccess(
-    {id:studentId, active: student.active},
-    enrollments || [],
-    (telegramPayments || []).map(p => ({...p, user_id:studentId})),
-    manualOverride ? [{user_id:studentId, allowed:manualOverride.allowed}] : []
-  );
+  const telegramEligible = student.role === "admin"
+    ? student.active === true && manualOverride?.allowed === true
+    : hasStudentTelegramAccess(
+        {id:studentId, active: student.active},
+        enrollments || [],
+        (telegramPayments || []).map(p => ({...p, user_id:studentId})),
+        manualOverride ? [{user_id:studentId, allowed:manualOverride.allowed}] : []
+      );
   const telegramPurchased = (telegramPayments || []).some(p =>
     p.status === "approved" && p.telegram_addon === true
   );
@@ -1336,12 +1338,12 @@ window.manageAccess = async function(studentId) {
       </div>
 
 
-      ${student.role==="admin" ? '<p class="legion-admin-course-note">Administradores podem receber acesso aos cursos por esta tela. A consultoria Telegram é exclusiva de contas de alunos.</p>' : `
+      `
       <section class="legion-modal-telegram-status ${telegramEligible ? "is-eligible" : "is-ineligible"}">
         <div style="flex:1;min-width:0">
           <span class="legion-student-access-label">CONSULTORIA TELEGRAM</span>
           <strong id="telegramAccessText">✈ ${telegramEligible ? "Acesso liberado" : "Sem acesso"}</strong>
-          <p>Você pode liberar ou bloquear manualmente o acesso deste aluno ao botão do Telegram. Sem alteração manual, vale a compra aprovada.</p>
+          <p>Libere ou bloqueie o acesso deste usuário ao Telegram. Para alunos sem alteração manual, vale a compra aprovada.</p>
           <label class="legion-telegram-admin-toggle" for="telegramAccessToggle">
             <input type="checkbox" id="telegramAccessToggle" ${telegramEligible ? "checked" : ""}>
             <span id="telegramToggleLabel">${telegramEligible ? "Permitir acesso ao Telegram" : "Dar acesso ao Telegram"}</span>
@@ -1349,7 +1351,7 @@ window.manageAccess = async function(studentId) {
           <small class="legion-telegram-admin-help">A escolha será aplicada ao salvar. Contas desativadas não podem abrir o grupo.</small>
         </div>
         <span class="legion-modal-telegram-marker" id="telegramAccessMarker">${telegramEligible ? "✓" : "—"}</span>
-      </section>`}
+      </section>`
 
       <!-- CURSOS -->
 
@@ -1485,7 +1487,7 @@ window.manageAccess = async function(studentId) {
             id="saveAccess"
             type="button"
             class="btn premium-btn"
-            ${courses.length ? "" : "disabled"}
+            
           >
             Salvar acessos
           </button>
@@ -1745,7 +1747,7 @@ window.manageAccess = async function(studentId) {
 
     const selectedTelegram = telegramToggle?.checked === true;
     // Registrar uma decisão manual só quando alterada, mantendo a regra automática da compra caso contrário.
-    if (student.role!=="admin" && telegramToggle && selectedTelegram !== telegramEligible) {
+    if (telegramToggle && selectedTelegram !== telegramEligible) {
       const { data: { user: adminUser } } = await adminSb.auth.getUser();
       const { error: telegramSaveError } = await adminSb
         .from("telegram_access_overrides")
