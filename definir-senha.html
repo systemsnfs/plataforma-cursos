@@ -1,0 +1,38 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Definir senha | Legion Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.invite-page{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:24px;background:linear-gradient(140deg,#101e16,#253d2c);font-family:"DM Sans",sans-serif}
+.invite-card{background:#faf7ed;color:#263e2d;border:1px solid #c8af7e;box-shadow:0 20px 55px #06160b70;border-radius:18px;max-width:440px;width:100%;padding:38px}
+.invite-brand{font-size:17px;font-weight:800;letter-spacing:.13em;color:#29492f;text-decoration:none}
+.invite-brand span{color:#9f7e43}
+.invite-card h1{font:700 31px "Playfair Display",serif;margin:27px 0 9px}
+.invite-card p{font-size:13px;line-height:1.65;color:#5e6c5e}
+.invite-card label{display:block;font-size:13px;font-weight:700;margin:21px 0 8px}
+.invite-card input{width:100%;box-sizing:border-box;padding:13px 12px;border:1px solid #c7b58e;border-radius:8px;background:#fff;color:#253b2b;font-size:15px}
+.invite-card button{width:100%;background:#294c35;color:#fff7e5;border:0;border-radius:8px;padding:14px;margin-top:20px;font-weight:800;cursor:pointer}
+.invite-card button:disabled{opacity:.6;cursor:wait}
+.invite-card a.back{color:#756133;font-size:12px;display:block;margin-top:22px;text-align:center}
+.invite-status{font-size:12px;line-height:1.55;margin-top:15px;color:#357144}
+.invite-status.error{color:#a13b37}
+.invite-card form[hidden]{display:none}
+</style></head>
+<body><main class="invite-page"><div class="invite-card">
+<a href="index.html" class="invite-brand">◇ LEGION <span>ACADEMY</span></a>
+<h1>Defina sua senha</h1>
+<p>Você foi convidado para a Legion Academy. Crie uma senha pessoal para acessar sua conta com segurança.</p>
+<form id="invitePasswordForm" hidden>
+<label for="invitePassword">Nova senha</label>
+<input id="invitePassword" type="password" autocomplete="new-password" minlength="10" required placeholder="Mínimo de 10 caracteres">
+<label for="invitePasswordConfirm">Confirmar senha</label>
+<input id="invitePasswordConfirm" type="password" autocomplete="new-password" minlength="10" required placeholder="Repita sua senha">
+<button id="invitePasswordSave" type="submit">Definir senha e entrar</button>
+</form>
+<div id="invitePasswordStatus" class="invite-status" role="status" aria-live="polite">Verificando convite...</div>
+<a class="back" href="login.html">Voltar para entrar</a>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/definir-senha.js?v=1"></script>
+</body></html>
