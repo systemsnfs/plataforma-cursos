@@ -15,6 +15,7 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/tema-militar-admin.css?v=6">
+  <link rel="stylesheet" href="css/admin-users.css?v=1">
 </head>
 
 
@@ -126,6 +127,38 @@
         </div>
       </section>
 
+      <section class="legion-user-manager" id="adminUsersSection" hidden aria-labelledby="adminUsersHeading">
+        <div class="legion-users-intro">
+          <div><span class="premium-eyebrow">CONTAS E PERMISSÕES</span>
+            <h2 id="adminUsersHeading">Usuários e administradores</h2>
+            <p>Convide novos usuários por e-mail e escolha quem terá acesso ao painel administrativo.</p>
+          </div>
+        </div>
+        <div class="legion-users-content">
+          <form id="adminInviteForm" class="legion-users-form" autocomplete="off">
+            <h3>Adicionar usuário</h3>
+            <div class="legion-users-fields">
+              <label>Nome completo<input name="name" type="text" minlength="2" maxlength="120" placeholder="Nome do novo usuário" required autocomplete="off"></label>
+              <label>E-mail<input name="email" type="email" maxlength="254" placeholder="usuario@exemplo.com" required autocomplete="off"></label>
+              <label>Tipo de acesso<select name="role" required>
+                <option value="student">Aluno</option>
+                <option value="admin">Administrador</option>
+              </select></label>
+            </div>
+            <div class="legion-users-invite-bottom">
+              <p>O usuário receberá um convite para definir a própria senha. Alunos adicionados manualmente não recebem matrícula automaticamente.</p>
+              <button id="adminInviteSubmit" type="submit">+ Enviar convite</button>
+            </div>
+          </form>
+          <div class="legion-users-list-title">
+            <h3>Usuários cadastrados</h3>
+            <button id="adminUsersRefresh" type="button">↻ Atualizar lista</button>
+          </div>
+          <div id="adminUsersStatus" class="legion-users-status" role="status" aria-live="polite">Carregando usuários...</div>
+          <div id="adminUsersList" class="legion-users-list"></div>
+        </div>
+      </section>
+
       <section class="admin-main-grid">
         <div
           class="premium-panel students-panel"
@@ -184,6 +217,7 @@
 <script src="js/config.js"></script>
 
 <script src="js/admin.js?v=6"></script>
+<script src="js/admin-users.js?v=1"></script>
 
 </body>
 </html>
