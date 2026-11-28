@@ -1338,7 +1338,6 @@ window.manageAccess = async function(studentId) {
       </div>
 
 
-      `
       <section class="legion-modal-telegram-status ${telegramEligible ? "is-eligible" : "is-ineligible"}">
         <div style="flex:1;min-width:0">
           <span class="legion-student-access-label">CONSULTORIA TELEGRAM</span>
@@ -1351,7 +1350,7 @@ window.manageAccess = async function(studentId) {
           <small class="legion-telegram-admin-help">A escolha será aplicada ao salvar. Contas desativadas não podem abrir o grupo.</small>
         </div>
         <span class="legion-modal-telegram-marker" id="telegramAccessMarker">${telegramEligible ? "✓" : "—"}</span>
-      </section>`
+      </section>
 
       <!-- CURSOS -->
 
