@@ -212,8 +212,41 @@ if (studentAvatar) {
 
   }
 
+  // Aplica o mesmo fundo a todos os banners dos cursos, sem depender do ID.
+  await applySharedCourseBackground();
+
 }
 
+
+/* =====================================
+   FUNDO PADRÃO PARA TODOS OS CURSOS
+===================================== */
+async function applySharedCourseBackground() {
+  const banners = document.querySelectorAll(".legion-student .student-course-hero");
+  if (!banners.length) return;
+
+  try {
+    const { data, error } = await sb.from("homepage_media")
+      .select("background_image_path").eq("id", 1).single();
+    if (error) throw error;
+    const path = data?.background_image_path;
+    if (typeof path !== "string" ||
+        !/^homepage[/]hero-[0-9a-f-]{36}[.](jpg|jpeg|png|webp)$/.test(path)) return;
+
+    const url = new URL(sb.storage.from("materiais").getPublicUrl(path).data.publicUrl);
+    if (url.protocol !== "https:") return;
+
+    const background = "linear-gradient(90deg,rgba(14,30,21,.93),rgba(19,37,27,.68) 55%,rgba(18,34,25,.36)),url('" + url.href + "')";
+    banners.forEach(banner => {
+      banner.style.setProperty("background-image", background, "important");
+      banner.style.setProperty("background-size", "cover", "important");
+      banner.style.setProperty("background-position", "center 35%", "important");
+      banner.style.setProperty("background-repeat", "no-repeat", "important");
+    });
+  } catch (error) {
+    console.warn("Não foi possível atualizar a imagem de todos os cursos:", error);
+  }
+}
 
 /* =====================================
    RENDERIZAR CURSO
