@@ -144,9 +144,13 @@
 
         <div class="checkout-price-panel" aria-live="polite">
           <span class="checkout-price-eyebrow">SEU INVESTIMENTO</span>
-          <div class="checkout-installment-main">
-            <span class="checkout-installment-label">Simulação de parcelamento</span>
-            <strong id="checkoutInstallments">Carregando...</strong>
+          <div class="checkout-installment-main checkout-promo-main">
+            <span class="checkout-original-price">De <s>R$ 197,90</s></span>
+            <div class="checkout-promotional-line">
+              <span class="checkout-promo-prefix">Por</span>
+              <strong id="checkoutInstallments">Carregando...</strong>
+            </div>
+            <span id="checkoutPromoDescription" class="checkout-promo-description">Curso sem consultoria do Telegram</span>
           </div>
           <div class="checkout-total">
             <div>
@@ -155,7 +159,7 @@
             </div>
             <strong id="coursePrice">—</strong>
           </div>
-          <p class="checkout-installment-note">Parcelas ilustrativas, podendo incluir juros. O total da compra acima é o valor à vista, sem juros. Quantidade de parcelas, juros e valores efetivos serão informados pelo Mercado Pago antes da confirmação do pagamento.</p>
+          <p class="checkout-installment-note">Valor à vista. Eventuais opções de parcelamento serão apresentadas pelo Mercado Pago antes da confirmação.</p>
         </div>
 
         <div id="checkoutBuyerDetails" style="display:grid;gap:14px;margin:20px 0;">
@@ -205,6 +209,14 @@
 
   <style>
 
+    /* Apresentação promocional sem simulação de parcelas */
+    .legion-checkout .checkout-promo-main { gap:6px; }
+    .legion-checkout .checkout-original-price { font-size:15px; color:#725e4b!important; font-weight:600; }
+    .legion-checkout .checkout-original-price s { text-decoration-thickness:1px; }
+    .legion-checkout .checkout-promotional-line { display:flex; align-items:baseline; flex-wrap:wrap; gap:10px; }
+    .legion-checkout .checkout-promo-prefix { color:#31583d!important; font-size:18px; font-weight:700; }
+    .legion-checkout .checkout-promo-main #checkoutInstallments { color:#1e402b!important; }
+    .legion-checkout .checkout-promo-description { color:#536957!important; font-size:12px; }
     /* Foto enviada para o painel de finalização da inscrição. */
     .legion-checkout .checkout-info {
       background-image: linear-gradient(90deg, rgba(14,32,22,.91) 0%, rgba(19,42,30,.73) 55%, rgba(17,37,26,.48) 100%), url("images/checkout-neve.webp") !important;
@@ -266,7 +278,7 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
-  <script src="js/checkout.js?v=8"></script>
+  <script src="js/checkout.js?v=9"></script>
 
 </body>
 
