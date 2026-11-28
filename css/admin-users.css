@@ -59,3 +59,18 @@
   background:#f4dad3;border-color:#934038;
 }
 .legion-user-delete-button:disabled{opacity:.5;cursor:not-allowed}
+
+/* Botão de acesso aos cursos na lista de usuários. */
+.legion-user-access-button{
+  border:1px solid #7e996e;border-radius:8px;
+  background:#e6eddb;color:#315239;padding:11px 15px;
+  cursor:pointer;font:700 12px "DM Sans",sans-serif;
+}
+.legion-user-access-button:hover,.legion-user-access-button:focus-visible{
+  background:#cdddbf;border-color:#557e55;
+}
+.legion-admin-course-note{
+  padding:12px 15px;background:#f0eadb;color:#536348;
+  border:1px solid #d7c59e;border-radius:9px;
+  font-size:12px;line-height:1.6;
+}
